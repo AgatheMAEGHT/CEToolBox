@@ -6,17 +6,15 @@ import (
 	"net/http"
 
 	"cetoolbox.com/config"
-	"cetoolbox.com/database/models"
+	"cetoolbox.com/database"
 	"github.com/sirupsen/logrus"
 )
 
 type upsertParams struct {
-	Item models.HouseItem `json:"item"`
+	Item database.HouseItem `json:"item"`
 }
 
-func PostUpsert(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-
+func upsert(w http.ResponseWriter, r *http.Request) {
 	log := logrus.WithContext(r.Context()).WithFields(logrus.Fields{
 		"method": r.Method,
 		"path":   r.URL.Path,
@@ -24,25 +22,22 @@ func PostUpsert(w http.ResponseWriter, r *http.Request) {
 	ctx := log.Context
 	log.Info("Upsert endpoint triggered")
 
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
 	upsertParams := upsertParams{}
 	err := json.NewDecoder(r.Body).Decode(&upsertParams)
 	if err != nil {
 		log.WithError(err).Errorf("fail to decode body")
+		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "{'error': 'fail to decode body'}")
 		return
 	}
 
-	err = config.HouseDB.Upsert(ctx, upsertParams)
+	err = config.HouseDB.Upsert(ctx, &upsertParams.Item)
 	if err != nil {
 		log.WithError(err).Errorf("fail to upsert: '%v'", err)
+		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "{'error': 'fail to decode body'}")
+		fmt.Fprintf(w, "{'error': 'fail to upsert'}")
 		return
 	}
 

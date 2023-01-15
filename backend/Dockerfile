@@ -1,6 +1,6 @@
 FROM golang:1.19-alpine
 
-EXPOSE 8080
+EXPOSE 1234
 
 WORKDIR /
 COPY . /

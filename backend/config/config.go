@@ -1,9 +1,11 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"cetoolbox.com/database"
+	"github.com/go-pg/pg/v10"
 )
 
 var (
@@ -17,7 +19,7 @@ var (
 		"PGDBNAME":   "house",
 	}
 
-	HouseDB database.Psql
+	HouseDB database.HouseItemsTable
 )
 
 func init() {
@@ -29,14 +31,14 @@ func init() {
 		}
 	}
 
-	// var err error
-	// HouseDB, err = database.NewPsql(pg.Options{
-	// 	Addr:     fmt.Sprintf("%s:%s", Env["PGHOST"], Env["PGPORT"]),
-	// 	User:     Env["PGUSER"],
-	// 	Password: Env["PGPASSWORD"],
-	// 	Database: Env["PGDBNAME"],
-	// })
-	// if err != nil {
-	// 	panic(err)
-	// }
+	var err error
+	HouseDB, err = database.NewHouseItemsTable(pg.Options{
+		Addr:     fmt.Sprintf("%s:%s", Env["PGHOST"], Env["PGPORT"]),
+		User:     Env["PGUSER"],
+		Password: Env["PGPASSWORD"],
+		Database: Env["PGDBNAME"],
+	})
+	if err != nil {
+		panic(err)
+	}
 }

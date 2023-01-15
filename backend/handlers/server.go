@@ -20,7 +20,8 @@ func StartServer(path string) {
 	server := http.NewServeMux()
 	server.HandleFunc("/", root)
 	server.HandleFunc("/ping", ping)
-	server.HandleFunc("/house/upsert", househandler.PostUpsert)
+
+	server.HandleFunc("/house", househandler.Dispatch)
 
 	fmt.Printf("Listening on '%s'\n", path)
 	http.ListenAndServe(path, server)
