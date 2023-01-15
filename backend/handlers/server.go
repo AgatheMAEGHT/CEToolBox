@@ -13,7 +13,8 @@ func root(w http.ResponseWriter, r *http.Request) {
 		"method": r.Method,
 		"path":   r.URL.Path,
 	})
-	log.Info("Upsert endpoint triggered")
+	log.Info("Root endpoint triggered")
+	w.WriteHeader(http.StatusNotFound)
 }
 
 func StartServer(path string) {
