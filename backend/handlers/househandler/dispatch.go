@@ -5,6 +5,7 @@ import (
 )
 
 func Dispatch(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == http.MethodGet {
 		get(w, r)
 	} else if r.Method == http.MethodPost {
