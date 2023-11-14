@@ -1,0 +1,68 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 93vh;
+    text-align: center;
+}
+
+/* ======== *
+ *  Colors  *
+ * ======== */
+
+.Blanc {
+    color: white;
+}
+
+.Noir {
+    color: black;
+}
+
+.Gris {
+    color: gray;
+}
+
+.Marron {
+    color: brown;
+}
+
+.Orange {
+    color: #E58605;
+}
+
+.Jaune {
+    color: yellow;
+}
+
+.Vert {
+    color: #1EBA16;
+}
+
+.Turquoise {
+    color: turquoise;
+}
+
+.Cyan {
+    color: #0EC2DF;
+}
+
+.Bleu {
+    color: blue;
+}
+
+.Bordeaux {
+    color: purple;
+}
+
+.Violet {
+    color: #7F3ADE;
+}
+
+.Rose {
+    color: #D733B6;
+}
+
+.Rouge {
+    color: red;
+}

@@ -1,0 +1,59 @@
+#docs-content {
+    display: flex;
+    min-height: inherit;
+    width: 98vw;
+}
+
+/*============*
+ * Left Part  *
+ *============*/
+
+#docs-left {
+    width: 30vw;
+    min-height: inherit;
+    background-color: #e9e9e9;
+}
+
+.docs-infos-title {
+    cursor: pointer;
+}
+
+.docs-infos {
+    margin-top: -15px;
+    padding: 5px;
+    text-align: left;
+}
+
+.docs-infos-line {
+    width: 80%;
+}
+
+.docs-infos-color {
+    margin: 2px;
+    font-weight: bold;
+}
+
+/* Arrows */
+.docs-double-arrow {
+    width: 30px;
+    padding: 5px;
+}
+
+#docs-hide-left {
+    display: flex;
+    margin-left: auto;
+    margin-right: 0%;
+}
+
+#docs-show-left {
+    display: flex;
+    transform: rotate(180deg);
+}
+
+/*============*
+ * Right Part *
+ *============*/
+
+#docs-right {
+    width: 100%;
+}
