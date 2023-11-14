@@ -32,17 +32,22 @@ func (u *User) ComparePassword(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 }
 
-func (u *User) Create(ctx context.Context) (*mongo.InsertOneResult, error) {
+func (u *User) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {
 	var err error
 	u.Password, err = HashPassword(u.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return UserCollection.InsertOne(ctx, u)
+	res, err := UserCollection.InsertOne(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+	u.ID = res.InsertedID.(primitive.ObjectID)
+	return res, nil
 }
 
-func (u *User) Update(ctx context.Context) (*mongo.UpdateResult, error) {
+func (u *User) UpdateOne(ctx context.Context) (*mongo.UpdateResult, error) {
 	return UserCollection.UpdateOne(ctx, bson.M{"_id": u.ID}, bson.M{"$set": u})
 }
 

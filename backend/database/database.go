@@ -40,6 +40,8 @@ func Connect(ctx context.Context, url string) (*mongo.Client, error) {
 
 	// Init collections
 	initUser(ctx, db)
+	initBlock(ctx, db)
+	initBlockText(ctx, db)
 
 	return client, nil
 }
