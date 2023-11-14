@@ -37,7 +37,7 @@ func main() {
 		FirstName: "Quentin",
 		LastName:  "Escudier",
 	}
-	_, err = user.Create(ctx)
+	_, err = user.CreateOne(ctx)
 	if mongo.IsDuplicateKeyError(err) {
 		log.Info("User already exists")
 	} else if err != nil {

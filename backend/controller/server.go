@@ -24,6 +24,8 @@ func StartServer(path string) {
 	server.HandleFunc("/login", login)
 	server.HandleFunc("/refresh", refresh)
 	server.HandleFunc("/who-am-i", middlewareWrapper(whoAmI))
+	server.HandleFunc("/blocks", middlewareWrapper(BlockDispatch))
+	server.HandleFunc("/blocks/text", middlewareWrapper(BlockTextDispatch))
 
 	fmt.Printf("Listening on '%s'\n", path)
 	http.ListenAndServe(path, server)
