@@ -1,7 +1,11 @@
-FROM golang:1.19-alpine
+FROM golang:1.20-alpine
 
-EXPOSE 1234
+EXPOSE 8080
 
-WORKDIR /
-COPY . /
-CMD [ "go", "run", "main.go" ]
+RUN apk add --no-cache gcc musl-dev
+RUN go install github.com/cespare/reflex@latest
+ADD . /go/src/CEToolBox/api
+WORKDIR /go/src/CEToolBox/api
+RUN go mod vendor && go mod tidy
+RUN go install
+CMD /go/bin/CEToolBox/api

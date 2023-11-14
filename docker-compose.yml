@@ -1,27 +1,26 @@
 version: '3'
 services:
-  database:
-    build: ./database
-    restart: always
-    environment:
-      - POSTGRES_USER=Dev
-      - POSTGRES_PASSWORD=bliblabloubliblui
+  api:
+    build: backend
     ports:
-      - "5432:5432"
+      - "8080:8080"
     volumes:
-      - db:/var/lib/postgresql/data
-
-  backend:
-    build: ./backend
-    ports:
-      - "1234:1234"
+      - ./backend:/go/src/CEToolBox/api
     environment:
-      - PORT=1234
-      - HOSTNAME=0.0.0.0
-      - PGUSER=Dev
-      - PGPASSWORD=bliblabloubliblui
+      MONGO_INITDB_ROOT_USERNAME: cetoolbox
+      MONGO_INITDB_ROOT_PASSWORD: azertyuiop
+    env_file:
+      - ./backend/.env
     depends_on:
-      - database
-volumes:
-  db:
-    driver: local
+      - mongo
+    command: reflex -r '\.go$$' -s -- sh -c 'go build . && ./CEToolBox'
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cetoolbox
+      MONGO_INITDB_ROOT_PASSWORD: azertyuiop
