@@ -4,11 +4,30 @@ import { useNavigate } from 'react-router-dom';
 import './docs.css';
 import BlockText from '../../components/blocks/text/text';
 
+
 function Docs() {
     let navigate = useNavigate();
     const [showLeft, setShowLeft] = React.useState<boolean>(true);
     const [showLeftMarkdown, setShowLeftMarkdown] = React.useState<boolean>(true);
     const [showLeftColors, setShowLeftColors] = React.useState<boolean>(true);
+    const [numberBlock, setNumberBlock] = React.useState<number>(0);
+
+    const [pageContent, setPageContent] = React.useState<{ elt: JSX.Element, id: number }[]>([]);
+
+    function deleteBlock(id: number): void {
+        setPageContent(prev => prev.filter((_, i) => i !== id));
+        setNumberBlock(prev => prev - 1);
+    }
+
+    function displayPage(): JSX.Element {
+        let page: JSX.Element[] = [];
+
+        pageContent.forEach((elt) => {
+            page.push(elt.elt);
+        });
+
+        return <div>{page}</div>;
+    }
 
     return <div id="docs" className='page'>
         <div id="docs-content">
@@ -34,8 +53,8 @@ function Docs() {
                 <h4 className='docs-infos-title' onClick={() => setShowLeftColors(!showLeftColors)}>Couleurs</h4>
                 {showLeftColors && <div className="docs-infos">
                     <p>
-                        Les couleurs sont à mettre dans le style d'une balise html  : <br />
-                        {`(<div class="Couleur"> ... </div>)`}
+                        Les couleurs sont à mettre comme class d'une balise html  : <br />
+                        {`<div class="Couleur"> </div>`}
                     </p>
                     <p className='docs-infos-color Blanc'>Blanc</p>
                     <p className='docs-infos-color Noir'>Noir</p>
@@ -56,8 +75,13 @@ function Docs() {
 
             <div id="docs-right">
                 {!showLeft && <img alt="double-arrow" className="docs-double-arrow" id="docs-show-left" src='/double-arrow.svg' onClick={() => setShowLeft(true)} />}
-
-                <BlockText />
+                {pageContent}
+                <div id="docs-content-add">
+                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Texte</p>
+                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Mermaid</p>
+                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Tableau</p>
+                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Code</p>
+                </div>
             </div>
         </div>
     </div>

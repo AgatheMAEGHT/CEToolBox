@@ -1,3 +1,4 @@
 export type blockText = {
-    content: string
+    id: number,
+    delete: (params: number) => void
 };

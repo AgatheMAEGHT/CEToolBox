@@ -1,7 +1,7 @@
 #docs-content {
     display: flex;
     min-height: inherit;
-    width: 98vw;
+    width: 100vw;
 }
 
 /*============*
@@ -56,4 +56,16 @@
 
 #docs-right {
     width: 100%;
+}
+
+#docs-content-add {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.docs-content-add-elt {
+    cursor: pointer;
+    font-weight: bold;
 }

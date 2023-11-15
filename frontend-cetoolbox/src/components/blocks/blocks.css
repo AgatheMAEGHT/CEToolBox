@@ -2,9 +2,22 @@
     display: flex;
     text-align: left;
     height: fit-content;
+    min-height: 20px;
     width: 100%;
 }
 
-.block-hide-arrow {
+#block-icons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.block-icon {
     width: 20px;
+    cursor: pointer;
+    display: none;
+}
+
+.block:hover .block-icon {
+    display: flex;
 }
