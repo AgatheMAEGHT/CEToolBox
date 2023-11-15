@@ -43,5 +43,7 @@ func Connect(ctx context.Context, url string) (*mongo.Client, error) {
 	initBlock(ctx, db)
 	initBlockText(ctx, db)
 
+	initDocuments(ctx, db)
+
 	return client, nil
 }

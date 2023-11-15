@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	// DocumentsCollection
 	DocumentsCollection *mongo.Collection
 )
 

@@ -31,12 +31,12 @@ func TestBlock(t *testing.T) {
 	assert.Equal(t, 400, status)
 
 	body = map[string]interface{}{
-		"type":        database.TEXT_BLOCK,
+		"type":        database.MARKDOWN_BLOCK,
 		"linkedBlock": result["_id"],
 	}
 	result, status = requester("/blocks", http.MethodPost, body, tok)
 	assert.Equal(t, 200, status)
-	assert.Equal(t, string(database.TEXT_BLOCK), result["type"])
+	assert.Equal(t, string(database.MARKDOWN_BLOCK), result["type"])
 
 	// DELETE BLOCK
 	result, status = requester(fmt.Sprintf("/blocks?_id=%s", result["_id"]), http.MethodDelete, nil, tok)

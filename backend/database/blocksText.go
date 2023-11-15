@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	// BlockTextCollection
 	BlockTextCollection *mongo.Collection
 )
 

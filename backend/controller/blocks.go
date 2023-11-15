@@ -115,7 +115,7 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	switch database.BlockType(blockType) {
-	case database.TEXT_BLOCK:
+	case database.MARKDOWN_BLOCK, database.MERMAID_BLOCK, database.KATEX_BLOCK:
 		_, err := database.FindOneBlockText(ctx, bson.M{
 			"_id": linkedBlockId,
 		})
@@ -188,18 +188,12 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	if block.LinkedBlock != primitive.NilObjectID {
-		linkedBlock, err := database.FindOneLinkedBlock(ctx, block)
+		err = database.DeleteLinkedBlock(ctx, block)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
 				http.Error(w, fmt.Sprintf("Block %s not found", block.LinkedBlock), http.StatusNotFound)
 				return
 			}
-			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		err = database.DeleteLinkedBlock(ctx, block, linkedBlock)
-		if err != nil {
 			log.Error(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
