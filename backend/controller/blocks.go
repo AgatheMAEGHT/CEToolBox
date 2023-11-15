@@ -37,14 +37,20 @@ func blockGet(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	blockID := r.Form.Get("blockId")
+	blockID := r.Form.Get("_id")
 	if blockID == "" {
 		http.Error(w, "blockId is required", http.StatusBadRequest)
 		return
 	}
 
+	blockObjectID, err := primitive.ObjectIDFromHex(blockID)
+	if err != nil {
+		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		return
+	}
+
 	block, err := database.FindOneBlock(ctx, bson.M{
-		"_id": blockID,
+		"_id": blockObjectID,
 	})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -74,24 +80,43 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	if r.Form.Get("type") == "" {
-		http.Error(w, "type is required", http.StatusBadRequest)
-		return
-	}
-	if r.Form.Get("linkedBlock") == "" {
-		http.Error(w, "linkedBlock is required", http.StatusBadRequest)
+	body := map[string]interface{}{}
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		log.Error(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	linkedBlockId, err := primitive.ObjectIDFromHex(r.Form.Get("linkedBlock"))
+	if body["type"] == nil {
+		http.Error(w, "type is required", http.StatusBadRequest)
+		return
+	}
+	blockType, ok := body["type"].(string)
+	if !ok {
+		http.Error(w, "type is not a string", http.StatusBadRequest)
+		return
+	}
+
+	if body["linkedBlock"] == nil {
+		http.Error(w, "linkedBlock is required", http.StatusBadRequest)
+		return
+	}
+	linkedBlockString, ok := body["linkedBlock"].(string)
+	if !ok {
+		http.Error(w, "linkedBlock is not a string", http.StatusBadRequest)
+		return
+	}
+
+	linkedBlockId, err := primitive.ObjectIDFromHex(linkedBlockString)
 	if err != nil {
 		http.Error(w, "linkedBlock is not a valid ObjectId", http.StatusBadRequest)
 		return
 	}
 
-	switch database.BlockType(r.Form.Get("type")) {
-	case database.TEXT_BLOCK:
-		_, err := database.FindOneBlock(ctx, bson.M{
+	switch database.BlockType(blockType) {
+	case database.MARKDOWN_BLOCK, database.MERMAID_BLOCK, database.KATEX_BLOCK:
+		_, err := database.FindOneBlockText(ctx, bson.M{
 			"_id": linkedBlockId,
 		})
 		if err != nil {
@@ -109,11 +134,11 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	block := database.Block{
-		Type:        database.BlockType(r.Form.Get("type")),
+		Type:        database.BlockType(blockType),
 		LinkedBlock: linkedBlockId,
 	}
 
-	result, err := block.CreateOne(ctx)
+	_, err = block.CreateOne(ctx)
 	if err != nil {
 		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -121,8 +146,8 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf(`{"blockId": "%s"}`, result.InsertedID.(primitive.ObjectID).Hex())))
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(block)
 }
 
 func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -137,14 +162,19 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	blockID := r.Form.Get("blockId")
+	blockID := r.Form.Get("_id")
 	if blockID == "" {
 		http.Error(w, "blockId is required", http.StatusBadRequest)
 		return
 	}
 
+	blockIDObject, err := primitive.ObjectIDFromHex(blockID)
+	if err != nil {
+		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		return
+	}
 	block, err := database.FindOneBlock(ctx, bson.M{
-		"_id": blockID,
+		"_id": blockIDObject,
 	})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -158,20 +188,12 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	if block.LinkedBlock != primitive.NilObjectID {
-		linkedBlock, err := database.FindOneBlock(ctx, bson.M{
-			"_id": block.LinkedBlock,
-		})
+		err = database.DeleteLinkedBlock(ctx, block)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
 				http.Error(w, fmt.Sprintf("Block %s not found", block.LinkedBlock), http.StatusNotFound)
 				return
 			}
-			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		err = database.DeleteLinkedBlock(ctx, block, linkedBlock)
-		if err != nil {
 			log.Error(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -185,5 +207,5 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	w.WriteHeader(http.StatusOK)
 }

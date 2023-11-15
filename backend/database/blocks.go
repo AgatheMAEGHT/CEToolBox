@@ -11,13 +11,14 @@ import (
 type BlockType string
 
 const (
-	TEXT_BLOCK  BlockType = "TEXT_BLOCK"
-	IMAGE_BLOCK BlockType = "IMAGE_BLOCK"
-	TABLE_BLOCK BlockType = "TABLE_BLOCK"
+	MARKDOWN_BLOCK BlockType = "MARKDOWN_BLOCK"
+	MERMAID_BLOCK  BlockType = "MERMAID_BLOCK"
+	KATEX_BLOCK    BlockType = "KATEX_BLOCK"
+	IMAGE_BLOCK    BlockType = "IMAGE_BLOCK"
+	TABLE_BLOCK    BlockType = "TABLE_BLOCK"
 )
 
 var (
-	// BlockCollection
 	BlockCollection *mongo.Collection
 )
 

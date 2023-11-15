@@ -8,6 +8,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -36,13 +37,19 @@ func blockTextGet(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	blockTextID := r.Form.Get("blockTextId")
+	blockTextID := r.Form.Get("_id")
 	if blockTextID == "" {
 		http.Error(w, "blockTextId is required", http.StatusBadRequest)
 		return
 	}
 
-	blockText, err := database.FindOneBlockText(ctx, bson.M{"_id": blockTextID})
+	blockTextObjectID, err := primitive.ObjectIDFromHex(blockTextID)
+	if err != nil {
+		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		return
+	}
+
+	blockText, err := database.FindOneBlockText(ctx, bson.M{"_id": blockTextObjectID})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			http.Error(w, "BlockText not found", http.StatusNotFound)
@@ -70,9 +77,8 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	blockTextID := r.Form.Get("blockTextId")
-	body := map[string]interface{}{}
 	blockText := database.BlockText{}
+	body := map[string]interface{}{}
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		log.Error(err)
@@ -85,7 +91,7 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	if blockTextID == "" { // Create new blockText
+	if body["_id"] == nil { // Create new blockText
 		blockText.Text = body["text"].(string)
 		_, err := blockText.CreateOne(ctx)
 		if err != nil {
@@ -95,7 +101,19 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		}
 	} else { // Update existing blockText
 		var err error
-		blockText, err = database.FindOneBlockText(ctx, bson.M{"_id": blockTextID})
+		blockTextID, ok := body["_id"].(string)
+		if !ok {
+			http.Error(w, "_id must be a string", http.StatusBadRequest)
+			return
+		}
+
+		blockTextObjectID, err := primitive.ObjectIDFromHex(blockTextID)
+		if err != nil {
+			http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+			return
+		}
+
+		blockText, err = database.FindOneBlockText(ctx, bson.M{"_id": blockTextObjectID})
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
 				http.Error(w, "BlockText not found", http.StatusNotFound)
@@ -132,13 +150,18 @@ func blockTextDelete(w http.ResponseWriter, r *http.Request, user database.User)
 		return
 	}
 
-	blockTextID := r.Form.Get("blockTextId")
+	blockTextID := r.Form.Get("_id")
 	if blockTextID == "" {
 		http.Error(w, "blockTextId is required", http.StatusBadRequest)
 		return
 	}
 
-	blockText, err := database.FindOneBlockText(ctx, bson.M{"_id": blockTextID})
+	blockTextObjectID, err := primitive.ObjectIDFromHex(blockTextID)
+	if err != nil {
+		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		return
+	}
+	blockText, err := database.FindOneBlockText(ctx, bson.M{"_id": blockTextObjectID})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			http.Error(w, "BlockText not found", http.StatusNotFound)
