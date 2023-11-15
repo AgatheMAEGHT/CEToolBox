@@ -1,0 +1,22 @@
+.block-text {
+    display: flex;
+    text-align: left;
+    height: fit-content;
+    width: 100%;
+}
+
+.block-text-text {
+    width: 50%;
+    min-height: fit-content;
+    padding: 10px;
+    resize: none;
+}
+
+.block-text-preview {
+    width: 50%;
+    min-height: fit-content;
+    height: 100%;
+
+    border: 1px solid #000;
+    padding: 0 10px;
+}

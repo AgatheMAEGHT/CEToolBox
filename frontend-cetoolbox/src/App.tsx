@@ -8,6 +8,7 @@ import Docs from './pages/docs/docs';
 
 import './App.css';
 import './components/style.css';
+import './components/blocks/blocks.css';
 
 function App() {
     return (
