@@ -3,17 +3,12 @@
     text-align: left;
     height: fit-content;
     min-height: 20px;
-    width: 100%;
-}
-
-#block-icons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+    width: calc(100% - 20px);
 }
 
 .block-icon {
     width: 20px;
+    height: 20px;
     cursor: pointer;
     display: none;
 }

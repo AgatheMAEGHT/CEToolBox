@@ -1,0 +1,27 @@
+.block-code-ide {
+    width: 50%;
+    min-height: fit-content;
+    background-color: aquamarine;
+}
+
+.block-code-language {
+    width: 100%;
+    height: 25px;
+}
+
+.block-code-text {
+    height: calc(90% - 25px);
+    ;
+    width: calc(100% - 20px);
+    min-height: fit-content;
+    padding: 10px;
+    resize: none;
+}
+
+.katex {
+    padding: 5px 0px;
+}
+
+.katex-html {
+    display: none;
+}

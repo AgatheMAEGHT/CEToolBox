@@ -25,5 +25,8 @@ th, td {
 }
 
 blockquote {
-    background-color: rgb(196, 196, 196);
+    background: linear-gradient(90deg, rgb(174, 212, 255) 0%, rgba(238,246,255,1) 100%);
+    border-radius: 3px;
+    margin: 5px 0 5px 20px;
+    padding-left: 10px;
 }
