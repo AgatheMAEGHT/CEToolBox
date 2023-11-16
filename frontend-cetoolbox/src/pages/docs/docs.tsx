@@ -26,7 +26,7 @@ function Docs() {
         let page: JSX.Element[] = [];
 
         pageContent.forEach((elt) => {
-            page.push(elt.content);
+            page.push(elt.elt);
         });
 
         return <div>{page}</div>;
