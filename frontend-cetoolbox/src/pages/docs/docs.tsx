@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import './docs.css';
 import BlockText from '../../components/blocks/text/text';
+import { blockType, docType } from '../../components/types';
 
 
 function Docs() {
@@ -12,7 +13,7 @@ function Docs() {
     const [showLeftColors, setShowLeftColors] = React.useState<boolean>(true);
     const [numberBlock, setNumberBlock] = React.useState<number>(0);
 
-    const [pageContent, setPageContent] = React.useState<{ elt: JSX.Element, id: number }[]>([]);
+    const [pageContent, setPageContent] = React.useState<docType>([]);
 
     function deleteBlock(id: number): void {
         setPageContent(prev => prev.filter((_, i) => i !== id));
@@ -23,10 +24,19 @@ function Docs() {
         let page: JSX.Element[] = [];
 
         pageContent.forEach((elt) => {
-            page.push(elt.elt);
+            page.push(elt.content);
         });
 
         return <div>{page}</div>;
+    }
+
+    function addBlock(type: string, content: JSX.Element): void {
+        let block: blockType = {
+            content: content,
+            type: type,
+            id: 0
+        }
+        setPageContent(prev => [...prev, block])
     }
 
     return <div id="docs" className='page'>
@@ -75,12 +85,12 @@ function Docs() {
 
             <div id="docs-right">
                 {!showLeft && <img alt="double-arrow" className="docs-double-arrow" id="docs-show-left" src='/double-arrow.svg' onClick={() => setShowLeft(true)} />}
-                {pageContent}
+                {displayPage()}
                 <div id="docs-content-add">
-                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Texte</p>
-                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Mermaid</p>
-                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Tableau</p>
-                    <p className='docs-content-add-elt' onClick={() => setPageContent(prev => [...prev, <BlockText id={numberBlock} delete={deleteBlock} />])}>Code</p>
+                    <p className='docs-content-add-elt' onClick={() => { }}>Texte</p>
+                    <p className='docs-content-add-elt' onClick={() => { }}>Mermaid</p>
+                    <p className='docs-content-add-elt' onClick={() => { }}>Tableau</p>
+                    <p className='docs-content-add-elt' onClick={() => { }}>Code</p>
                 </div>
             </div>
         </div>
