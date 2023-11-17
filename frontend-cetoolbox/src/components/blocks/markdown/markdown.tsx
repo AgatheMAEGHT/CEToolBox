@@ -15,10 +15,14 @@ function BlockText(props: blockText) {
 
     return (
         <div className='block'>
-            {showText && <textarea className='block-text-text' value={value} onChange={(e) => setValue(e.target.value)} />}
-            <div className='block-text-preview' style={showText ? { width: "50%" } : { width: "100%" }}>
-                <img alt="double-arrow" className="block-icon" src='/double-arrow.svg' style={showText ? {} : { transform: "rotate(180deg)" }} onClick={() => setShowText(!showText)} />
-                <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeKatex, [rehypeRaw, { allowDangerousHtml: true }]]}>{value}</Markdown>
+            {showText && <textarea className='block-text' value={value} onChange={(e) => setValue(e.target.value)} />}
+            <div className='block-preview' style={showText ? { width: "50%" } : { width: "100%" }}>
+                <div className='block-icon-area'>
+                    <img alt="double-arrow" className="block-icon block-icon-arrow" src='/double-arrow.svg' style={showText ? {} : { transform: "rotate(180deg)" }} onClick={() => setShowText(!showText)} />
+                </div>
+                <div>
+                    <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[[rehypeKatex, { displayMode: true }], [rehypeRaw, { allowDangerousHtml: true }]]}>{value}</Markdown>
+                </div>
             </div>
         </div>
     );

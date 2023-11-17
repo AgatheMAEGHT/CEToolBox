@@ -6,6 +6,21 @@
     width: calc(100% - 20px);
 }
 
+.block-text {
+    width: 50%;
+    min-height: fit-content;
+    padding: 10px;
+    resize: none;
+    background-color: transparent;
+    border-radius: 5px 0 0 5px;
+}
+
+.block-icon-area {
+    width: 30px;
+    height: 30px;
+    padding-right: 5px;
+}
+
 .block-icon {
     width: 20px;
     height: 20px;
@@ -13,6 +28,22 @@
     display: none;
 }
 
+.block-icon-arrow {
+    padding: 5px 0 5px 0;
+}
+
+.block-icon-bin {
+    padding: 5px 5px 0 5px;
+}
+
 .block:hover .block-icon {
     display: flex;
+}
+
+.block-preview {
+    display: flex;
+    min-height: fit-content;
+    height: 100%;
+    padding: 0 10px;
+    width: 100%;
 }

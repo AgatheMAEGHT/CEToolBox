@@ -2,17 +2,19 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import BlockText from '../../components/blocks/markdown/markdown';
+import BlockKatex from '../../components/blocks/katex/katex';
+import BlockCode from '../../components/blocks/code/code';
 import { blockType, docType } from '../../components/types';
 
 import './docs.css';
-import BlockCode from '../../components/blocks/code/code';
+import BlockImage from '../../components/blocks/image/image';
 
 function Docs() {
     let navigate = useNavigate();
     const [showLeft, setShowLeft] = React.useState<boolean>(true);
-    const [showLeftMarkdown, setShowLeftMarkdown] = React.useState<boolean>(true);
-    const [showLeftColors, setShowLeftColors] = React.useState<boolean>(true);
-    const [showLeftKaTeX, setShowLeftKaTeX] = React.useState<boolean>(true);
+    const [showLeftMarkdown, setShowLeftMarkdown] = React.useState<boolean>(false);
+    const [showLeftColors, setShowLeftColors] = React.useState<boolean>(false);
+    const [showLeftKaTeX, setShowLeftKaTeX] = React.useState<boolean>(false);
 
     const [pageContent, setPageContent] = React.useState<docType>([]);
 
@@ -29,27 +31,28 @@ function Docs() {
             page.push(elt.content);
         });
 
-        return <div>{page}</div>;
+        return <div id="doc-block-list">{page}</div>;
     }
 
-    function addBlock(type: string, content: string, langage?: string): void {
+    function addBlock(type: string, content: string, langage?: string, size?: string): void {
         let id: number = pageContent?.length ? pageContent[pageContent.length - 1].id + 1 : 0;
         let contentBlock: JSX.Element =
             type === "markdown" ? <BlockText content={content} /> :
-                langage !== undefined ? <BlockCode content={content} langage={langage} /> : <div></div>; // langage defined means code block
+                type === "katex" ? <BlockKatex content={content} /> :
+                    langage !== undefined ? <BlockCode content={content} langage={langage} /> : // langage defined means code block
+                        size !== undefined ? <BlockImage content={content} size={size} /> : <div></div>; // size defined means image block
 
         let block: blockType = {
             content:
                 <div className='doc-block-area' key={id}>
                     {contentBlock}
-                    <img alt="bin" className="block-icon" src='/bin.png' onClick={() => { deleteBlock(id) }} />
+                    <div className="block-icon-area">
+                        <img alt="bin" className="block-icon-bin block-icon" src='/bin.png' onClick={() => { deleteBlock(id) }} />
+                    </div>
                 </div>,
             type: type,
             id: id
         }
-
-        console.log(block);
-
         setPageContent(prev => [...prev, block])
     }
 
@@ -60,16 +63,16 @@ function Docs() {
 
                 <h4 className='docs-infos-title' onClick={() => setShowLeftMarkdown(!showLeftMarkdown)}>Infos Markdown</h4>
                 {showLeftMarkdown && <div className="docs-infos">
-                    <p><b>Titres :</b> {"##"}</p>
-                    <p><b>Citation :</b> {"<blockquote><blockquote/>"}</p>
-                    <p><b>Tableau :</b> <br />
+                    <p className="docs-infos-text"><b>Titres :</b> {"##"}</p>
+                    <p className="docs-infos-text"><b>Citation :</b> {"<blockquote><blockquote/>"}</p>
+                    <p className="docs-infos-text"><b>Tableau :</b> <br />
                         | Col1 | Col2 | <br />
                         | ----: | :----- |<br />
                         | AAA | BBB |<br />
                         | CCC | DDD |
                     </p>
-                    <p><b>Code :</b> {"```ext xxx ```"}</p>
-                    <p><b>KaTeX :</b> {"`$$ xxx $$`"}</p>
+                    <p className="docs-infos-text"><b>Code :</b> {"```ext xxx ```"}</p>
+                    <p className="docs-infos-text"><b>KaTeX :</b> {"`$$ xxx $$`"}</p>
                 </div>}
 
                 <hr className='docs-infos-line' />
@@ -80,36 +83,42 @@ function Docs() {
                         Les couleurs sont à mettre comme class d'une balise html  : <br />
                         {`<div class="Couleur"> </div>`}
                     </p>
-                    <p className='docs-infos-color Blanc'>Blanc</p>
-                    <p className='docs-infos-color Noir'>Noir</p>
-                    <p className='docs-infos-color Gris' >Gris</p>
-                    <p className='docs-infos-color Marron' >Marron</p>
-                    <p className='docs-infos-color Orange' >Orange</p>
-                    <p className='docs-infos-color Jaune' >Jaune</p>
-                    <p className='docs-infos-color Vert' >Vert</p>
-                    <p className='docs-infos-color Turquoise' >Turquoise</p>
-                    <p className='docs-infos-color Cyan' >Cyan</p>
-                    <p className='docs-infos-color Bleu' >Bleu</p>
-                    <p className='docs-infos-color Violet' >Violet</p>
-                    <p className='docs-infos-color Bordeaux' >Bordeaux</p>
-                    <p className='docs-infos-color Rose' >Rose</p>
-                    <p className='docs-infos-color Rouge' >Rouge</p>
+                    <p className='docs-infos-text docs-infos-color Blanc'>Blanc</p>
+                    <p className='docs-infos-text docs-infos-color Noir'>Noir</p>
+                    <p className='docs-infos-text docs-infos-color Gris' >Gris</p>
+                    <p className='docs-infos-text docs-infos-color Marron' >Marron</p>
+                    <p className='docs-infos-text docs-infos-color Orange' >Orange</p>
+                    <p className='docs-infos-text docs-infos-color Jaune' >Jaune</p>
+                    <p className='docs-infos-text docs-infos-color Vert' >Vert</p>
+                    <p className='docs-infos-text docs-infos-color Turquoise' >Turquoise</p>
+                    <p className='docs-infos-text docs-infos-color Cyan' >Cyan</p>
+                    <p className='docs-infos-text docs-infos-color Bleu' >Bleu</p>
+                    <p className='docs-infos-text docs-infos-color Violet' >Violet</p>
+                    <p className='docs-infos-text docs-infos-color Bordeaux' >Bordeaux</p>
+                    <p className='docs-infos-text docs-infos-color Rose' >Rose</p>
+                    <p className='docs-infos-text docs-infos-color Rouge' >Rouge</p>
                 </div>}
 
                 <hr className='docs-infos-line' />
 
                 <h4 className='docs-infos-title' onClick={() => setShowLeftKaTeX(!showLeftKaTeX)}>KaTeX</h4>
                 {showLeftKaTeX && <div className="docs-infos">
-                    <p><b>Titres :</b> {"##"}</p>
-                    <p><b>Citation :</b> {"<blockquote><blockquote/>"}</p>
-                    <p><b>Tableau :</b> <br />
-                        | Col1 | Col2 | <br />
-                        | ----: | :----- |<br />
-                        | AAA | BBB |<br />
-                        | CCC | DDD |
+                    <p className="docs-infos-text"><b>Newline :</b> {"\\\\"}</p>
+                    <p className="docs-infos-text"><b>Ligne vide :</b> {"\\text { }\\\\"}</p>
+                    <p className="docs-infos-text"><b>Intégrale :</b> {"\\int_a^b"}</p>
+                    <p className="docs-infos-text"><b>Fraction :</b> {"\\frac {} {}"}</p>
+                    <p className="docs-infos-text"><b>⇔ :</b> {"\\Leftrightarrow"}</p>
+                    <p className="docs-infos-text"><b>√ :</b> {"\\sqrt"}</p>
+                    <p className="docs-infos-text"><b>φ :</b> {"\\Phi"}</p>
+                    <p className="docs-infos-text"><b>ϕ :</b> {"\\phi"}</p>
+                    <p className="docs-infos-text"><b>Équation alignée : </b><br />
+                        {"\\begin{equation}"}<br />
+                        {"\\begin{split}"}<br />
+                        a&b<br />
+                        &b&c<br />
+                        {"\\end{split}"}<br />
+                        {"\\end{equation}"}
                     </p>
-                    <p><b>Code :</b> {"```ext xxx ```"}</p>
-                    <p><b>KaTeX :</b> {"`$$ xxx $$`"}</p>
                 </div>}
             </div>}
 
@@ -118,10 +127,11 @@ function Docs() {
                 {displayPage()}
                 <div id="docs-content-add">
                     <p className='docs-content-add-elt' onClick={() => addBlock("markdown", "")}>Markdown</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("table", "")}>Tableau</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("image", "")}>Image</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("table", "", undefined)}>Tableau</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("image", "", undefined, "")}>Image</p>
                     <p className='docs-content-add-elt' onClick={() => addBlock("code", "", "")}>Code</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("mermaid", "")}>Mermaid</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("katex", "", undefined)}>KaTeX</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("mermaid", "", undefined)}></p>
                 </div>
             </div>
         </div>

@@ -23,9 +23,13 @@ function BlockCode(props: blockCode) {
                     <textarea className='block-code-text' value={value} onChange={(e) => setValue(e.target.value)} />
                 </div>
             }
-            <div className='block-text-preview' style={showCode ? { width: "50%" } : { width: "100%" }}>
-                <img alt="double-arrow" className="block-icon" src='/double-arrow.svg' style={showCode ? {} : { transform: "rotate(180deg)" }} onClick={() => setShowCode(!showCode)} />
-                <SyntaxHighlighter language={langage} style={nightOwl} showLineNumbers wrapLongLines >{value}</SyntaxHighlighter>
+            <div className='block-preview' style={showCode ? { width: "50%" } : { width: "100%" }}>
+                <div className='block-icon-area'>
+                    <img alt="double-arrow block-icon-arrow" className="block-icon" src='/double-arrow.svg' style={showCode ? {} : { transform: "rotate(180deg)" }} onClick={() => setShowCode(!showCode)} />
+                </div>
+                <div>
+                    <SyntaxHighlighter language={langage} style={nightOwl} showLineNumbers wrapLongLines >{value}</SyntaxHighlighter>
+                </div>
             </div>
         </div>
     );
