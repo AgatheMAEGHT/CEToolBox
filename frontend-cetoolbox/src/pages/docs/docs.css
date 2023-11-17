@@ -75,7 +75,7 @@
 }
 
 .doc-block-area:hover {
-    background: linear-gradient(135deg, rgb(215, 226, 255) 0%, rgb(133, 189, 253) 100%);
+    background: linear-gradient(135deg, rgb(240, 244, 255) 0%, rgb(165, 207, 255) 100%);
 }
 
 .doc-block-area:hover .block-icon {
