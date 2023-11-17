@@ -1,9 +1,0 @@
-.dropdown {
-    display: flex;
-    flex-direction: column;
-}
-
-.dropdown-item {
-    text-decoration: none;
-    color: inherit;
-}
