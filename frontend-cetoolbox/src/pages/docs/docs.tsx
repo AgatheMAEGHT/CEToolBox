@@ -26,7 +26,7 @@ function Docs() {
         let page: JSX.Element[] = [];
 
         pageContent.forEach((elt) => {
-            page.push(elt.elt);
+            page.push(elt.content);
         });
 
         return <div>{page}</div>;
@@ -76,7 +76,7 @@ function Docs() {
 
                 <h4 className='docs-infos-title' onClick={() => setShowLeftColors(!showLeftColors)}>Couleurs</h4>
                 {showLeftColors && <div className="docs-infos">
-                    <p>
+                    <p className="docs-infos-text">
                         Les couleurs sont à mettre comme class d'une balise html  : <br />
                         {`<div class="Couleur"> </div>`}
                     </p>
@@ -98,7 +98,7 @@ function Docs() {
 
                 <hr className='docs-infos-line' />
 
-                <h4 className='docs-infos-title'>KaTeX</h4>
+                <h4 className='docs-infos-title' onClick={() => setShowLeftKaTeX(!showLeftKaTeX)}>KaTeX</h4>
                 {showLeftKaTeX && <div className="docs-infos">
                     <p><b>Titres :</b> {"##"}</p>
                     <p><b>Citation :</b> {"<blockquote><blockquote/>"}</p>

@@ -3,6 +3,7 @@
     min-height: fit-content;
     padding: 10px;
     resize: none;
+    background-color: transparent;
 }
 
 .block-text-preview {

@@ -1,7 +1,7 @@
 #docs-content {
     display: flex;
     min-height: inherit;
-    width: 100vw;
+    width: 100%;
 }
 
 /*============*
@@ -11,7 +11,7 @@
 #docs-left {
     width: 30vw;
     min-height: inherit;
-    background: linear-gradient(180deg, rgba(244,247,255,1) 0%, rgba(92,127,217,1) 100%);
+    background-color: #e0e0e0;
 }
 
 .docs-infos-title {
@@ -37,6 +37,7 @@
 .docs-double-arrow {
     width: 30px;
     padding: 5px;
+    cursor: pointer;
 }
 
 #docs-hide-left {
@@ -71,6 +72,10 @@
 
 .doc-block-area {
     display: flex;
+}
+
+.doc-block-area:hover {
+    background: linear-gradient(135deg, rgb(215, 226, 255) 0%, rgb(133, 189, 253) 100%);
 }
 
 .doc-block-area:hover .block-icon {
