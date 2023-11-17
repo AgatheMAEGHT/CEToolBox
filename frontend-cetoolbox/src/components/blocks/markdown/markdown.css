@@ -13,7 +13,11 @@ th, td {
 
 blockquote {
     background: linear-gradient(90deg, rgb(174, 212, 255) 0%, rgba(238,246,255,1) 100%);
-    border-radius: 3px;
+    border-radius: 5px;
     margin: 5px 0 5px 20px;
     padding-left: 10px;
+}
+
+.doc-block-area:hover blockquote{
+    background: linear-gradient(135deg, rgb(236, 236, 236) 0%, rgb(194, 194, 194) 100%);
 }
