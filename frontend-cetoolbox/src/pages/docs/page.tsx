@@ -1,16 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import BlockText from '../../components/blocks/markdown/markdown';
 import BlockKatex from '../../components/blocks/katex/katex';
 import BlockCode from '../../components/blocks/code/code';
+import BlockImage from '../../components/blocks/image/image';
 import { blockType, docType } from '../../components/types';
 
-import './docs.css';
-import BlockImage from '../../components/blocks/image/image';
+import './page.css';
+import BlockTable from '../../components/blocks/table/table';
 
-function Docs() {
-    let navigate = useNavigate();
+function Page() {
     const [showLeft, setShowLeft] = React.useState<boolean>(true);
     const [showLeftMarkdown, setShowLeftMarkdown] = React.useState<boolean>(false);
     const [showLeftColors, setShowLeftColors] = React.useState<boolean>(false);
@@ -23,7 +22,6 @@ function Docs() {
         setPageContent(prev => prev.filter(block => block.id !== id));
     }
 
-
     function displayPage(): JSX.Element {
         let page: JSX.Element[] = [];
 
@@ -34,13 +32,15 @@ function Docs() {
         return <div id="doc-block-list">{page}</div>;
     }
 
-    function addBlock(type: string, content: string, langage?: string, size?: string): void {
+    function addBlock(type: string, attributeStr0: string, attributeStr1?: string, attributeStr2?: string, attributeTable?: string[][]): void {
         let id: number = pageContent?.length ? pageContent[pageContent.length - 1].id + 1 : 0;
         let contentBlock: JSX.Element =
-            type === "markdown" ? <BlockText content={content} /> :
-                type === "katex" ? <BlockKatex content={content} /> :
-                    langage !== undefined ? <BlockCode content={content} langage={langage} /> : // langage defined means code block
-                        size !== undefined ? <BlockImage content={content} size={size} /> : <div></div>; // size defined means image block
+            type === "markdown" ? <BlockText content={attributeStr0} /> :
+                type === "table" ? <BlockTable content={attributeTable} /> :
+                    type === "image" ? <BlockImage content={attributeStr0} size={attributeStr1} align={attributeStr2} /> :
+                        type === "code" ? <BlockCode content={attributeStr0} langage={attributeStr1} /> :
+                            type === "katex" ? <BlockKatex content={attributeStr0} /> :
+                                <div></div>;
 
         let block: blockType = {
             content:
@@ -127,15 +127,15 @@ function Docs() {
                 {displayPage()}
                 <div id="docs-content-add">
                     <p className='docs-content-add-elt' onClick={() => addBlock("markdown", "")}>Markdown</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("table", "", undefined)}>Tableau</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("image", "", undefined, "")}>Image</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("table", "")}>Tableau</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("image", "", "", "")}>Image</p>
                     <p className='docs-content-add-elt' onClick={() => addBlock("code", "", "")}>Code</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("katex", "", undefined)}>KaTeX</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("mermaid", "", undefined)}></p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("katex", "")}>KaTeX</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("mermaid", "")}></p>
                 </div>
             </div>
         </div>
     </div>
 }
 
-export default Docs;
+export default Page;

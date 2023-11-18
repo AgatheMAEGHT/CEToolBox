@@ -9,7 +9,7 @@ import { blockCode } from '../../types';
 import './code.css';
 
 function BlockCode(props: blockCode) {
-    const [value, setValue] = React.useState<string>(props.content);
+    const [value, setValue] = React.useState<string>(props.content ?? "");
     const [langage, setLangage] = React.useState<string | undefined>(props.langage);
     const [showCode, setShowCode] = React.useState<boolean>(false);
 

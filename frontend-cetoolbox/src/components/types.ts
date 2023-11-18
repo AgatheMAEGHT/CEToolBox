@@ -1,21 +1,24 @@
 export type blockText = {
-    content: string,
+    content: string | undefined,
 };
 
 export type blockKatex = {
-    content: string,
+    content: string | undefined,
 };
-
 
 export type blockCode = {
-    langage: string,
-    content: string,
+    langage: string | undefined,
+    content: string | undefined,
 };
 
-
 export type blockImage = {
-    content: string,
-    size: string,
+    content: string | undefined,
+    size: string | undefined,
+    align: string | undefined,
+};
+
+export type blockTable = {
+    content: string[][] | undefined,
 };
 
 export type blockType = {

@@ -1165,6 +1165,18 @@
   resolved "https://registry.npmjs.org/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz"
   integrity sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==
 
+"@column-resizer/core@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@column-resizer/core/-/core-1.3.0.tgz#93ef30497c344b2c849d1b787e15188a70d13667"
+  integrity sha512-qkNaMv/qcuuWaLm+ZTUwherIQ4/Wwr4pFe5ECyEaJc0RwsDhtzHGElLtCBcIAjQ+MYMNOVypf2WWwdQtcScenQ==
+
+"@column-resizer/react@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@column-resizer/react/-/react-1.3.0.tgz#ae6017f4f629a8984fafaaea8f4c6c7479f5b3f1"
+  integrity sha512-CCzGQSL43q+gK71wtDbbw2RYslp2creI+GVkIR+RX7OuNSa8wRUByJf2HA2ulKEF4ihI7LQVcsn5W1fNyJ6efQ==
+  dependencies:
+    "@column-resizer/core" "1.3.0"
+
 "@csstools/normalize.css@*":
   version "12.0.0"
   resolved "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-12.0.0.tgz"

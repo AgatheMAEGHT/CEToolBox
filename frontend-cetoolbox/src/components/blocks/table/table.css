@@ -1,0 +1,10 @@
+.block-table {
+    width: 100%;
+    border: #001268 1px solid;
+    min-height: 30px;
+}
+
+.block-table-bar {
+    cursor: 'col-resize';
+    background-color: #001268;
+}

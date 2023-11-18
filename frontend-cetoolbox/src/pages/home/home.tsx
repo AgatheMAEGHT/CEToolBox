@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
+
 import './home.css';
 
 function Home() {
-    let navigate = useNavigate();
+    //let navigate = useNavigate();
 
     return <div id="home" className='page'>
         <h1 id="home-title">Accueil de la CE ToolBox</h1>

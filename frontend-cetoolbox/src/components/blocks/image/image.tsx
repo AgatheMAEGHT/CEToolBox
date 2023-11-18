@@ -1,10 +1,5 @@
 import React from 'react';
 
-import Markdown from 'react-markdown'; // to display markdown
-import remarkGfm from 'remark-gfm'; // to allow tables in markdown
-import rehypeKatex from 'rehype-katex'; // to allow katex in markdown
-import rehypeRaw from 'rehype-raw'; // to allow html in markdown
-
 import { blockImage } from '../../types';
 
 import './image.css';
@@ -31,7 +26,7 @@ function BlockImage(props: blockImage) {
                     <img alt="double-arrow" className="block-icon block-icon-arrow" src='/double-arrow.svg' style={showText ? {} : { transform: "rotate(180deg)" }} onClick={() => setShowText(!showText)} />
                 </div>
                 <div className='block-image' style={{ justifyContent: align }}>
-                    <img alt="image" className="block-image" src={value} style={{ width: size }} />
+                    <img alt={value} className="block-image" src={value} style={{ width: size }} />
                 </div>
             </div>
         </div>
