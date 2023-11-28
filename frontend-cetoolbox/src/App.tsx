@@ -5,6 +5,7 @@ import Header from './components/header/header';
 import NoPage from './pages/no-page/no-page';
 import Home from './pages/home/home';
 import Page from './pages/docs/page';
+import Lists from './pages/lists/lists';
 
 import './App.css';
 import './components/style.css';
@@ -18,6 +19,7 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path="docs" element={<Page />} />
+                    <Route path="lists" element={<Lists />} />
                     <Route path="*" element={<NoPage />} />
                 </Routes>
             </BrowserRouter>

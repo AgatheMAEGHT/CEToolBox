@@ -4,10 +4,10 @@ import BlockText from '../../components/blocks/markdown/markdown';
 import BlockKatex from '../../components/blocks/katex/katex';
 import BlockCode from '../../components/blocks/code/code';
 import BlockImage from '../../components/blocks/image/image';
+import BlockTable from '../../components/blocks/table/table';
 import { blockType, docType } from '../../components/types';
 
 import './page.css';
-import BlockTable from '../../components/blocks/table/table';
 
 function Page() {
     const [showLeft, setShowLeft] = React.useState<boolean>(true);
