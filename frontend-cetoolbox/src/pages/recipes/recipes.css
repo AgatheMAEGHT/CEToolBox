@@ -1,0 +1,28 @@
+#recipes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.recipes-button {
+    padding: 0px;
+    background: var(--gradient);
+    border-radius: 10px;
+    overflow: hidden;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.recipes-button-content {
+    width: 150px;
+    height: 50px;
+    border-radius: 8px;
+    background-color: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+}

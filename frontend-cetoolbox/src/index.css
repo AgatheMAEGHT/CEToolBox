@@ -5,6 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Global variables */
+  --gradient: linear-gradient(90deg, rgba(0, 0, 215, 1) 0%, rgba(250, 13, 217, 1) 100%);
+  --gradient-color1: rgba(0, 0, 215, 1);
+  --gradient-color2: rgba(250, 13, 217, 1);
+
+  --gradient-light: linear-gradient(90deg, rgb(200, 201, 253) 0%, rgba(255, 212, 255, 1) 100%);
+  --gradient-color1-light: rgb(205, 205, 255);
+  --gradient-color2-light: rgb(255, 212, 255);
+
+  --gradient-dark: linear-gradient(90deg, rgba(0, 0, 128, 1) 0%, rgba(128, 0, 128, 1) 100%);
+  --gradient-color1-dark: rgb(0, 0, 128);
+  --gradient-color2-dark: rgb(128, 0, 128);
+
+  --background: white;
+  --background-dark: rgb(241, 241, 241);
+  --background-darker: rgb(211, 211, 211);
+  --text-color: black;
+
+  --prev-gradient: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgb(19, 102, 173) 100%);
+
 }
 
 code {

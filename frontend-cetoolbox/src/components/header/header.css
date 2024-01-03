@@ -3,10 +3,11 @@
     justify-content: space-evenly;
     align-items: center;
     height: 7vh;
-    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgb(19, 102, 173) 100%);
-    color: #cccccc;
+    background: var(--gradient);
+    color: var(--background-dark);
 }
 
 .header-button {
     cursor: pointer;
+    font-weight: bold;
 }
