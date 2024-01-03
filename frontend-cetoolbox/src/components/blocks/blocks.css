@@ -44,6 +44,6 @@
     display: flex;
     min-height: fit-content;
     height: 100%;
-    padding: 0 10px;
+    padding: 10px;
     width: 100%;
 }
