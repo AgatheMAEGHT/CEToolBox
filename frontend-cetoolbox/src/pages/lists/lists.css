@@ -1,0 +1,103 @@
+#docs-content {
+    display: flex;
+    min-height: inherit;
+    width: 100%;
+}
+
+/*============*
+ * Left Part  *
+ *============*/
+
+#docs-left {
+    width: 30vw;
+    min-height: inherit;
+    background-color: rgb(230, 241, 255);
+    border-right: rgb(146, 204, 255) 1px solid;
+}
+
+.docs-infos-title {
+    cursor: pointer;
+    color: rgb(39, 90, 156);
+}
+
+.docs-infos {
+    margin-top: -15px;
+    padding: 5px;
+    text-align: left;
+}
+
+.docs-infos-text {
+    font-size: small;
+}
+
+.docs-infos-line {
+    width: 80%;
+    border-top: rgb(19, 102, 173) 1px solid;
+}
+
+.docs-infos-color {
+    margin: 2px;
+    font-weight: bold;
+}
+
+/* Arrows */
+.docs-double-arrow {
+    width: 30px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#docs-hide-left {
+    display: flex;
+    margin-left: auto;
+    margin-right: 0%;
+}
+
+#docs-show-left {
+    display: flex;
+    transform: rotate(180deg);
+}
+
+/*============*
+ * Right Part *
+ *============*/
+
+#docs-right {
+    width: 100%;
+    padding: 20px;
+}
+
+#doc-block-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.doc-block-area {
+    display: flex;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.doc-block-area:hover {
+    background: linear-gradient(135deg, rgb(245, 248, 255) 0%, rgb(181, 216, 255) 100%);
+}
+
+.doc-block-area:hover .block-icon {
+    display: flex;
+}
+
+/* Add Block */
+#docs-content-add {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: rgb(181, 216, 255);
+}
+
+.docs-content-add-elt {
+    cursor: pointer;
+    font-weight: bold;
+}
