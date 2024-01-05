@@ -50,7 +50,7 @@ func TestIngredient(t *testing.T) {
 
 	// Get ingredient by id
 	resultList, status, errList = requesterList("/ingredients?_id="+resID1, http.MethodGet, nil, adminTok)
-	assert.Equal(t, 200, status, result["err"])
+	assert.Equal(t, 200, status, errList)
 	assert.Equal(t, 1, len(resultList))
 
 	// Get ingredient by name
