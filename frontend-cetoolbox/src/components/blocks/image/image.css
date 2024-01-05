@@ -15,5 +15,14 @@
     padding: 5px;
     resize: none;
     background-color: transparent;
-    border-radius: 5px 0 0 5px;
+}
+
+#block-image-elt-top  {
+    border-radius: 5px 0 0;
+}
+
+#block-image-align {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% -20px);
 }

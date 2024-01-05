@@ -12,7 +12,7 @@ function Header() {
         <p className='header-button' onClick={() => navigate("/calendar")}>Calendrier</p>
         <p className='header-button' onClick={() => navigate("/docs")}>Documents</p>
         <p className='header-button' onClick={() => navigate("/notes")}>Notes</p>
-        <p className='header-button' onClick={() => navigate("/recipies")}>Recettes</p>
+        <p className='header-button' onClick={() => navigate("/recipes")}>Recettes</p>
         <p className='header-button' onClick={() => navigate("/lists")}>Listes</p>
         <p className='header-button' onClick={() => navigate("/profile")}>Profil</p>
     </div>

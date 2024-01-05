@@ -4,10 +4,10 @@ import BlockText from '../../components/blocks/markdown/markdown';
 import BlockKatex from '../../components/blocks/katex/katex';
 import BlockCode from '../../components/blocks/code/code';
 import BlockImage from '../../components/blocks/image/image';
+import BlockTable from '../../components/blocks/table/table';
 import { blockType, docType } from '../../components/types';
 
 import './page.css';
-import BlockTable from '../../components/blocks/table/table';
 
 function Page() {
     const [showLeft, setShowLeft] = React.useState<boolean>(true);
@@ -16,6 +16,10 @@ function Page() {
     const [showLeftKaTeX, setShowLeftKaTeX] = React.useState<boolean>(false);
 
     const [pageContent, setPageContent] = React.useState<docType>([]);
+
+
+    let test: string[][] = [["100", "150", "200"], ["30", "30", "30", "30"], [`z`, `a`, `b`, `c`], [`d\n
+    \na`, `e`, `f`, "block"], [`g`, `h`, `i`, "bluck"]];
 
     function deleteBlock(id: number): void {
         console.log("the deleted id : " + id);
@@ -127,7 +131,7 @@ function Page() {
                 {displayPage()}
                 <div id="docs-content-add">
                     <p className='docs-content-add-elt' onClick={() => addBlock("markdown", "")}>Markdown</p>
-                    <p className='docs-content-add-elt' onClick={() => addBlock("table", "")}>Tableau</p>
+                    <p className='docs-content-add-elt' onClick={() => addBlock("table", "", undefined, undefined, test)}>Tableau</p>
                     <p className='docs-content-add-elt' onClick={() => addBlock("image", "", "", "")}>Image</p>
                     <p className='docs-content-add-elt' onClick={() => addBlock("code", "", "")}>Code</p>
                     <p className='docs-content-add-elt' onClick={() => addBlock("katex", "")}>KaTeX</p>
