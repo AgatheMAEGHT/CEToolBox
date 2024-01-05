@@ -7,10 +7,63 @@
     text-align: center;
 }
 
+/* ========= *
+ *  Button   *
+ * ========= */
+.button-border {
+    background: var(--gradient);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 2px;
+    width: fit-content;
+}
+
+.button-inside {
+    background-color: var(--background);
+    padding: 5px 10px;
+    border-radius: 2px;
+    width: fit-content;
+}
+
+/* =========== *
+ *  Checkbox   *
+ * =========== */
+.checkbox {
+    width: 25px;
+    height: 25px;
+    background: var(--gradient);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkmark-area {
+    background-color: var(--background);
+    width: 21px;
+    height: 21px;
+    border-radius: 2px;
+    margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkmark {
+    margin-top: -4px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--gradient-color3);
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
 /* ======== *
  *  Colors  *
  * ======== */
-
 .Blanc {
     color: white;
 }

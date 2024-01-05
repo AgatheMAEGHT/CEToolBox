@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import './ingredients-detail.css';
 import { ingredient, tag } from '../../../../components/types';
+import { button, checkbox } from '../../../../components/components';
 
 function IngredientsDetail() {
 
@@ -23,19 +24,14 @@ function IngredientsDetail() {
         }
     });
     const [tags, setTags] = React.useState<tag[]>([{ name: 'Oui', color: '789456' }, { name: 'Bleu', color: 'fffa75' }, { name: 'Eau', color: '22ffff' }]);
+    const [showAdd, setShowAdd] = React.useState<boolean>(false);
+    const [newTag, setNewTag] = React.useState<tag>({ name: '', color: 'c0c0c0' });
+    console.log(newTag);
 
     React.useEffect(() => {
         // Get the ingredient from the database
         // Get the tags from the database
     },);
-
-    function checkbox(bool: boolean, onClick: any): JSX.Element {
-        return <div className="ingredient-detail-restrictions-checkbox" onClick={onClick}>
-            <div className="ingredient-detail-restrictions-checkmark-area">
-                {bool && <div className="ingredient-detail-restrictions-checkmark"></div>}
-            </div>
-        </div>
-    }
 
     function displayTags(): JSX.Element | JSX.Element[] {
         let cellTags: JSX.Element[] = [];
@@ -72,6 +68,11 @@ function IngredientsDetail() {
         return cellTags;
     }
 
+    function addTag(): void {
+        // Add the tag to the ingredient
+        // Add the tag to the database
+    }
+
     function handleChange(value: string | null) {
         let newValue: ingredient = ingredient;
 
@@ -82,17 +83,18 @@ function IngredientsDetail() {
         setIngredient(newValue);
     }
 
-    function editElement(line: string): void {
+    function editIngredient(line: string): void {
         // Edit the element from the ingredient list
         // Edit the element from the meal list
     }
 
-    function deleteElement(line: string): void {
+    function deleteIngredient(line: string): void {
         // Delete the element from the ingredient list
         // Delete the element from the meal list
     }
 
     return <div id="ingredient-detail" className='page'>
+        <div id="ingredient-detail-back-border"><div id="ingredient-detail-back">Retourner à la liste des ingrédients</div></div>
         <h2 id="ingredient-detail-title">{ingredient.name}</h2>
         <div id="ingredient-detail-restrictions-area">
             <div className='ingredient-detail-restrictions'>
@@ -122,11 +124,23 @@ function IngredientsDetail() {
             </div>
         </div>
 
-        <div id="ingredient-detail-tag-area">
-            <p id='ingredient-detail-tags-title'>Tags</p>
-            <div id="ingredient-detail-tags-list">
-                {displayTags()}
+        <div>
+            <div id="ingredient-detail-tags-area">
+                <p id='ingredient-detail-tags-title'>Tags</p>
+                <div id="ingredient-detail-tags-list">
+                    {displayTags()}
+                </div>
+                {showAdd && <div id='ingredient-detail-tags-new'>
+                    <input type="text" id='ingredient-detail-tags-new-input' placeholder='Tag' value={newTag.name} onChange={(e) => setNewTag({ name: e.target.value, color: newTag.color })} />
+                    <input type="color" id='ingredient-detail-tags-new-color' defaultValue={newTag.color} value={newTag.color} onChange={e => { setNewTag({ name: newTag.name, color: e.target.value.replace("#", "") }) }} />
+                    <div className='ingredient-detail-tags-label' style={{ backgroundColor: "#" + newTag.color }}>
+                        {newTag.name}
+                    </div>
+                    {button('Ajouter', () => { addTag() })}
+                </div>}
+                {button('Ajouter un tag', () => { setShowAdd(!showAdd) })}
             </div>
+
         </div>
 
     </div >

@@ -33,9 +33,9 @@ export type blockType = {
 
 export type docType = blockType[];
 
-/* ========= *
+/* ======== *
 *    FOOD
-** ========== */
+** ======== */
 export type tag = {
     name: string,
     color: string
