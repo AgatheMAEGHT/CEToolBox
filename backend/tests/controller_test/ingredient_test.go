@@ -48,15 +48,20 @@ func TestIngredient(t *testing.T) {
 	assert.Equal(t, 200, status, errList)
 	assert.Equal(t, 3, len(resultList))
 
-	// // Get ingredient by id
-	// result, status = requester("/ingredients?_id="+resID1, http.MethodGet, nil, adminTok)
-	// assert.Equal(t, 200, status, result["err"])
-	// assert.Equal(t, 1, len(resultList))
+	// Get ingredient by id
+	resultList, status, errList = requesterList("/ingredients?_id="+resID1, http.MethodGet, nil, adminTok)
+	assert.Equal(t, 200, status, result["err"])
+	assert.Equal(t, 1, len(resultList))
 
-	// // Get ingredient by tag
-	// resultList, status, errList = requesterList("/ingredients?tags=testTag1", http.MethodGet, nil, adminTok)
-	// assert.Equal(t, 200, status, errList)
-	// assert.Equal(t, 2, len(resultList))
+	// Get ingredient by name
+	resultList, status, errList = requesterList("/ingredients?name=testIngredient1", http.MethodGet, nil, adminTok)
+	assert.Equal(t, 200, status, errList)
+	assert.Equal(t, 1, len(resultList))
+
+	// Get ingredient by tag
+	resultList, status, errList = requesterList("/ingredients?tags=testTag1", http.MethodGet, nil, adminTok)
+	assert.Equal(t, 200, status, errList)
+	assert.Equal(t, 2, len(resultList))
 
 	// Put ingredient
 	body = map[string]interface{}{

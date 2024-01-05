@@ -56,12 +56,13 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	if r.Form.Get("name") != "" {
 		query["name"] = r.Form.Get("name")
 	}
-	if len(r.Form["tags"]) > 1 {
+	if len(r.Form["tags"]) >= 1 {
 		query["tags"] = bson.M{
 			"$in": r.Form["tags"],
 		}
 	}
 
+	log.Info(query)
 	ingredient, err := database.FindIngredients(ctx, query)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
