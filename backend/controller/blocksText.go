@@ -2,6 +2,7 @@ package controller
 
 import (
 	"CEToolBox/database"
+	"CEToolBox/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -71,6 +72,12 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		"function": "blockTextPut",
 	})
 
+	if !user.IsAdmin {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(utils.NewResErr("Unauthorized").ToJson())
+		return
+	}
+
 	if err := r.ParseForm(); err != nil {
 		log.Error(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -82,12 +89,14 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("Invalid body").ToJson())
 		return
 	}
 
 	if body["text"] == nil {
-		http.Error(w, "text is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("text is required").ToJson())
 		return
 	}
 
@@ -96,31 +105,36 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		_, err := blockText.CreateOne(ctx)
 		if err != nil {
 			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(utils.NewResErr("Error creating blockText").ToJson())
 			return
 		}
 	} else { // Update existing blockText
 		var err error
 		blockTextID, ok := body["_id"].(string)
 		if !ok {
-			http.Error(w, "_id must be a string", http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr("_id must be a string").ToJson())
 			return
 		}
 
 		blockTextObjectID, err := primitive.ObjectIDFromHex(blockTextID)
 		if err != nil {
-			http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr("_id must be a valid ObjectID").ToJson())
 			return
 		}
 
 		blockText, err = database.FindOneBlockText(ctx, bson.M{"_id": blockTextObjectID})
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
-				http.Error(w, "BlockText not found", http.StatusNotFound)
+				w.WriteHeader(http.StatusNotFound)
+				w.Write(utils.NewResErr("BlockText not found").ToJson())
 				return
 			}
 			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(utils.NewResErr("Error finding blockText").ToJson())
 			return
 		}
 
@@ -128,7 +142,8 @@ func blockTextPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		_, err = blockText.UpdateOne(ctx)
 		if err != nil {
 			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(utils.NewResErr("Error updating blockText").ToJson())
 			return
 		}
 	}
@@ -144,38 +159,50 @@ func blockTextDelete(w http.ResponseWriter, r *http.Request, user database.User)
 		"function": "blockTextDelete",
 	})
 
+	if !user.IsAdmin {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(utils.NewResErr("Unauthorized").ToJson())
+		return
+	}
+
 	if err := r.ParseForm(); err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
 	blockTextID := r.Form.Get("_id")
 	if blockTextID == "" {
-		http.Error(w, "blockTextId is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("blockTextId is required").ToJson())
 		return
 	}
 
 	blockTextObjectID, err := primitive.ObjectIDFromHex(blockTextID)
 	if err != nil {
-		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("_id must be a valid ObjectID").ToJson())
 		return
 	}
 	blockText, err := database.FindOneBlockText(ctx, bson.M{"_id": blockTextObjectID})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			http.Error(w, "BlockText not found", http.StatusNotFound)
+			w.WriteHeader(http.StatusNotFound)
+			w.Write(utils.NewResErr("BlockText not found").ToJson())
 			return
 		}
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(utils.NewResErr("Error finding blockText").ToJson())
 		return
 	}
 
 	_, err = blockText.DeleteOne(ctx)
 	if err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(utils.NewResErr("Error deleting blockText").ToJson())
 		return
 	}
 

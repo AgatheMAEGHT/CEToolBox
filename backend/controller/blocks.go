@@ -2,6 +2,7 @@ package controller
 
 import (
 	"CEToolBox/database"
+	"CEToolBox/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -21,7 +22,8 @@ func BlockDispatch(w http.ResponseWriter, r *http.Request, user database.User) {
 	case http.MethodDelete:
 		blockDelete(w, r, user)
 	default:
-		http.Error(w, fmt.Sprintf("Method %s not allowed", r.Method), http.StatusMethodNotAllowed)
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write(utils.NewResErr(fmt.Sprintf("Method %s not allowed", r.Method)).ToJson())
 	}
 }
 
@@ -33,19 +35,22 @@ func blockGet(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	if err := r.ParseForm(); err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
 	blockID := r.Form.Get("_id")
 	if blockID == "" {
-		http.Error(w, "blockId is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("blockId is required").ToJson())
 		return
 	}
 
 	blockObjectID, err := primitive.ObjectIDFromHex(blockID)
 	if err != nil {
-		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("_id must be a valid ObjectID").ToJson())
 		return
 	}
 
@@ -54,12 +59,14 @@ func blockGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			http.Error(w, fmt.Sprintf("Block %s not found", blockID), http.StatusNotFound)
+			w.WriteHeader(http.StatusNotFound)
+			w.Write(utils.NewResErr(fmt.Sprintf("Block %s not found", blockID)).ToJson())
 			return
 		}
 
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
@@ -76,7 +83,8 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	if err := r.ParseForm(); err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
@@ -84,33 +92,39 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
 	if body["type"] == nil {
-		http.Error(w, "type is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("type is required").ToJson())
 		return
 	}
 	blockType, ok := body["type"].(string)
 	if !ok {
-		http.Error(w, "type is not a string", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("type is not a string").ToJson())
 		return
 	}
 
 	if body["linkedBlock"] == nil {
-		http.Error(w, "linkedBlock is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("linkedBlock is required").ToJson())
 		return
 	}
 	linkedBlockString, ok := body["linkedBlock"].(string)
 	if !ok {
-		http.Error(w, "linkedBlock is not a string", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("linkedBlock is not a string").ToJson())
 		return
 	}
 
 	linkedBlockId, err := primitive.ObjectIDFromHex(linkedBlockString)
 	if err != nil {
-		http.Error(w, "linkedBlock is not a valid ObjectId", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("linkedBlock is not a valid ObjectID").ToJson())
 		return
 	}
 
@@ -121,15 +135,18 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 		})
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
-				http.Error(w, fmt.Sprintf("Block %s not found", linkedBlockId), http.StatusNotFound)
+				w.WriteHeader(http.StatusNotFound)
+				w.Write(utils.NewResErr(fmt.Sprintf("BlockText %s not found", linkedBlockId)).ToJson())
 				return
 			}
 			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
 			return
 		}
 	default:
-		http.Error(w, "type is not valid", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(fmt.Sprintf("BlockType %s not found", blockType)).ToJson())
 		return
 	}
 
@@ -141,7 +158,8 @@ func blockPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	_, err = block.CreateOne(ctx)
 	if err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
@@ -158,19 +176,22 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	if err := r.ParseForm(); err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
 	blockID := r.Form.Get("_id")
 	if blockID == "" {
-		http.Error(w, "blockId is required", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("blockId is required").ToJson())
 		return
 	}
 
 	blockIDObject, err := primitive.ObjectIDFromHex(blockID)
 	if err != nil {
-		http.Error(w, "_id must be a valid ObjectID", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("_id must be a valid ObjectID").ToJson())
 		return
 	}
 	block, err := database.FindOneBlock(ctx, bson.M{
@@ -178,12 +199,14 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 	})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			http.Error(w, fmt.Sprintf("Block %s not found", blockID), http.StatusNotFound)
+			w.WriteHeader(http.StatusNotFound)
+			w.Write(utils.NewResErr(fmt.Sprintf("Block %s not found", blockID)).ToJson())
 			return
 		}
 
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
@@ -191,11 +214,13 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 		err = database.DeleteLinkedBlock(ctx, block)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
-				http.Error(w, fmt.Sprintf("Block %s not found", block.LinkedBlock), http.StatusNotFound)
+				w.WriteHeader(http.StatusNotFound)
+				w.Write(utils.NewResErr(fmt.Sprintf("BlockText %s not found", block.LinkedBlock)).ToJson())
 				return
 			}
 			log.Error(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
 			return
 		}
 	}
@@ -203,7 +228,8 @@ func blockDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 	_, err = block.DeleteOne(ctx)
 	if err != nil {
 		log.Error(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 

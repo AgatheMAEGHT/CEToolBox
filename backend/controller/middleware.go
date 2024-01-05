@@ -2,6 +2,7 @@ package controller
 
 import (
 	"CEToolBox/database"
+	"CEToolBox/utils"
 	"net/http"
 	"strings"
 
@@ -20,21 +21,22 @@ func middleware(w http.ResponseWriter, r *http.Request, next HandlerFunc) {
 
 	if r.Header.Get("Authorization") == "" {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("No authorization header"))
+		w.Write(utils.NewResErr("No authorization header").ToJson())
 		return
 	}
 
 	tok := strings.Split(r.Header.Get("Authorization"), " ")
 	if len(tok) != 2 {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Invalid authorization header"))
+		w.Write(utils.NewResErr("Invalid authorization header").ToJson())
 		return
 	}
 
 	user, err := verifyAccessToken(ctx, tok[1])
 	if err != nil {
+		log.Errorf("Failed to verify token: %v", err)
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Invalid token"))
+		w.Write(utils.NewResErr("Invalid token").ToJson())
 		return
 	}
 
@@ -42,7 +44,7 @@ func middleware(w http.ResponseWriter, r *http.Request, next HandlerFunc) {
 }
 
 func middlewareWrapper(next HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return corsWrapper(func(w http.ResponseWriter, r *http.Request) {
 		middleware(w, r, next)
-	}
+	})
 }

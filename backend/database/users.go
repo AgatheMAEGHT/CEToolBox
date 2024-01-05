@@ -2,7 +2,9 @@ package database
 
 import (
 	"context"
+	"time"
 
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,7 +13,6 @@ import (
 )
 
 var (
-	// UserCollection
 	UserCollection *mongo.Collection
 )
 
@@ -21,6 +22,8 @@ type User struct {
 	FirstName string             `json:"firstName" bson:"firstName"`
 	LastName  string             `json:"lastName" bson:"lastName"`
 	Password  string             `json:"-" bson:"password"`
+	IsAdmin   bool               `json:"isAdmin" bson:"isAdmin" default:"false"`
+	CreatedAt primitive.DateTime `json:"createdAt" bson:"createdAt"`
 }
 
 func HashPassword(password string) (string, error) {
@@ -33,6 +36,7 @@ func (u *User) ComparePassword(password string) error {
 }
 
 func (u *User) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {
+	u.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	var err error
 	u.Password, err = HashPassword(u.Password)
 	if err != nil {
@@ -43,8 +47,20 @@ func (u *User) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	u.ID = res.InsertedID.(primitive.ObjectID)
 	return res, nil
+}
+
+func (u *User) UpdatePassword(ctx context.Context, password string) error {
+	var err error
+	u.Password, err = HashPassword(password)
+	if err != nil {
+		return err
+	}
+
+	_, err = UserCollection.UpdateOne(ctx, bson.M{"_id": u.ID}, bson.M{"$set": bson.M{"password": u.Password}})
+	return err
 }
 
 func (u *User) UpdateOne(ctx context.Context) (*mongo.UpdateResult, error) {
@@ -57,6 +73,10 @@ func FindOneUser(ctx context.Context, query bson.M) (User, error) {
 	return user, err
 }
 
+func DeleteOneUser(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
+	return UserCollection.DeleteOne(ctx, bson.M{"_id": id})
+}
+
 func initUser(ctx context.Context, db *mongo.Database) {
 	UserCollection = db.Collection("users")
 	// Create index on email
@@ -64,14 +84,33 @@ func initUser(ctx context.Context, db *mongo.Database) {
 		Keys:    map[string]int{"email": 1},
 		Options: options.Index().SetUnique(true),
 	})
+}
 
-	// Create index on FirstName
-	UserCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
-		Keys: map[string]int{"firstName": 1},
-	})
-
-	// Create index on LastName
-	UserCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
-		Keys: map[string]int{"lastName": 1},
-	})
+func defaultUsers(ctx context.Context) {
+	log := logrus.WithContext(ctx)
+	// Create admins
+	admins := []User{
+		{
+			Email:     "quentinescudier@hotmail.fr",
+			FirstName: "Quentin",
+			LastName:  "Escudier",
+			Password:  "admin",
+			IsAdmin:   true,
+		},
+		{
+			Email:     "agathe.maeght@gmail.com",
+			FirstName: "Agathe",
+			LastName:  "Maeght",
+			Password:  "admin",
+			IsAdmin:   true,
+		},
+	}
+	for _, admin := range admins {
+		_, err := admin.CreateOne(ctx)
+		if mongo.IsDuplicateKeyError(err) {
+			log.Debug("User already exists")
+		} else if err != nil {
+			log.Fatal(err)
+		}
+	}
 }

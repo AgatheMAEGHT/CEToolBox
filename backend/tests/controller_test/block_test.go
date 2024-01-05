@@ -10,7 +10,7 @@ import (
 )
 
 func TestBlock(t *testing.T) {
-	tok := getAccessToken(t)
+	tok := getAdminAccessToken(t)
 	body := map[string]interface{}{
 		"text": "Hello World, This is me, Can't you see ?",
 	}
