@@ -1,0 +1,102 @@
+#ingredient-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Title */
+#ingredient-detail-title {
+    margin-bottom: 50px;
+}
+
+/* Restrictions */
+#ingredient-detail-restrictions-area {
+    display: flex;
+    gap: 20px;
+}
+
+.ingredient-detail-restrictions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 90px;
+}
+
+.ingredient-detail-restrictions-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.ingredient-detail-restrictions-text {
+    user-select: none;
+}
+
+.ingredient-detail-restrictions-checkbox {
+    width: 25px;
+    height: 25px;
+    background: var(--gradient);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ingredient-detail-restrictions-checkmark-area {
+    background-color: var(--background);
+    width: 21px;
+    height: 21px;
+    border-radius: 2px;
+    margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ingredient-detail-restrictions-checkmark {
+    margin-top: -4px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--gradient-color3);
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Tages */
+#ingredient-detail-tags-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#ingredient-detail-tags-title {
+    user-select: none;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#ingredient-detail-tags-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ingredient-detail-tags {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+}
+
+.ingredient-detail-tags-label {
+    padding: 2px 5px;
+    margin: 2px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    cursor: default;
+}

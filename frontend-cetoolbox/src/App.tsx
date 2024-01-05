@@ -8,6 +8,7 @@ import Page from './pages/docs/page';
 import Lists from './pages/lists/lists';
 import RecipesHome from './pages/recipes/recipes';
 import Ingredients from './pages/recipes/ingredients/ingredients';
+import IngredientsDetail from './pages/recipes/ingredients/ingredients-detail/ingredients-detail';
 import RecipesList from './pages/recipes/recipes/recipes';
 import Cheeses from './pages/recipes/cheeses/cheeses';
 
@@ -26,6 +27,7 @@ function App() {
                     <Route path="lists" element={<Lists />} />
                     <Route path="recipes" element={<RecipesHome />} />
                     <Route path="recipes/ingredients" element={<Ingredients />} />
+                    <Route path="recipes/ingredients/:itemName" element={<IngredientsDetail />} />
                     <Route path="recipes/list" element={<RecipesList />} />
                     <Route path="recipes/cheeses" element={<Cheeses />} />
                     <Route path="*" element={<NoPage />} />

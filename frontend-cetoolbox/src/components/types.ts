@@ -36,9 +36,29 @@ export type docType = blockType[];
 /* ========= *
 *    FOOD
 ** ========== */
-export type ingredient = {
+export type tag = {
     name: string,
-    tags: string[],
+    color: string
+}
+
+export type ingredientNew = {
+    name: string,
+    tags: tag[],
+    kcalPerGram: number,
+    toGramFactor: number,
+    restrictions: {
+        vegan: boolean,
+        vegetarian: boolean,
+        glutenFree: boolean,
+        cheeseFree: boolean,
+        fishFree: boolean
+    },
+}
+
+export type ingredient = {
+    _id: string,
+    name: string,
+    tags: tag[],
     kcalPerGram: number,
     toGramFactor: number,
     restrictions: {
@@ -52,7 +72,7 @@ export type ingredient = {
 
 export type recipe = {
     name: string,
-    ingredients: ingredient[],
+    ingredients: ingredientNew[],
     quantity: number[],
     kcalTotal: number, // calculate from ingredients
     image: string,

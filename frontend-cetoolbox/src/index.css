@@ -10,6 +10,7 @@ body {
   --gradient: linear-gradient(90deg, rgba(0, 0, 215, 1) 0%, rgba(250, 13, 217, 1) 100%);
   --gradient-color1: rgba(0, 0, 215, 1);
   --gradient-color2: rgba(250, 13, 217, 1);
+  --gradient-color3: rgba(125,7,216, 1);
 
   --gradient-light: linear-gradient(90deg, rgb(200, 201, 253) 0%, rgba(255, 212, 255, 1) 100%);
   --gradient-color1-light: rgb(205, 205, 255);
