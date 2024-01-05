@@ -1,3 +1,7 @@
+/* ========== *
+*    BLOCKS
+** ========== */
+
 export type blockText = {
     content: string | undefined,
 };
@@ -28,3 +32,42 @@ export type blockType = {
 };
 
 export type docType = blockType[];
+
+/* ========= *
+*    FOOD
+** ========== */
+export type ingredient = {
+    name: string,
+    tags: string[],
+    kcalPerGram: number,
+    toGramFactor: number,
+    restrictions: {
+        vegan: boolean,
+        vegetarian: boolean,
+        glutenFree: boolean,
+        cheeseFree: boolean,
+        fishFree: boolean
+    },
+}
+
+export type recipe = {
+    name: string,
+    ingredients: ingredient[],
+    quantity: number[],
+    kcalTotal: number, // calculate from ingredients
+    image: string,
+    categories: string[], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
+    origin: string, // pays d'origine
+    status: string, // approuvé, à tester, refusé
+    type: string, // salé, sucré, sucré-salé
+    preparationTime: number, // en minutes
+    cookingTime: number, // en minutes
+    restrictions: {
+        vegan: boolean,
+        vegetarian: boolean,
+        glutenFree: boolean,
+        cheeseFree: boolean,
+        fishFree: boolean
+    }, // calculate from ingredients
+    steps: string[], // markdown
+}

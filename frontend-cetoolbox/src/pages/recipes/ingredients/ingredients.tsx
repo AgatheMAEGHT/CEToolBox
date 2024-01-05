@@ -4,87 +4,138 @@ import { useNavigate } from 'react-router-dom';
 import { Bar, Container, Section } from '@column-resizer/react';
 
 import './ingredients.css';
+import { ingredient } from '../../../components/types';
 
 function Ingredients() {
     let navigate = useNavigate();
 
-    /* TEST */
-    let test: string[][] = [
-        ["100", "150", "200", "150"],
-        ["30", "30", "21", "50", "21"],
-        [`Nom`, `a`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`],
-        [`Kcal / 1g`, `3`, `50`, `12`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`],
-        [`da`, `e`, `f`, "block", `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`],
-        [`g`, `h`, `i`, "bluck", `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`, `b`, `c`]
+    let temp: ingredient[] = [
+        {
+            name: 'Oui et parfois non et meme ça dépend',
+            tags: ["/"],
+            kcalPerGram: 0,
+            toGramFactor: 0,
+            restrictions: {
+                vegan: false,
+                vegetarian: false,
+                glutenFree: false,
+                cheeseFree: false,
+                fishFree: false
+            }
+        },
+        {
+            name: 'Oui',
+            tags: ["/"],
+            kcalPerGram: 0,
+            toGramFactor: 0,
+            restrictions: {
+                vegan: false,
+                vegetarian: false,
+                glutenFree: false,
+                cheeseFree: false,
+                fishFree: false
+            }
+        }
     ];
-    /* END TEST */
 
-    const [table, setTable] = React.useState<string[][]>(test ? test : [[]]);
+    React.useEffect(() => {
+        // Get the ingredient from the database
+    },);
+    const [table, setTable] = React.useState<ingredient[]>(temp);
 
-    function handleChange(value: string | null, i: number, j: number) {
-        let newValue: string[][] = table;
-        newValue[i][j] = value ? value : "";
-        setTable(newValue);
-
-        // Change the height of the other columns to fit content
-        for (let k = 0; k < newValue.length; k++) {
-            document.getElementById('recipes-ingredients-table-cell' + k + j)?.setAttribute("style", "height: fit-content");
+    // Change the color of the line in the table
+    function changeColor(i: number, select: boolean): void {
+        let element: HTMLElement | null = document.getElementById('recipes-ingredients-table-name' + i);
+        if (element) {
+            select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        // Calculate new height
-        let height: number = 0;
-
-        for (let k = 0; k < table.length; k++) {
-            let h = document.getElementById('recipes-ingredients-table-cell' + k + j)?.scrollHeight ?? 0;
-            height = height > h ? height : h;
+        element = document.getElementById('recipes-ingredients-table-tags' + i);
+        if (element) {
+            select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        newValue[1][j] = height.toString();
-
-        // Change the height of the other columns
-        for (let k = 0; k < newValue.length; k++) {
-            document.getElementById('recipes-ingredients-table-cell' + k + j)?.setAttribute("style", "height: " + height + "px");
+        element = document.getElementById('recipes-ingredients-table-kcalPerGram' + i);
+        if (element) {
+            select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        setTable(newValue);
+        element = document.getElementById('recipes-ingredients-table-restrictions' + i);
+        if (element) {
+            select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
+        }
+
+        element = document.getElementById('recipes-ingredients-table-toGramFactor' + i);
+        if (element) {
+            select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
+        }
     }
 
-    function addCol(): void {
-        let newValue: string[][] = table;
-        newValue[0].push("100");
+    React.useEffect(() => {
+        setHeights();
+    }, [table]);
 
-        // input the new column name
-        let newColName: string = prompt("Nom de la nouvelle colonne :") ?? "";
-        let newCol: string[] = [];
+    function setHeights(): void {
+        let heights: number[] = JSON.parse(localStorage.getItem('recipes-ingredients-table-heights') || '[]');
 
-        for (let i = 0; i < newValue[newValue.length - 1].length; i++) {
-            newCol.push("");
+        // Get the heights of the lines
+        for (let i = 0; i < heights.length; i++) {
+            let element: HTMLElement | null = document.getElementById('recipes-ingredients-table-name' + i);
+            if (element) {
+                element.style.height = 'fit-content'
+                heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
+            }
+
+            element = document.getElementById('recipes-ingredients-table-tags' + i);
+            if (element) {
+                element.style.height = 'fit-content'
+                heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
+            }
+
+            element = document.getElementById('recipes-ingredients-table-kcalPerGram' + i);
+            if (element) {
+                element.style.height = 'fit-content'
+                heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
+            }
+
+            element = document.getElementById('recipes-ingredients-table-restrictions' + i);
+            if (element) {
+                element.style.height = 'fit-content'
+                heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
+            }
+
+            element = document.getElementById('recipes-ingredients-table-toGramFactor' + i);
+            if (element) {
+                element.style.height = 'fit-content'
+                heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
+            }
         }
-        newCol[0] = newColName;
-        newValue.push(newCol);
 
-        setTable(newValue);
-    }
+        // Set the heights to the lines
+        for (let i = 0; i < heights.length; i++) {
+            let element: HTMLElement | null = document.getElementById('recipes-ingredients-table-name' + i);
+            if (element) {
+                element.style.height = heights[i] - 1 + 'px';
+            }
 
-    function addRow(): void {
-        let newTable: string[][] = table;
-        newTable[1].push("21");
+            element = document.getElementById('recipes-ingredients-table-tags' + i);
+            if (element) {
+                element.style.height = heights[i] - 1 + 'px';
+            }
 
-        for (let i = 0; i < newTable.length; i++) {
-            newTable[i].push("");
-        }
+            element = document.getElementById('recipes-ingredients-table-kcalPerGram' + i);
+            if (element) {
+                element.style.height = heights[i] - 1 + 'px';
+            }
 
-        setTable(newTable);
-    }
+            element = document.getElementById('recipes-ingredients-table-restrictions' + i);
+            if (element) {
+                element.style.height = heights[i] - 1 + 'px';
+            }
 
-    function changeColor(j: number, enter: boolean): void {
-        if (j < 1) {
-            return;
-        }
-        for (let i = 0; i < table.length; i++) {
-            let elt = document.getElementById('recipes-ingredients-table-cell' + i + j) ?? undefined;
-            if (elt) {
-                elt.style.backgroundColor = enter ? "transparent" : "white";
+            element = document.getElementById('recipes-ingredients-table-toGramFactor' + i);
+            if (element) {
+                element.style.height = heights[i] - 1 + 'px';
             }
         }
     }
@@ -92,44 +143,72 @@ function Ingredients() {
     function tableToHtml(): JSX.Element {
         let htmlTable: JSX.Element[] = [];
 
-        for (let i = 2; i < table.length; i++) {
-            let column: JSX.Element[] = [];
-
-            for (let j = 0; j < table[i].length; j++) {
-                // eslint-disable-next-line
-                column.push(<span
-                    key={i + "-" + j}
-                    id={'recipes-ingredients-table-cell' + i + j}
-                    role='textbox'
-                    className={'recipes-ingredients-table-cell recipes-ingredients-table-row-' + j}
-                    contentEditable
-                    onInput={e => handleChange(e.currentTarget.innerText, i, j)}
-                    style={{ minHeight: "fit-content", height: table[1][j] + "px", minWidth: "20px" }}
-                    onMouseOver={() => changeColor(j, true)}
-                    onMouseOut={() => changeColor(j, false)}
-                >
-                    {table[i][j]}
-                </span>);
-            }
-
-            htmlTable.push(<Section key={i} className='recipes-ingredients-table-col' minSize={parseInt(table[0][i - 1])}>{column}</Section>);
-            { i < table.length - 1 && htmlTable.push(<Bar key={i + "bar"} size={1} style={{ cursor: 'col-resize' }} className='recipes-ingredients-table-bar' />) };
+        // Names
+        let names: JSX.Element[] = [<span key="header" className='recipes-ingredients-table-header' id='recipes-ingredients-table-name'>Nom</span>];
+        for (let i = 0; i < table.length; i++) {
+            names.push(<span key={i} className='recipes-ingredients-table-cell' id={'recipes-ingredients-table-name' + i} onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>{table[i].name}</span>);
         }
+        htmlTable.push(<Section className='recipes-ingredients-table-col' minSize={100}>{names}</Section>);
+        htmlTable.push(<Bar size={1} style={{ cursor: 'col-resize' }} className='recipes-ingredients-table-bar' />);
 
-        return <Container id='recipes-ingredients-table'>{htmlTable}</Container>
+        // Tags
+        let tags: JSX.Element[] = [<span key="header" className='recipes-ingredients-table-header'>Tags</span>];
+        for (let i = 0; i < table.length; i++) {
+            tags.push(<span key={i} className='recipes-ingredients-table-cell' id={'recipes-ingredients-table-tags' + i} onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>{table[i].tags}</span>);
+        }
+        htmlTable.push(<Section className='recipes-ingredients-table-col' minSize={100}>{tags}</Section>);
+        htmlTable.push(<Bar size={1} style={{ cursor: 'col-resize' }} className='recipes-ingredients-table-bar' />);
+
+        // kcalPerGram
+        let kcalPerGram: JSX.Element[] = [<span key="header" className='recipes-ingredients-table-header'>Kcal / g</span>];
+        for (let i = 0; i < table.length; i++) {
+            kcalPerGram.push(<span key={i} className='recipes-ingredients-table-cell' id={'recipes-ingredients-table-kcalPerGram' + i} onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>{table[i].kcalPerGram}</span>);
+        }
+        htmlTable.push(<Section className='recipes-ingredients-table-col' minSize={100}>{kcalPerGram}</Section>);
+        htmlTable.push(<Bar size={1} style={{ cursor: 'col-resize' }} className='recipes-ingredients-table-bar' />);
+
+        // restrictions
+        let restrictions: JSX.Element[] = [<span key="header" className='recipes-ingredients-table-header'>Restrictions</span>];
+        for (let i = 0; i < table.length; i++) {
+            restrictions.push(<span key={i} className='recipes-ingredients-table-cell' id={'recipes-ingredients-table-restrictions' + i} onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>
+                {table[i].restrictions.vegan ? "Vegan" : ""}
+                {table[i].restrictions.vegetarian ? "Veggie" : ""}
+                {table[i].restrictions.glutenFree ? "GlutenFree" : ""}
+                {table[i].restrictions.cheeseFree ? "CheeseFree" : ""}
+                {table[i].restrictions.fishFree ? "FishFree" : ""}
+                {!table[i].restrictions.vegan && !table[i].restrictions.vegetarian && !table[i].restrictions.glutenFree && !table[i].restrictions.cheeseFree && !table[i].restrictions.fishFree ? "Aucune" : ""}
+            </span>);
+        }
+        htmlTable.push(<Section className='recipes-ingredients-table-col' minSize={100}>{restrictions}</Section>);
+        htmlTable.push(<Bar size={1} style={{ cursor: 'col-resize' }} className='recipes-ingredients-table-bar' />);
+
+        // toGramFactor
+        let toGramFactor: JSX.Element[] = [<span key="header" className='recipes-ingredients-table-header'>To gram factor</span>];
+        for (let i = 0; i < table.length; i++) {
+            toGramFactor.push(<span key={i} className='recipes-ingredients-table-cell' id={'recipes-ingredients-table-toGramFactor' + i} onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>{table[i].toGramFactor}</span>);
+        }
+        htmlTable.push(<Section className='recipes-ingredients-table-col' minSize={120}>{toGramFactor}</Section>);
+
+        //Heights
+        let heights: number[] = [];
+        for (let i = 0; i < table.length; i++) {
+            heights.push(0);
+        }
+        localStorage.setItem('recipes-ingredients-table-heights', JSON.stringify(heights));
+
+        return <Container id='recipes-ingredients-table' onClick={() => setHeights()}>{htmlTable}</Container>
     }
 
     return <div id="recipes" className='page'>
         <h2>Ingrédients de la CE Toolbox</h2>
-        <button className='recipes-button' onClick={() => { addRow() }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
-        <button className='recipes-button' onClick={() => { addCol() }}><div className='recipes-button-content'>Ajouter une colone</div></button>
+        <button className='recipes-button' onClick={() => { navigate('/recipes/ingredients/new') }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
 
         <div className='block-preview'>
-            <div id='recipes-ingredients-table-content' style={{ width: "100%" }}>
+            <div id='recipes-ingredients-table-content' style={{ width: "100%" }} onClick={() => setHeights()}>
                 {tableToHtml()}
             </div>
         </div>
-        <button className='recipes-button' onClick={() => { addRow() }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
+        <button className='recipes-button' onClick={() => { navigate('/recipes/ingredients/new') }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
     </div>
 }
 

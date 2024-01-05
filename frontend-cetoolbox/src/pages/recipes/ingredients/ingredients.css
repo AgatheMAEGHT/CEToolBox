@@ -15,6 +15,8 @@
 .recipes-ingredients-table-cell {
     border-bottom: 1px dotted var(--background-darker);
     background-color: var(--background);
+    color: var(--text-color);
+    cursor: default;
 }
 
 .recipes-ingredients-table-col {
@@ -28,7 +30,7 @@
     width: 30px;
 }
 
-.recipes-ingredients-table-row-0 {
+.recipes-ingredients-table-header {
     background: transparent;
     color: var(--text-color);
     font-weight: bold;
