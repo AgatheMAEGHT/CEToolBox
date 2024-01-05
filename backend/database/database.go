@@ -15,6 +15,20 @@ var (
 	db *mongo.Database
 )
 
+func defaultValues(ctx context.Context) {
+	defaultUsers(ctx)
+}
+
+func initCollections(ctx context.Context) {
+	initUser(ctx, db)
+	initBlock(ctx, db)
+	initBlockText(ctx, db)
+	initDocuments(ctx, db)
+	initFile(ctx, db)
+	initIngredient(ctx, db)
+	initRecipe(ctx, db)
+}
+
 func Connect(ctx context.Context, url string) (*mongo.Client, error) {
 	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
 		"package":  "database",
@@ -39,11 +53,10 @@ func Connect(ctx context.Context, url string) (*mongo.Client, error) {
 	db = client.Database("CEToolBox")
 
 	// Init collections
-	initUser(ctx, db)
-	initBlock(ctx, db)
-	initBlockText(ctx, db)
+	initCollections(ctx)
 
-	initDocuments(ctx, db)
+	// Default values
+	defaultValues(ctx)
 
 	return client, nil
 }

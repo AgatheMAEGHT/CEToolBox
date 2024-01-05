@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func conf() {
@@ -27,20 +26,6 @@ func main() {
 	log.Info("Starting api")
 	_, err := database.Connect(ctx, os.Getenv("MONGO_URL"))
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Create first user
-	user := database.User{
-		Email:     "quentinescudier@hotmail.fr",
-		Password:  "test",
-		FirstName: "Quentin",
-		LastName:  "Escudier",
-	}
-	_, err = user.CreateOne(ctx)
-	if mongo.IsDuplicateKeyError(err) {
-		log.Info("User already exists")
-	} else if err != nil {
 		log.Fatal(err)
 	}
 
