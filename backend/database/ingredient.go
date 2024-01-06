@@ -22,12 +22,12 @@ type Restrictions struct {
 }
 
 type Ingredient struct {
-	ID           primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-	Name         string             `json:"name" bson:"name"`
-	Tags         []string           `json:"tags" bson:"tags"`
-	KcalPerGram  float64            `json:"kcalPerGram" bson:"kcalPerGram"`
-	ToGramFactor float64            `json:"toGramFactor" bson:"toGramFactor"`
-	Restrictions Restrictions       `json:"restrictions" bson:"restrictions"`
+	ID           primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
+	Name         string               `json:"name" bson:"name"`
+	Tags         []primitive.ObjectID `json:"tags" bson:"tags"`
+	KcalPerGram  float64              `json:"kcalPerGram" bson:"kcalPerGram"`
+	ToGramFactor float64              `json:"toGramFactor" bson:"toGramFactor"`
+	Restrictions Restrictions         `json:"restrictions" bson:"restrictions"`
 }
 
 func (a *Ingredient) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {

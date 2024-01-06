@@ -12,29 +12,29 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func IngredientDispatch(w http.ResponseWriter, r *http.Request, user database.User) {
+func IngredientTagDispatch(w http.ResponseWriter, r *http.Request, user database.User) {
 	switch r.Method {
 	case http.MethodGet:
-		ingredientGet(w, r, user)
+		ingredientTagGet(w, r, user)
 	case http.MethodPost:
-		ingredientPost(w, r, user)
+		ingredientTagPost(w, r, user)
 	case http.MethodPut:
-		ingredientPut(w, r, user)
+		ingredientTagPut(w, r, user)
 	case http.MethodDelete:
-		ingredientDelete(w, r, user)
+		ingredientTagDelete(w, r, user)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write(utils.NewResErr(fmt.Sprintf("Method %s not allowed", r.Method)).ToJson())
 	}
 }
 
-func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
+func ingredientTagGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	ctx := r.Context()
 	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
 		"method": r.Method,
 		"path":   r.URL.Path,
 	})
-	log.Info("ingredientGet")
+	log.Info("ingredientTagGet")
 
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -56,21 +56,9 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	if r.Form.Get("name") != "" {
 		query["name"] = r.Form.Get("name")
 	}
-	if len(r.Form["tags"]) >= 1 {
-		tagsID, err := utils.IsStringListObjectIdValid(r.Form["tags"], database.IngredientTagsCollection)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(utils.NewResErr(err.Error()).ToJson())
-			return
-		}
-
-		query["tags"] = bson.M{
-			"$in": tagsID,
-		}
-	}
 
 	log.Info(query)
-	ingredient, err := database.FindIngredients(ctx, query)
+	ingredientTag, err := database.FindIngredientTags(ctx, query)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
@@ -78,16 +66,16 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ingredient)
+	json.NewEncoder(w).Encode(ingredientTag)
 }
 
-func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) {
+func ingredientTagPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	ctx := r.Context()
 	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
 		"method": r.Method,
 		"path":   r.URL.Path,
 	})
-	log.Info("ingredientPost")
+	log.Info("ingredientTagPost")
 
 	if !user.IsAdmin {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -95,22 +83,15 @@ func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) 
 		return
 	}
 
-	ingredient := database.Ingredient{}
-	err := utils.ParseBody(r.Body, &ingredient)
+	ingredientTag := database.IngredientTag{}
+	err := utils.ParseBody(r.Body, &ingredientTag)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
-	resErr := utils.IsListObjectIdExist(ingredient.Tags, database.IngredientTagsCollection)
-	if resErr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(utils.NewResErr(resErr.Error()).ToJson())
-		return
-	}
-
-	_, err = ingredient.CreateOne(ctx)
+	_, err = ingredientTag.CreateOne(ctx)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
@@ -118,16 +99,16 @@ func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) 
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ingredient)
+	json.NewEncoder(w).Encode(ingredientTag)
 }
 
-func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
+func ingredientTagPut(w http.ResponseWriter, r *http.Request, user database.User) {
 	ctx := r.Context()
 	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
 		"method": r.Method,
 		"path":   r.URL.Path,
 	})
-	log.Info("ingredientPut")
+	log.Info("ingredientTagPut")
 
 	if !user.IsAdmin {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -135,22 +116,15 @@ func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	ingredient := database.Ingredient{}
-	err := utils.ParseBody(r.Body, &ingredient)
+	ingredientTag := database.IngredientTag{}
+	err := utils.ParseBody(r.Body, &ingredientTag)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
-	resErr := utils.IsListObjectIdExist(ingredient.Tags, database.IngredientTagsCollection)
-	if resErr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(utils.NewResErr(resErr.Error()).ToJson())
-		return
-	}
-
-	_, err = ingredient.UpdateOne(ctx)
+	_, err = ingredientTag.UpdateOne(ctx)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
@@ -158,16 +132,16 @@ func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ingredient)
+	json.NewEncoder(w).Encode(ingredientTag)
 }
 
-func ingredientDelete(w http.ResponseWriter, r *http.Request, user database.User) {
+func ingredientTagDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 	ctx := r.Context()
 	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
 		"method": r.Method,
 		"path":   r.URL.Path,
 	})
-	log.Info("ingredientDelete")
+	log.Info("ingredientTagDelete")
 
 	if !user.IsAdmin {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -194,7 +168,7 @@ func ingredientDelete(w http.ResponseWriter, r *http.Request, user database.User
 		return
 	}
 
-	res, err := database.DeleteOneIngredient(ctx, id)
+	res, err := database.DeleteOneIngredientTag(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
@@ -203,7 +177,7 @@ func ingredientDelete(w http.ResponseWriter, r *http.Request, user database.User
 
 	if res.DeletedCount == 0 {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(utils.NewResErr(fmt.Sprintf("Ingredient %s not found", id)).ToJson())
+		w.Write(utils.NewResErr(fmt.Sprintf("IngredientTag %s not found", id)).ToJson())
 		return
 	}
 

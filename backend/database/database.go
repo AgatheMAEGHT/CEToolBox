@@ -27,6 +27,7 @@ func initCollections(ctx context.Context) {
 	initFile(ctx, db)
 	initIngredient(ctx, db)
 	initRecipe(ctx, db)
+	initIngredientTags(ctx, db)
 }
 
 func Connect(ctx context.Context, url string) (*mongo.Client, error) {

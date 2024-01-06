@@ -50,6 +50,7 @@ func StartServer(path string) {
 	server.HandleFunc("/blocks", middlewareWrapper(BlockDispatch))
 	server.HandleFunc("/blocks/text", middlewareWrapper(BlockTextDispatch))
 	server.HandleFunc("/ingredients", middlewareWrapper(IngredientDispatch))
+	server.HandleFunc("/ingredient-tags", middlewareWrapper(IngredientTagDispatch))
 
 	server.HandleFunc("/file/download/", corsWrapper(downloadFile))
 	server.HandleFunc("/file/create", middlewareWrapper(postFile))
