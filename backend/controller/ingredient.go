@@ -70,15 +70,33 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	log.Info(query)
-	ingredient, err := database.FindIngredients(ctx, query)
+	ingredients, err := database.FindIngredients(ctx, query)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
+	if r.Form.Get("populate") != "" {
+		ingredientsPopulated := make([]database.IngredientRes, len(ingredients))
+		for i, ingredient := range ingredients {
+			ingredientPopulated, err := ingredient.Populate(ctx)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write(utils.NewResErr(err.Error()).ToJson())
+				return
+			}
+
+			ingredientsPopulated[i] = ingredientPopulated
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(ingredientsPopulated)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ingredient)
+	json.NewEncoder(w).Encode(ingredients)
 }
 
 func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) {
