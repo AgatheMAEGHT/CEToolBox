@@ -98,6 +98,13 @@ func TestIngredient(t *testing.T) {
 	assert.Equal(t, 200, status, errList)
 	assert.Equal(t, 3, len(resultList))
 
+	// Get ingredient populated
+	resultList, status, errList = requesterList("/ingredients?populate=true", http.MethodGet, nil, adminTok)
+	assert.Equal(t, 200, status, errList)
+	assert.Equal(t, 3, len(resultList))
+	assert.Equal(t, 1, len(resultList[0]["tags"].([]interface{})))
+	assert.Equal(t, "testTag1", resultList[0]["tags"].([]interface{})[0].(map[string]interface{})["name"])
+
 	// Put ingredient
 	body = map[string]interface{}{
 		"_id":  resID1,

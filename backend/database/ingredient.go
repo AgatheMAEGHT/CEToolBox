@@ -13,6 +13,15 @@ var (
 	IngredientCollection *mongo.Collection
 )
 
+type IngredientRes struct {
+	ID           primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Name         string             `json:"name" bson:"name"`
+	Tags         []*IngredientTag   `json:"tags" bson:"tags"`
+	KcalPerGram  float64            `json:"kcalPerGram" bson:"kcalPerGram"`
+	ToGramFactor float64            `json:"toGramFactor" bson:"toGramFactor"`
+	Restrictions Restrictions       `json:"restrictions" bson:"restrictions"`
+}
+
 type Restrictions struct {
 	IsVegan      bool `json:"isVegan" bson:"isVegan"`
 	IsVeggie     bool `json:"isVeggie" bson:"isVeggie"`
@@ -71,6 +80,23 @@ func FindIngredients(ctx context.Context, filter bson.M) ([]*Ingredient, error) 
 	}
 
 	return ingredients, nil
+}
+
+func (a *Ingredient) Populate(ctx context.Context) (IngredientRes, error) {
+	var res IngredientRes
+	tags, err := FindIngredientTags(ctx, bson.M{"_id": bson.M{"$in": a.Tags}})
+	if err != nil {
+		return res, err
+	}
+
+	res.ID = a.ID
+	res.Name = a.Name
+	res.Tags = tags
+	res.KcalPerGram = a.KcalPerGram
+	res.ToGramFactor = a.ToGramFactor
+	res.Restrictions = a.Restrictions
+
+	return res, nil
 }
 
 func initIngredient(ctx context.Context, db *mongo.Database) {
