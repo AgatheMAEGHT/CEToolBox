@@ -25,6 +25,18 @@
     width: fit-content;
 }
 
+.button-inside:hover {
+    background: var(--gradient-color3-light);
+}
+
+/* Delete */
+.button-border-delete-true {
+    background: rgb(255, 12, 12);
+}
+.button-inside-delete-true:hover {
+    background: rgb(255, 199, 199);
+}
+
 /* =========== *
  *  Checkbox   *
  * =========== */

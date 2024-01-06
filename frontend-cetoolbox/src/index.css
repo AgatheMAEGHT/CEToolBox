@@ -11,14 +11,16 @@ body {
   --gradient-color1: rgba(0, 0, 215, 1);
   --gradient-color2: rgba(250, 13, 217, 1);
   --gradient-color3: rgba(125,7,216, 1);
-
+  
   --gradient-light: linear-gradient(90deg, rgb(200, 201, 253) 0%, rgba(255, 212, 255, 1) 100%);
   --gradient-color1-light: rgb(205, 205, 255);
   --gradient-color2-light: rgb(255, 212, 255);
-
+  --gradient-color3-light: rgb(247, 241, 255);
+  
   --gradient-dark: linear-gradient(90deg, rgba(0, 0, 128, 1) 0%, rgba(128, 0, 128, 1) 100%);
   --gradient-color1-dark: rgb(0, 0, 128);
   --gradient-color2-dark: rgb(128, 0, 128);
+  --gradient-color3-dark: rgb(87, 0, 153);
 
   --background: white;
   --background-dark: rgb(241, 241, 241);
