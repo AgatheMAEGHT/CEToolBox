@@ -13,29 +13,29 @@ function Ingredients() {
         {
             _id: "",
             name: 'Oui et parfois non et meme ça dépend',
-            tags: [{ name: "Tag 1", color: "fff123" }, { name: "Tag 2", color: "789456" }],
+            tags: [{ _id: "", name: "Tag 1", color: "fff123" }, { _id: "", name: "Tag 2", color: "789456" }],
             kcalPerGram: 0,
             toGramFactor: 0,
             restrictions: {
-                vegan: false,
-                vegetarian: false,
-                glutenFree: false,
-                cheeseFree: false,
-                fishFree: false
+                isVegan: false,
+                isVeggie: false,
+                isGlutenFree: false,
+                isCheeseFree: false,
+                isFishFree: false
             }
         },
         {
             _id: "",
             name: 'Oui',
-            tags: [{ name: "Tag 1", color: "fff123" }],
+            tags: [{ _id: "", name: "Tag 1", color: "fff123" }],
             kcalPerGram: 0,
             toGramFactor: 0,
             restrictions: {
-                vegan: false,
-                vegetarian: false,
-                glutenFree: false,
-                cheeseFree: false,
-                fishFree: false
+                isVegan: false,
+                isVeggie: false,
+                isGlutenFree: false,
+                isCheeseFree: false,
+                isFishFree: false
             }
         }
     ];
@@ -206,13 +206,13 @@ function Ingredients() {
         for (let i = 0; i < table.length; i++) {
             restrictions.push(<span key={i} className='recipes-ingredients-table-cell' id={'recipes-ingredients-table-restrictions' + i}
                 onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>
-                {table[i].restrictions.vegan ? "Vegan" : ""}
-                {table[i].restrictions.vegetarian ? "Veggie" : ""}
-                {table[i].restrictions.glutenFree ? "GlutenFree" : ""}
-                {table[i].restrictions.cheeseFree ? "CheeseFree" : ""}
-                {table[i].restrictions.fishFree ? "FishFree" : ""}
-                {!table[i].restrictions.vegan && !table[i].restrictions.vegetarian && !table[i].restrictions.glutenFree &&
-                    !table[i].restrictions.cheeseFree && !table[i].restrictions.fishFree ? "Aucune" : ""}
+                {table[i].restrictions.isVegan ? "Vegan" : ""}
+                {table[i].restrictions.isVeggie ? "Veggie" : ""}
+                {table[i].restrictions.isGlutenFree ? "GlutenFree" : ""}
+                {table[i].restrictions.isCheeseFree ? "CheeseFree" : ""}
+                {table[i].restrictions.isFishFree ? "FishFree" : ""}
+                {!table[i].restrictions.isVegan && !table[i].restrictions.isVeggie && !table[i].restrictions.isGlutenFree &&
+                    !table[i].restrictions.isCheeseFree && !table[i].restrictions.isFishFree ? "Aucune" : ""}
             </span>);
         }
         htmlTable.push(<Section key={"section-3"} className='recipes-ingredients-table-col' minSize={100}>{restrictions}</Section>);

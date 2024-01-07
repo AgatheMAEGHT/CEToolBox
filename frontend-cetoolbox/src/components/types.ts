@@ -37,8 +37,17 @@ export type docType = blockType[];
 *    FOOD
 ** ======== */
 export type tag = {
+    _id: string,
     name: string,
     color: string
+}
+
+type restrictions = {
+    isVegan: boolean,
+    isVeggie: boolean,
+    isGlutenFree: boolean,
+    isCheeseFree: boolean,
+    isFishFree: boolean
 }
 
 export type ingredientNew = {
@@ -46,13 +55,7 @@ export type ingredientNew = {
     tags: tag[],
     kcalPerGram: number,
     toGramFactor: number,
-    restrictions: {
-        vegan: boolean,
-        vegetarian: boolean,
-        glutenFree: boolean,
-        cheeseFree: boolean,
-        fishFree: boolean
-    },
+    restrictions: restrictions,
 }
 
 export type ingredient = {
@@ -61,13 +64,7 @@ export type ingredient = {
     tags: tag[],
     kcalPerGram: number,
     toGramFactor: number,
-    restrictions: {
-        vegan: boolean,
-        vegetarian: boolean,
-        glutenFree: boolean,
-        cheeseFree: boolean,
-        fishFree: boolean
-    },
+    restrictions: restrictions,
 }
 
 export type recipe = {
@@ -82,12 +79,6 @@ export type recipe = {
     type: string, // salé, sucré, sucré-salé
     preparationTime: number, // en minutes
     cookingTime: number, // en minutes
-    restrictions: {
-        vegan: boolean,
-        vegetarian: boolean,
-        glutenFree: boolean,
-        cheeseFree: boolean,
-        fishFree: boolean
-    }, // calculate from ingredients
+    restrictions: restrictions, // calculate from ingredients
     steps: string[], // markdown
 }
