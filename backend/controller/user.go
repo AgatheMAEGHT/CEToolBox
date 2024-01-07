@@ -72,41 +72,31 @@ func createUser(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	email := ""
-	if mapBody["email"] != nil {
-		email = mapBody["email"].(string)
+	pseudo := ""
+	if mapBody["pseudo"] != nil {
+		pseudo = mapBody["pseudo"].(string)
 	}
 	password := ""
 	if mapBody["password"] != nil {
 		password = mapBody["password"].(string)
-	}
-	firstName := ""
-	if mapBody["firstName"] != nil {
-		firstName = mapBody["firstName"].(string)
-	}
-	lastName := ""
-	if mapBody["lastName"] != nil {
-		lastName = mapBody["lastName"].(string)
 	}
 	isAdmin := false
 	if mapBody["isAdmin"] != nil {
 		isAdmin = mapBody["isAdmin"].(bool)
 	}
 
-	if email == "" || password == "" {
+	if pseudo == "" || password == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write(utils.NewResErr("Missing email or password").ToJson())
+		w.Write(utils.NewResErr("Missing pseudo or password").ToJson())
 		return
 	}
 
-	log.Infof("Creating user %s", mapBody["email"])
+	log.Infof("Creating user %s", mapBody["pseudo"])
 
 	newUser := database.User{
-		Email:     email,
-		Password:  password,
-		FirstName: firstName,
-		LastName:  lastName,
-		IsAdmin:   isAdmin,
+		Pseudo:   pseudo,
+		Password: password,
+		IsAdmin:  isAdmin,
 	}
 
 	_, err = newUser.CreateOne(ctx)
@@ -214,7 +204,7 @@ func changePassword(w http.ResponseWriter, r *http.Request, user database.User) 
 
 	userToUpdate := user
 	if r.Form.Get("_id") != "" {
-		if !user.IsAdmin {
+		if !user.IsAdmin && user.ID.Hex() != r.Form.Get("_id") {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write(utils.NewResErr("Unauthorized").ToJson())
 			return
@@ -288,11 +278,16 @@ func updateUser(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	if mapBody.FirstName == "" {
-		user.FirstName = mapBody.FirstName
+	if mapBody.ID.Hex() != user.ID.Hex() && !user.IsAdmin {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(utils.NewResErr("Unauthorized").ToJson())
+		return
 	}
-	if mapBody.LastName == "" {
-		user.LastName = mapBody.LastName
+
+	if mapBody.IsAdmin && !user.IsAdmin {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(utils.NewResErr("Unauthorized").ToJson())
+		return
 	}
 
 	log.Infof("Updating user %s", user.ID.Hex())

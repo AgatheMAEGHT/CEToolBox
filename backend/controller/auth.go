@@ -129,23 +129,23 @@ func login(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Error while parsing body"))
 		return
 	}
-	if mapBody["email"] == "" || mapBody["password"] == "" {
+	if mapBody["pseudo"] == "" || mapBody["password"] == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Missing email or password"))
+		w.Write([]byte("Missing pseudo or password"))
 		return
 	}
 
-	user, err := database.FindOneUser(r.Context(), bson.M{"email": mapBody["email"]})
+	user, err := database.FindOneUser(r.Context(), bson.M{"pseudo": mapBody["pseudo"]})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Wrong email or password"))
+		w.Write([]byte("Wrong pseudo or password"))
 		return
 	}
 
 	err = user.ComparePassword(mapBody["password"])
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Wrong email or password"))
+		w.Write([]byte("Wrong pseudo or password"))
 		return
 	}
 

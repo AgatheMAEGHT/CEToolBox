@@ -18,9 +18,7 @@ var (
 
 type User struct {
 	ID        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-	Email     string             `json:"email" bson:"email"`
-	FirstName string             `json:"firstName" bson:"firstName"`
-	LastName  string             `json:"lastName" bson:"lastName"`
+	Pseudo    string             `json:"pseudo" bson:"pseudo"`
 	Password  string             `json:"-" bson:"password"`
 	IsAdmin   bool               `json:"isAdmin" bson:"isAdmin" default:"false"`
 	CreatedAt primitive.DateTime `json:"createdAt" bson:"createdAt"`
@@ -79,9 +77,9 @@ func DeleteOneUser(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteRes
 
 func initUser(ctx context.Context, db *mongo.Database) {
 	UserCollection = db.Collection("users")
-	// Create index on email
+
 	UserCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
-		Keys:    map[string]int{"email": 1},
+		Keys:    map[string]int{"pseudo": 1},
 		Options: options.Index().SetUnique(true),
 	})
 }
@@ -91,18 +89,14 @@ func defaultUsers(ctx context.Context) {
 	// Create admins
 	admins := []User{
 		{
-			Email:     "quentinescudier@hotmail.fr",
-			FirstName: "Quentin",
-			LastName:  "Escudier",
-			Password:  "admin",
-			IsAdmin:   true,
+			Pseudo:   "eavi",
+			Password: "admin",
+			IsAdmin:  true,
 		},
 		{
-			Email:     "agathe.maeght@gmail.com",
-			FirstName: "Agathe",
-			LastName:  "Maeght",
-			Password:  "admin",
-			IsAdmin:   true,
+			Pseudo:   "cataaa",
+			Password: "admin",
+			IsAdmin:  true,
 		},
 	}
 	for _, admin := range admins {

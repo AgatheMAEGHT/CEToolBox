@@ -17,9 +17,7 @@ func TestWhoAmI(t *testing.T) {
 	result, status := requester("/who-am-i", http.MethodGet, nil, tok)
 	assert.Equal(t, 200, status, result["err"])
 	assert.NotEmpty(t, result["_id"], result)
-	assert.NotEmpty(t, result["email"], result)
-	assert.NotEmpty(t, result["firstName"], result)
-	assert.NotEmpty(t, result["lastName"], result)
+	assert.NotEmpty(t, result["pseudo"], result)
 	assert.Contains(t, "truefalse", fmt.Sprintf("%t", result["isAdmin"]), result)
 }
 
@@ -29,11 +27,18 @@ func TestUpdateAccount(t *testing.T) {
 	defer deleteAccount(t, tok)
 	assert.NotEmpty(t, tok)
 
+	// Who am I
+	result, status := requester("/who-am-i", http.MethodGet, nil, tok)
+	assert.Equal(t, 200, status, result["err"])
+	assert.NotEmpty(t, result["_id"])
+	testId, ok := result["_id"].(string)
+	assert.True(t, ok)
+
 	body := map[string]interface{}{
-		"firstName": "test2",
-		"lastName":  "test2",
+		"_id":    testId,
+		"pseudo": "test2",
 	}
-	result, status := requester("/user/update", http.MethodPut, body, tok)
+	result, status = requester("/user/update", http.MethodPut, body, tok)
 	assert.Equal(t, 200, status, result["err"])
 
 	/* Test with error */
@@ -56,7 +61,7 @@ func TestChangePassword(t *testing.T) {
 	assert.Equal(t, 200, status, result["err"])
 	// Login with new password
 	body = map[string]interface{}{
-		"email":    "test@test.fr",
+		"pseudo":   "test@test.fr",
 		"password": "test2",
 	}
 	result, status = requester("/login", http.MethodPost, body, "")

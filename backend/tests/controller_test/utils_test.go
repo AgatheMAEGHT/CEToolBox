@@ -141,7 +141,7 @@ func requester(path string, method string, body map[string]interface{}, auth str
 
 func getAdminAccessToken(t *testing.T) string {
 	body := map[string]interface{}{
-		"email":    "quentinescudier@hotmail.fr",
+		"pseudo":   "eavi",
 		"password": "admin",
 	}
 	result, status := requester("/login", http.MethodPost, body, "")
@@ -151,12 +151,10 @@ func getAdminAccessToken(t *testing.T) string {
 	return res
 }
 
-func createTestAccount(t *testing.T, email string, adminTok string) string {
+func createTestAccount(t *testing.T, pseudo string, adminTok string) string {
 	body := map[string]interface{}{
-		"email":     email,
-		"firstName": "test",
-		"lastName":  "test",
-		"password":  "test",
+		"pseudo":   pseudo,
+		"password": "test",
 	}
 	result, status := requester("/user/create", http.MethodPost, body, adminTok)
 	assert.Equal(t, 200, status, result["err"])
