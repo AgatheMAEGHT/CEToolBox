@@ -69,7 +69,6 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 		}
 	}
 
-	log.Info(query)
 	ingredients, err := database.FindIngredients(ctx, query)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -89,7 +88,7 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 
 			ingredientsPopulated[i] = ingredientPopulated
 		}
-
+		
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(ingredientsPopulated)
 		return
@@ -226,4 +225,5 @@ func ingredientDelete(w http.ResponseWriter, r *http.Request, user database.User
 	}
 
 	w.WriteHeader(http.StatusOK)
+	w.Write(utils.NewResMsg("Ingredient deleted").ToJson())
 }

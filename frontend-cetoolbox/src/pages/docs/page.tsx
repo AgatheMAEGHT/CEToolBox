@@ -22,7 +22,6 @@ function Page() {
     \na`, `e`, `f`, "block"], [`g`, `h`, `i`, "bluck"]];
 
     function deleteBlock(id: number): void {
-        console.log("the deleted id : " + id);
         setPageContent(prev => prev.filter(block => block.id !== id));
     }
 

@@ -1,0 +1,41 @@
+#login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5vh;
+}
+
+.login-container {
+    background-color: var(--color-2-lighter);
+    padding: 30px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+#login-container-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.login-container-input {
+    display: flex;
+    gap: 10px;
+}
+
+.login-label {
+    width: 100px;
+    min-width: fit-content;
+    text-align: right;
+}
+
+.login-input {
+    min-width: 200px;
+    max-width: 200px;
+}

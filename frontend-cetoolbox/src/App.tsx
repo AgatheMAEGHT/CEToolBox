@@ -11,25 +11,32 @@ import Ingredients from './pages/recipes/ingredients/ingredients';
 import IngredientsDetail from './pages/recipes/ingredients/ingredients-detail/ingredients-detail';
 import RecipesList from './pages/recipes/recipes/recipes';
 import Cheeses from './pages/recipes/cheeses/cheeses';
+import Login from './pages/login/login';
 
 import './App.css';
 import './components/style.css';
 import './components/blocks/blocks.css';
 
 function App() {
+    let logged: string | null = localStorage.getItem("logged");
+
     return (
         <div id="App">
             <BrowserRouter>
-                <Header />
+                {logged !== null && <Header />}
                 <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path="docs" element={<Page />} />
-                    <Route path="lists" element={<Lists />} />
-                    <Route path="recipes" element={<RecipesHome />} />
-                    <Route path="recipes/ingredients" element={<Ingredients />} />
-                    <Route path="recipes/ingredients/:itemName" element={<IngredientsDetail />} />
-                    <Route path="recipes/list" element={<RecipesList />} />
-                    <Route path="recipes/cheeses" element={<Cheeses />} />
+                    {logged !== null && <>
+                        <Route path='/' element={<Home />} />
+                        <Route path="docs" element={<Page />} />
+                        <Route path="lists" element={<Lists />} />
+                        <Route path="recipes" element={<RecipesHome />} />
+                        <Route path="recipes/ingredients" element={<Ingredients />} />
+                        <Route path="recipes/ingredients/:itemName" element={<IngredientsDetail />} />
+                        <Route path="recipes/list" element={<RecipesList />} />
+                        <Route path="recipes/cheeses" element={<Cheeses />} />
+                    </>}
+
+                    <Route path='/' element={<Login />} />
                     <Route path="*" element={<NoPage />} />
                 </Routes>
             </BrowserRouter>

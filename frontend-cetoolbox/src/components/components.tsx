@@ -1,4 +1,4 @@
-export function button(text: string, onClick: any, del?: boolean) {
+export function button(text: string, onClick: any, del?: boolean): JSX.Element {
     return <div className={'button-border button-border-delete-' + del} onClick={onClick}><div className={"button-inside button-inside-delete-" + del}>{text}</div></div>;
 }
 

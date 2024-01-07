@@ -16,7 +16,7 @@ var (
 type IngredientRes struct {
 	ID           primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	Name         string             `json:"name" bson:"name"`
-	Tags         []*IngredientTag   `json:"tags" bson:"tags"`
+	Tags         []IngredientTag   `json:"tags" bson:"tags"`
 	KcalPerGram  float64            `json:"kcalPerGram" bson:"kcalPerGram"`
 	ToGramFactor float64            `json:"toGramFactor" bson:"toGramFactor"`
 	Restrictions Restrictions       `json:"restrictions" bson:"restrictions"`
@@ -91,7 +91,10 @@ func (a *Ingredient) Populate(ctx context.Context) (IngredientRes, error) {
 
 	res.ID = a.ID
 	res.Name = a.Name
-	res.Tags = tags
+	res.Tags = make([]IngredientTag, len(tags))
+	for i, tag := range tags {
+		res.Tags[i] = *tag
+	}
 	res.KcalPerGram = a.KcalPerGram
 	res.ToGramFactor = a.ToGramFactor
 	res.Restrictions = a.Restrictions

@@ -75,16 +75,6 @@
     min-width: 30%;
 }
 
-.ingredient-detail-input {
-    width: 100%;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid var(--gradient-color3);
-    background-color: var(--background);
-    color: var(--text);
-
-}
-
 /* Tages */
 #ingredient-detail-tags-area {
     display: flex;

@@ -2,91 +2,118 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import './ingredients-detail.css';
-import { ingredient, tag } from '../../../../components/types';
+import { ingredientDB, tag } from '../../../../components/types';
 import { button, checkbox } from '../../../../components/components';
+import { requester } from '../../../../components/requester';
 
 function IngredientsDetail() {
     let navigate = useNavigate();
     let name = useParams()?.itemName ?? "";
 
-    const [ingredient, setIngredient] = React.useState<ingredient>({
+    const [ingredient, setIngredient] = React.useState<ingredientDB>({
         _id: '',
         name: name,
-        tags: [{ _id: "1", name: 'Oui', color: '789456' }],
+        tags: [],
         kcalPerGram: 0,
         toGramFactor: 0,
         restrictions: {
             isVegan: false,
             isVeggie: false,
             isGlutenFree: false,
-            isCheeseFree: true,
-            isFishFree: true
+            isCheeseFree: false,
+            isFishFree: false
         }
     });
-    const [tags, setTags] = React.useState<tag[]>([{ _id: '1', name: 'Oui', color: '789456' }, { _id: '2', name: 'Bleu', color: 'fffa75' }, { _id: '3', name: 'Eau', color: '22ffff' }]);
+
+    const [tags, setTags] = React.useState<tag[]>([]);
     const [showAdd, setShowAdd] = React.useState<boolean>(false);
     const [newTag, setNewTag] = React.useState<tag>({ _id: '', name: '', color: 'c0c0c0' });
-    console.log(newTag);
 
     React.useEffect(() => {
         // Get the ingredient from the database
+        requester('/ingredients?name=' + name, 'GET').then((res: any) => {
+            if (res.length > 0) {
+                setIngredient(res[0]);
+            }
+        });
         // Get the tags from the database
-    },);
+        requester('/ingredient-tags', 'GET').then((res: any) => {
+            if (res === null) return;
+            setTags(res);
+        });
+    }, []);
 
     function displayTags(): JSX.Element | JSX.Element[] {
-        let cellTags: JSX.Element[] = [];
+        let tagList: JSX.Element[] = [];
         for (let i = 0; i < tags.length; i++) {
             let tagIsSelected: boolean = false;
             let j = 0;
+
             while (!tagIsSelected && j < ingredient.tags.length) {
-                tagIsSelected = ingredient.tags[j]._id === tags[i]._id;
+                tagIsSelected = ingredient.tags[j] === tags[i]._id;
                 j++;
             }
 
-            cellTags.push(<div className='ingredient-detail-tags' key={i}>
+            tagList.push(<div className='ingredient-detail-tags' key={i}>
                 <div className='ingredient-detail-tags-label' style={{ backgroundColor: "#" + tags[i].color }}>
                     {tags[i].name}
                 </div>
                 {checkbox(tagIsSelected, () => {
-                    let newTags: tag[] = ingredient.tags;
+                    let newTags: string[] = ingredient.tags;
                     let newTagIsSelected: boolean = false;
                     let j = 0;
                     while (!newTagIsSelected && j < ingredient.tags.length) {
-                        newTagIsSelected = ingredient.tags[j]._id === tags[i]._id;
+                        newTagIsSelected = ingredient.tags[j] === tags[i]._id;
                         j++;
                     }
                     if (newTagIsSelected) {
-                        newTags.splice(newTags.indexOf(tags[i]), 1);
+                        newTags.splice(newTags.indexOf(tags[i]._id), 1);
                     } else {
-                        newTags.push(tags[i]);
+                        newTags.push(tags[i]._id);
                     }
                     setIngredient({ ...ingredient, tags: newTags })
                 })}
             </div>);
         }
 
-        return cellTags;
+        return tagList;
     }
 
     function addTag(): void {
         // Add the tag to the database
-        // Add the tag to the ingredient
+        let newTagWithId = newTag;
+        requester('/ingredient-tags', 'POST', newTag).then((res: any) => {
+            if (res._id) {
+                newTagWithId._id = res._id;
+            }
+        });
         // Update the tags list
-        let newTagWithÏd = newTag;
-        newTagWithÏd._id = ""; // Result of the database call
-        setTags([...tags, newTagWithÏd]);
+        setTags([...tags, newTagWithId]);
         setNewTag({ _id: "", name: "", color: "c0c0c0" });
-        setIngredient({ ...ingredient, tags: [...ingredient.tags, newTagWithÏd] });
+        setIngredient({ ...ingredient, tags: [...ingredient.tags, newTagWithId._id] });
     }
 
     function editIngredient(): void {
+        let ingredientNew: ingredientDB = {
+            _id: ingredient._id,
+            name: ingredient.name,
+            tags: ingredient.tags,
+            kcalPerGram: ingredient.kcalPerGram,
+            toGramFactor: ingredient.toGramFactor,
+            restrictions: ingredient.restrictions
+        }
         // Edit the element from the ingredient list
-        // Edit the element from the meal list
+        requester('/ingredients', 'PUT', ingredientNew).then((res: any) => {
+            setIngredient(res);
+            navigate('/recipes/ingredients');
+        });
     }
 
     function deleteIngredient(): void {
         // Delete the element from the ingredient list
-        // Delete the element from the meal list
+        requester('/ingredients?_id=' + ingredient._id, 'DELETE').then((res: any) => {
+            navigate('/recipes/ingredients');
+        });
     }
 
     return <div id="ingredient-detail" className='page'>
@@ -128,7 +155,7 @@ function IngredientsDetail() {
                     {displayTags()}
                 </div>
                 {showAdd && <div id='ingredient-detail-tags-new'>
-                    <input type="text" className='ingredient-detail-input' id='ingredient-detail-tags-new-input' placeholder='Tag' value={newTag.name} onChange={(e) => setNewTag({ _id: "", name: e.target.value, color: newTag.color })} />
+                    <input type="text" className='input' id='ingredient-detail-tags-new-input' placeholder='Tag' value={newTag.name} onChange={(e) => setNewTag({ _id: "", name: e.target.value, color: newTag.color })} />
                     <input type="color" id='ingredient-detail-tags-new-color' defaultValue={newTag.color} value={newTag.color} onChange={e => { setNewTag({ _id: "", name: newTag.name, color: e.target.value.replace("#", "") }) }} />
                     <div className='ingredient-detail-tags-label' style={{ backgroundColor: "#" + newTag.color }}>
                         {newTag.name === '' ? 'Tag' : newTag.name}
@@ -141,12 +168,12 @@ function IngredientsDetail() {
             <div id='ingredient-detail-numbers' className='ingredient-detail-elt-col'>
                 <div>
                     <p id='ingredient-detail-elt-title'>Kcal par gramme</p>
-                    <input type="number" min={0} className='ingredient-detail-input' id='ingredient-detail-elt-input' value={ingredient.kcalPerGram} onChange={e => setIngredient({ ...ingredient, kcalPerGram: parseInt(e.target.value) })} />
+                    <input type="number" min={0} className='input' id='ingredient-detail-elt-input' value={ingredient.kcalPerGram} onChange={e => setIngredient({ ...ingredient, kcalPerGram: parseInt(e.target.value) })} />
                 </div>
                 <div>
                     <p id='ingredient-detail-elt-title'>Facteur de conversion</p>
                     <p id='ingredient-detail-elt-subtitle'>(1 si on compte en gramme, x si on compte en autre chose <br />(ex : masse d'un oeuf en g))</p>
-                    <input type="number" min={0} className='ingredient-detail-input' id='ingredient-detail-elt-input' value={ingredient.toGramFactor} onChange={e => setIngredient({ ...ingredient, toGramFactor: parseInt(e.target.value) })} />
+                    <input type="number" min={0} className='input' id='ingredient-detail-elt-input' value={ingredient.toGramFactor} onChange={e => setIngredient({ ...ingredient, toGramFactor: parseInt(e.target.value) })} />
                 </div>
             </div>
         </div>

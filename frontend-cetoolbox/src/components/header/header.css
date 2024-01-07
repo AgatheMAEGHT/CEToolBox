@@ -10,4 +10,49 @@
 .header-button {
     cursor: pointer;
     font-weight: bold;
+    height: 100%;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+}
+
+/* ============ *
+ *  Dropdowns   *
+ * ============ */
+.header-dropdown {
+    display: block;
+}
+
+.header-dropdown:hover .header-dropdown-list {
+    display: block;
+}
+
+.header-dropdown-list {
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    position: fixed;
+    width: fit-content;
+    background: var(--gradient-color3-light);
+    color: var(--text-color);
+    z-index: 1;
+    border-radius: 5px;
+    margin-top: -10px;
+}
+
+.header-dropdown-list p:first-child {
+    border-top: 0px solid var(--gradient-color3)
+}
+
+.header-dropdown-button {
+    cursor: pointer;
+    font-weight: bold;
+    justify-self: flex-end;
+    padding: 5px 10px;
+    margin: 0px;
+    border-top: 1px solid var(--gradient-color3);
+}
+
+.header-dropdown-button:hover {
+    background: var(--gradient-light);
 }

@@ -50,9 +50,10 @@ type restrictions = {
     isFishFree: boolean
 }
 
-export type ingredientNew = {
+export type ingredientDB = {
+    _id: string,
     name: string,
-    tags: tag[],
+    tags: string[],
     kcalPerGram: number,
     toGramFactor: number,
     restrictions: restrictions,
@@ -69,7 +70,7 @@ export type ingredient = {
 
 export type recipe = {
     name: string,
-    ingredients: ingredientNew[],
+    ingredients: ingredientDB[],
     quantity: number[],
     kcalTotal: number, // calculate from ingredients
     image: string,

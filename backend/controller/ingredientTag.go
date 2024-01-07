@@ -57,7 +57,6 @@ func ingredientTagGet(w http.ResponseWriter, r *http.Request, user database.User
 		query["name"] = r.Form.Get("name")
 	}
 
-	log.Info(query)
 	ingredientTag, err := database.FindIngredientTags(ctx, query)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -182,4 +181,5 @@ func ingredientTagDelete(w http.ResponseWriter, r *http.Request, user database.U
 	}
 
 	w.WriteHeader(http.StatusOK)
+	w.Write(utils.NewResMsg("IngredientTag deleted").ToJson())
 }

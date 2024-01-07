@@ -137,7 +137,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	user, err := database.FindOneUser(r.Context(), bson.M{"pseudo": mapBody["pseudo"]})
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte("Wrong pseudo or password"))
 		return
 	}
