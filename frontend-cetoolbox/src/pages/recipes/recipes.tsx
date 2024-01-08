@@ -6,9 +6,9 @@ function RecipesHome() {
 
     return <div id="recipes" className='page'>
         <h2>Recettes de la CE Toolbox</h2>
-        <button className='recipes-button' onClick={() => navigate("/recipes/ingredients")}><div className='recipes-button-content'>Ingrédients</div></button>
-        <button className='recipes-button' onClick={() => navigate("/recipes/list")}><div className='recipes-button-content'>Recettes</div></button>
-        <button className='recipes-button' onClick={() => navigate("/recipes/cheeses")}><div className='recipes-button-content'>Fromages</div></button>
+        <button className='recipes-button' onClick={() => navigate("/food/ingredients")}><div className='recipes-button-content'>Ingrédients</div></button>
+        <button className='recipes-button' onClick={() => navigate("/food/list")}><div className='recipes-button-content'>Recettes</div></button>
+        <button className='recipes-button' onClick={() => navigate("/food/cheeses")}><div className='recipes-button-content'>Fromages</div></button>
     </div>
 }
 

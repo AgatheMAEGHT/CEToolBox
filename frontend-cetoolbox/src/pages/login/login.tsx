@@ -71,7 +71,7 @@ function Login() {
                     </div>
                 </div>
                 <div className='rotating'>
-                    {button('Se connecter', () => { login() })}
+                    {button({ text: 'Se connecter', onClick: () => { login() } })}
                 </div>
             </div>
         </div>

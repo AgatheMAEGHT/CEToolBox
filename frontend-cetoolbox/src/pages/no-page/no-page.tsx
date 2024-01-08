@@ -7,7 +7,7 @@ function NoPage() {
 
     return <div id="no-page" className='page'>
         <p><b>Cette page n'existe pas</b></p>
-        {button("Revenir à l'accueil", () => navigate("/"))}
+        {button({ text: "Revenir à l'accueil", onClick: () => navigate("/") })}
     </div>
 }
 

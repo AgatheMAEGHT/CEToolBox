@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { Bar, Container, Section } from '@column-resizer/react';
 
-import './ingredients.css';
 import { ingredient, ingredientDB } from '../../../components/types';
 import { requester } from '../../../components/requester';
+import './ingredients.css';
 
 function Ingredients() {
     let navigate = useNavigate();
@@ -140,7 +140,7 @@ function Ingredients() {
         for (let i = 0; i < table?.length; i++) {
             names.push(<span
                 key={i}
-                onClick={() => navigate("/recipes/ingredients/" + table[i].name)}
+                onClick={() => navigate("/food/ingredients/" + table[i].name)}
                 className='recipes-ingredients-table-cell recipes-ingredients-table-name'
                 id={'recipes-ingredients-table-name' + i}
                 onMouseOut={() => changeColor(i, false)}
@@ -233,11 +233,11 @@ function Ingredients() {
             }
         }
         requester('/ingredients', 'POST', newIngredient).then((res: any) => {
-            navigate('/recipes/ingredients/_new')
+            navigate('/food/ingredients/_new')
         });
     }
 
-    return <div id="recipes" className='page'>
+    return <div id="ingredients" className='page'>
         <h2>Ingrédients de la CE Toolbox</h2>
         <button className='recipes-button' onClick={() => { createNewIngredient() }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
 
@@ -246,7 +246,7 @@ function Ingredients() {
                 {tableToHtml()}
             </div>
         </div>
-        <button className='recipes-button' onClick={() => { navigate('/recipes/ingredients/new') }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
+        <button className='recipes-button' onClick={() => { navigate('/food/ingredients/new') }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
     </div>
 }
 

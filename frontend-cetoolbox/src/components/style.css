@@ -62,11 +62,16 @@
     width: fit-content;
 }
 
+.button-border-disabled {
+    background: var(--gradient-light);
+}
+
 .button-inside {
     background-color: var(--background);
     padding: 5px 10px;
     border-radius: 2px;
     width: fit-content;
+    user-select: none;
 }
 
 .button-border:hover .button-inside {
@@ -79,6 +84,10 @@
 }
 
 .button-inside-delete-true:hover {
+    background: rgb(255, 199, 199);
+}
+
+.button-border-disabled-delete {
     background: rgb(255, 199, 199);
 }
 

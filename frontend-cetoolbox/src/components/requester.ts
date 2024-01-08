@@ -54,14 +54,14 @@ export function requester<T>(url: string, method: string, body?: any): Promise<T
                 else if (token) {
                     msg = "Votre session a expiré. Veuillez vous reconnecter."
                 }
-
+                alert(msg);
+            } else if (res.status === 418) {
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
                 localStorage.removeItem('expire_date');
                 localStorage.removeItem('logged');
                 localStorage.removeItem('pseudo');
-
-                alert(msg);
+                alert("Vous avez été déconnecté.");
             } else if (res.status !== 200) {
                 console.log("Err: " + res.status);
                 res.json().then(res => {

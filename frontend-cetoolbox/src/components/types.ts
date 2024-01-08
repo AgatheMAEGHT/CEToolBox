@@ -1,3 +1,16 @@
+/* ============== *
+*    COMPONENTS
+** ============== */
+export type buttonType = {
+    text: string,
+    onClick: () => void,
+    del?: boolean,
+    className?: string,
+    width?: string,
+    rounded?: boolean,
+    disabled?: boolean,
+};
+
 /* ========== *
 *    BLOCKS
 ** ========== */
@@ -69,17 +82,20 @@ export type ingredient = {
 }
 
 export type recipe = {
+    _id: string,
     name: string,
-    ingredients: ingredientDB[],
-    quantity: number[],
-    kcalTotal: number, // calculate from ingredients
     image: string,
-    categories: string[], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
-    origin: string, // pays d'origine
-    status: string, // approuvé, à tester, refusé
-    type: string, // salé, sucré, sucré-salé
+    ingredients: ingredientDB[],
+    quantities: number[], // same length as ingredients
     preparationTime: number, // en minutes
     cookingTime: number, // en minutes
-    restrictions: restrictions, // calculate from ingredients
+    categories: tag[], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
+    origin: tag, // pays d'origine
+    status: tag, // approuvé, à tester, refusé
+    type: tag, // salé, sucré, sucré-salé
     steps: string[], // markdown
+    // kcalPerPortion: number, // calculated from ingredients and quantities
+    // restrictions: restrictions, // calculated from ingredients
+    // tags: tag[], // calculated from ingredients,
+    // numberOfPortions: number, // only when creating a meal (then transforms the quantities)
 }

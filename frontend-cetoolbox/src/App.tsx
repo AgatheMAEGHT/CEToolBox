@@ -16,6 +16,7 @@ import Login from './pages/login/login';
 import './App.css';
 import './components/style.css';
 import './components/blocks/blocks.css';
+import RecipesDetail from './pages/recipes/recipes/recipes-detail/recipes-detail';
 
 function App() {
     let logged: string | null = localStorage.getItem("logged");
@@ -29,11 +30,12 @@ function App() {
                         <Route path='/' element={<Home />} />
                         <Route path="docs" element={<Page />} />
                         <Route path="lists" element={<Lists />} />
-                        <Route path="recipes" element={<RecipesHome />} />
-                        <Route path="recipes/ingredients" element={<Ingredients />} />
-                        <Route path="recipes/ingredients/:itemName" element={<IngredientsDetail />} />
-                        <Route path="recipes/list" element={<RecipesList />} />
-                        <Route path="recipes/cheeses" element={<Cheeses />} />
+                        <Route path="food" element={<RecipesHome />} />
+                        <Route path="food/ingredients" element={<Ingredients />} />
+                        <Route path="food/ingredients/:itemName" element={<IngredientsDetail />} />
+                        <Route path="food/list" element={<RecipesList />} />
+                        <Route path="food/recipes/:itemName" element={<RecipesDetail />} />
+                        <Route path="food/cheeses" element={<Cheeses />} />
                     </>}
 
                     <Route path='/' element={<Login />} />

@@ -1,0 +1,25 @@
+#recipes-detail-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+}
+
+table {
+    border-color: transparent;
+    border-width: 2px;
+}
+
+table td {
+    padding: 5px;
+    border-color: var(--gradient-color3);
+    border-width: 1px;
+}
+
+#recipes-table-ingredients {
+    background: var(--gradient);
+    padding: 2px;
+    border-radius: 3px;
+    overflow: hidden;
+}

@@ -105,20 +105,20 @@ function IngredientsDetail() {
         // Edit the element from the ingredient list
         requester('/ingredients', 'PUT', ingredientNew).then((res: any) => {
             setIngredient(res);
-            navigate('/recipes/ingredients');
+            navigate('/food/ingredients');
         });
     }
 
     function deleteIngredient(): void {
         // Delete the element from the ingredient list
         requester('/ingredients?_id=' + ingredient._id, 'DELETE').then((res: any) => {
-            navigate('/recipes/ingredients');
+            navigate('/food/ingredients');
         });
     }
 
     return <div id="ingredient-detail" className='page'>
-        <div id="ingredient-detail-back">{button("Retourner à la liste des ingrédients", () => navigate('/recipes/ingredients'))}</div>
-        <div id="ingredient-detail-delete">{button("Supprimer l'ingrédient", () => deleteIngredient(), true)}</div>
+        <div id="ingredient-detail-back">{button({ text: "Retourner à la liste des ingrédients", onClick: () => navigate('/food/ingredients') })}</div>
+        <div id="ingredient-detail-delete">{button({ text: "Supprimer l'ingrédient", onClick: () => deleteIngredient(), del: true })} </div>
         <h2 id="ingredient-detail-title">{ingredient.name}</h2>
         <div id="ingredient-detail-restrictions-area">
             <div className='ingredient-detail-restrictions'>
@@ -160,10 +160,10 @@ function IngredientsDetail() {
                     <div className='ingredient-detail-tags-label' style={{ backgroundColor: "#" + newTag.color }}>
                         {newTag.name === '' ? 'Tag' : newTag.name}
                     </div>
-                    {newTag.name !== '' && button('Ajouter', () => { addTag() })}
-                    {button("Annuler l'ajout", () => { setShowAdd(!showAdd) })}
+                    {newTag.name !== '' && button({ text: 'Ajouter', onClick: () => { addTag() } })}
+                    {button({ text: "Annuler l'ajout", onClick: () => { setShowAdd(!showAdd) } })}
                 </div>}
-                {!showAdd && button('Ajouter un tag', () => { setShowAdd(!showAdd) })}
+                {!showAdd && button({ text: 'Ajouter un tag', onClick: () => { setShowAdd(!showAdd) } })}
             </div>
             <div id='ingredient-detail-numbers' className='ingredient-detail-elt-col'>
                 <div>
@@ -178,7 +178,7 @@ function IngredientsDetail() {
             </div>
         </div>
 
-        {button('Sauvegarder les modifications', () => { editIngredient() })}
+        {button({ text: "Retourner à la liste des ingrédients", onClick: () => editIngredient() })}
     </div >
 }
 
