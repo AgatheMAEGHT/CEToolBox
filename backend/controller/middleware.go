@@ -35,7 +35,7 @@ func middleware(w http.ResponseWriter, r *http.Request, next HandlerFunc) {
 	user, err := verifyAccessToken(ctx, tok[1])
 	if err != nil {
 		log.Errorf("Failed to verify token: %v", err)
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusTeapot)
 		w.Write(utils.NewResErr("Invalid token").ToJson())
 		return
 	}
