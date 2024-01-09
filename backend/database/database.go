@@ -17,6 +17,10 @@ var (
 
 func defaultValues(ctx context.Context) {
 	defaultUsers(ctx)
+	defaultRecipeCategories(ctx)
+	defaultRecipeOrigins(ctx)
+	defaultRecipeStatus(ctx)
+	defaultRecipeTypes(ctx)
 }
 
 func initCollections(ctx context.Context) {
@@ -28,6 +32,10 @@ func initCollections(ctx context.Context) {
 	initIngredient(ctx, db)
 	initRecipe(ctx, db)
 	initIngredientTags(ctx, db)
+	initRecipeCategories(ctx, db)
+	initRecipeOrigins(ctx, db)
+	initRecipeStatus(ctx, db)
+	initRecipeTypes(ctx, db)
 }
 
 func Connect(ctx context.Context, url string) (*mongo.Client, error) {
