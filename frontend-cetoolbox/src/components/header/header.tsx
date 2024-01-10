@@ -8,27 +8,27 @@ function Header() {
     let navigate = useNavigate();
 
     return <div id="header">
-        <p className='header-button' onClick={() => navigate("/")}>Accueil</p>
-        <p className='header-button' onClick={() => navigate("/calendar")}>Calendrier</p>
-        <p className='header-button' onClick={() => navigate("/docs")}>Documents</p>
-        <p className='header-button' onClick={() => navigate("/notes")}>Notes</p>
+        <a className='header-button' href='/' onClick={() => navigate("/")}>Accueil</a>
+        <a className='header-button' href='/calendar'>Calendrier</a>
+        <a className='header-button' href='/docs'>Documents</a>
+        <a className='header-button' href='/notes'>Notes</a>
         <div className='header-button header-dropdown'>
-            <p className='header-button' onClick={() => navigate("/food")}>Recettes</p>
+            <a className='header-button' href='/food'>Recettes</a>
             <div className="header-dropdown-list">
-                <p className='header-dropdown-button' onClick={() => navigate("/food/ingredients")}>Ingrédients</p>
-                <p className='header-dropdown-button' onClick={() => navigate("/food/list")}>Recettes</p>
-                <p className='header-dropdown-button' onClick={() => navigate("/food/cheeses")}>Fromages</p>
-            </div>
-        </div>
+                <a className='header-dropdown-button' href='/food/ingredients' >Ingrédients</a>
+                <a className='header-dropdown-button' href='/food/list' >Recettes</a>
+                <a className='header-dropdown-button' href='/food/cheeses' >Fromages</a>
+            </div >
+        </div >
         <div className='header-button header-dropdown'>
-            <p className='header-button' onClick={() => navigate("/lists")}>Listes</p>
+            <a className='header-button' href='/lists'>Listes</a>
             <div className="header-dropdown-list">
-                <p className='header-dropdown-button' onClick={() => navigate("/food/ingredients")}>Courses</p>
-                <p className='header-dropdown-button' onClick={() => navigate("/food/list")}>Noël</p>
-            </div>
-        </div>
-        <p className='header-button' onClick={() => navigate("/profile")}>Profil</p>
-    </div>
+                <a className='header-dropdown-button' href='/food/ingredients'>Courses</a>
+                <a className='header-dropdown-button' href='/food/list'>Noël</a>
+            </div >
+        </div >
+        <a className='header-button' href='/profile'>Profil</a>
+    </div >
 }
 
 export default Header;

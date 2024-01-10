@@ -7,6 +7,7 @@ export type buttonType = {
     del?: boolean,
     className?: string,
     width?: string,
+    padding?: string,
     rounded?: boolean,
     disabled?: boolean,
 };
@@ -14,7 +15,6 @@ export type buttonType = {
 /* ========== *
 *    BLOCKS
 ** ========== */
-
 export type blockText = {
     content: string | undefined,
 };
@@ -87,15 +87,15 @@ export type recipe = {
     image: string,
     ingredients: ingredientDB[],
     quantities: number[], // same length as ingredients
+    numberOfPortions: number, // default number of portions (then transforms the quantities)
     preparationTime: number, // en minutes
     cookingTime: number, // en minutes
-    categories: tag[], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
+    categories: tag[], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, boisson, sauce, accompagnement
     origin: tag, // pays d'origine
-    status: tag, // approuvé, à tester, refusé
+    status: tag, // approuvé, à tester, refusé...
     type: tag, // salé, sucré, sucré-salé
     steps: string[], // markdown
     // kcalPerPortion: number, // calculated from ingredients and quantities
     // restrictions: restrictions, // calculated from ingredients
     // tags: tag[], // calculated from ingredients,
-    // numberOfPortions: number, // only when creating a meal (then transforms the quantities)
 }

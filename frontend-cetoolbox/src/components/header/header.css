@@ -14,6 +14,8 @@
     margin: 0px;
     display: flex;
     align-items: center;
+    text-decoration: none;
+    color: var(--background-dark);
 }
 
 /* ============ *
@@ -24,7 +26,7 @@
 }
 
 .header-dropdown:hover .header-dropdown-list {
-    display: block;
+    display: flex;
 }
 
 .header-dropdown-list {
@@ -40,7 +42,7 @@
     margin-top: -10px;
 }
 
-.header-dropdown-list p:first-child {
+.header-dropdown-list a:first-child {
     border-top: 0px solid var(--gradient-color3)
 }
 
@@ -51,6 +53,8 @@
     padding: 5px 10px;
     margin: 0px;
     border-top: 1px solid var(--gradient-color3);
+    text-decoration: none;
+    color: var(--gradient-color3-dark);
 }
 
 .header-dropdown-button:hover {

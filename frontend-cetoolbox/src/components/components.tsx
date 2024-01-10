@@ -1,23 +1,26 @@
 import { buttonType } from "./types";
 
 export function button(props: buttonType): JSX.Element {
-    if (props.disabled) return <div
-        className={'button-border button-border-disabled button-border-disabled-delete'}
-        style={props.rounded ? { borderRadius: "100%" } : {}}>
-        <div
-            className={"button-inside button-inside-disabled-" + props.del}
-            style={props.rounded ? { borderRadius: "100%", width: props.width } : { width: props.width }}>
-            {props.text}
-        </div>
-    </div>;
+    let style: any = {
+        width: props.width ?? "initial",
+        padding: props.padding ?? "auto",
+        borderRadius: props.rounded ? "100%" : "initial"
+    };
+    let borderClass: string = 'button-border button-border-delete-' + props.del;
+    let insideClass: string = 'button-inside button-inside-delete-' + props.del;
+
+    if (props.disabled) {
+        borderClass = 'button-border button-border-disabled button-border-disabled-delete';
+        insideClass = 'button-inside button-inside-disabled-' + props.del;
+    };
 
     return <div
-        className={'button-border button-border-delete-' + props.del}
-        onClick={props.onClick}
+        className={borderClass}
+        onClick={!props.disabled ? (props.onClick ?? (() => { })) : () => { }}
         style={props.rounded ? { borderRadius: "100%" } : {}}>
         <div
-            className={"button-inside button-inside-delete-" + props.del}
-            style={props.rounded ? { borderRadius: "100%", width: props.width } : { width: props.width }}>
+            className={insideClass}
+            style={style}>
             {props.text}
         </div>
     </div>;

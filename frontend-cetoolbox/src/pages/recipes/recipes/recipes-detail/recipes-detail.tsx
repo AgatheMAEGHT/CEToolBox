@@ -11,11 +11,10 @@ function RecipesDetail() {
     let navigate = useNavigate();
     let name = useParams()?.itemName ?? "";
 
-    const [number, setNumber] = React.useState<number>(1); // nombre de personnes
     const [recipe, setRecipe] = React.useState<recipe>({
         _id: '',
         name: '',
-        image: "",
+        image: "/food-icons/recipe/back.jpg",
         ingredients: [{
             _id: '',
             name: name,
@@ -24,7 +23,7 @@ function RecipesDetail() {
             toGramFactor: 1,
             restrictions: {
                 isVegan: true,
-                isVeggie: false,
+                isVeggie: true,
                 isGlutenFree: true,
                 isCheeseFree: true,
                 isFishFree: true
@@ -40,11 +39,12 @@ function RecipesDetail() {
                 isVegan: true,
                 isVeggie: true,
                 isGlutenFree: true,
-                isCheeseFree: false,
-                isFishFree: false
+                isCheeseFree: true,
+                isFishFree: true
             }
         }],
         quantities: [10, 5],
+        numberOfPortions: 1,
         preparationTime: 0, // en minutes
         cookingTime: 121, // en minutes
         categories: [], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
@@ -83,14 +83,14 @@ function RecipesDetail() {
         }
         if (cookTime === "") cookTime = "0 min";
 
-        return <span id='recipes-table-time'
+        return <span id='table-list-time'
         >
-            <div className='recipes-table-cell-time-line'>
+            <div className='recipes-list-table-cell-time-line'>
                 <img alt="clock" className="recipes-icons rotating" src='/food-icons/recipe/prepa.png' />
                 {prepHours > 0 && (prepHours + "h ")}
                 {prepTime}
             </div>
-            <div className='recipes-table-cell-time-line'>
+            <div className='recipes-list-table-cell-time-line'>
                 <img alt="clock" className="recipes-icons rotating" src='/food-icons/recipe/oven.png' />
                 {cookTime}
             </div>
@@ -102,39 +102,25 @@ function RecipesDetail() {
         for (let j = 0; j < recipe.categories?.length; j++) {
             categories.push(<span
                 key={j}
-                className='recipes-table-cell-tag'
+                className='recipes-list-table-cell-tag'
                 style={{ backgroundColor: "#" + recipe.categories[j]?.color }}
             >
                 {recipe.categories[j].name}</span>);
         }
         return <div>
             <p>Catégories</p>
-            <span id='recipes-table-categories'>{recipe.categories.length === 0 ? "Aucune" : categories}</span>
+            <span id='table-list-categories'>{recipe.categories.length === 0 ? "Aucune" : categories}</span>
         </div>
     }
 
     function originToHtml(): JSX.Element {
-        return <div>
-            <p>Origine</p>
-            <span className='recipes-table-cell-tag' style={{ backgroundColor: "#" + recipe.origin?.color }}>
-                {recipe.origin.name}</span>
-        </div>
+        return <span className='recipes-list-table-cell-tag' style={{ backgroundColor: "#" + recipe.origin?.color }}>
+            {recipe.origin.name}</span>
     }
 
     function statusToHtml(): JSX.Element {
-        return <div>
-            <p>Status</p>
-            <span className='recipes-table-cell-tag' style={{ backgroundColor: "#" + recipe.status?.color }}>
-                {recipe.status.name}</span>
-        </div>
-    }
-
-    function typeToHtml(): JSX.Element {
-        return <div>
-            <p>Type</p>
-            <span className='recipes-table-cell-tag' style={{ backgroundColor: "#" + recipe.type?.color }}>
-                {recipe.type.name}</span>
-        </div>
+        return <span className='recipes-detail-tag' style={{ backgroundColor: "#" + recipe.status?.color }}>
+            {recipe.status.name}</span>
     }
 
     function kcalPerPortion(): JSX.Element {
@@ -142,10 +128,12 @@ function RecipesDetail() {
         for (let j = 0; j < recipe.ingredients?.length; j++) {
             portion += recipe.ingredients[j].kcalPerGram * recipe.ingredients[j].toGramFactor * recipe.quantities[j];
         }
-        return <div>
-            <p>Kcal par portion</p>
-            <span id='recipes-table-kcalPerPortion'>{portion} kcal</ span>;
-        </div>
+        return <span id='recipes-table-kcalPerPortion'><b>{portion} kcal</b><br />par portion</ span>
+    }
+
+    function typeToHtml(): JSX.Element {
+        return <span className='recipes-detail-tag' style={{ backgroundColor: "#" + recipe.type?.color }}>
+            {recipe.type.name}</span>
     }
 
     function restrictionsToHtml(): JSX.Element {
@@ -164,14 +152,13 @@ function RecipesDetail() {
         }
 
         return <div>
-            <p>Restrictions</p>
-            <div id='recipes-recipe-restrictions'>
-                {isVegan ? <img alt="vegan" className="recipes-restrictions-icon" src='/food-icons/vegan.png' /> : ""}
-                {isVeggie ? <img alt="veggie" className="recipes-restrictions-icon" src='/food-icons/veggie.png' /> : ""}
-                {isGlutenFree ? <img alt="gluten free" className="recipes-restrictions-icon" src='/food-icons/glutenFree.png' /> : ""}
-                {isCheeseFree ? <img alt="cheese free" className="recipes-restrictions-icon" src='/food-icons/cheeseFree.png' /> : ""}
-                {isFishFree ? <img alt="fish free" className="recipes-restrictions-icon" src='/food-icons/fishFree.png' /> : ""}
-                {!isVegan && !isVeggie && !isGlutenFree && !isCheeseFree && !isFishFree ? "Aucune" : ""}
+            <div id='recipes-detail-restrictions'>
+                {isVegan ? <img alt="vegan" className="recipes-detail-restrictions-icon" src='/food-icons/vegan.png' /> : ""}
+                {isVeggie ? <img alt="veggie" className="recipes-detail-restrictions-icon" src='/food-icons/veggie.png' /> : ""}
+                {isGlutenFree ? <img alt="gluten free" className="recipes-detail-restrictions-icon" src='/food-icons/glutenFree.png' /> : ""}
+                {isCheeseFree ? <img alt="cheese free" className="recipes-detail-restrictions-icon" src='/food-icons/cheeseFree.png' /> : ""}
+                {isFishFree ? <img alt="fish free" className="recipes-detail-restrictions-icon" src='/food-icons/fishFree.png' /> : ""}
+                {!isVegan && !isVeggie && !isGlutenFree && !isCheeseFree && !isFishFree ? "Aucune restriction" : ""}
             </div>
         </div>;
     }
@@ -180,30 +167,28 @@ function RecipesDetail() {
         let ingredients: JSX.Element[] = [];
         for (let j = 0; j < recipe.ingredients?.length; j++) {
             let ingredient: ingredientDB = recipe.ingredients[j];
-            ingredients.push(<tr key={j} className='recipes-table-row'>
-                <td className='recipes-table-cell'><input value={ingredient.name} onChange={e => {
+            ingredients.push(<tr key={j}>
+                <td className='recipes-detail-cell'><input value={ingredient.name} onChange={e => {
                     let newIngredients: ingredientDB[] = [...recipe.ingredients];
                     newIngredients[j].name = e.target.value;
                     setRecipe({ ...recipe, ingredients: newIngredients })
                 }}></input></td>
-                <td className='recipes-table-cell'>{recipe.quantities[j] * number}</td>
-                <td className='recipes-table-cell'>{recipe.ingredients[j].kcalPerGram * recipe.quantities[j] * number} kcal</td>
+                <td className='recipes-detail-cell'>{recipe.quantities[j] * recipe.numberOfPortions}</td>
+                <td className='recipes-detail-cell'>{recipe.ingredients[j].kcalPerGram * recipe.quantities[j] * recipe.numberOfPortions} kcal</td>
             </tr>);
         }
-        return <div id='recipes-table-ingredients'>
-            <table id='recipes-table-ingredients'>
-                <thead>
-                    <tr className='recipes-table-row recipes-table-ingredients-header'>
-                        <th className='recipes-table-cell'>Ingrédient</th>
-                        <th className='recipes-table-cell'>Quantité</th>
-                        <th className='recipes-table-cell'>Kcal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {ingredients}
-                </tbody>
-            </table>
-        </div>;
+        return <table id='recipes-table-ingredients'>
+            <thead className='recipes-detail-table-ingredients-header'>
+                <tr id='recipes-detail-table-ingredients'>
+                    <th className='recipes-detail-cell'>Ingrédient</th>
+                    <th className='recipes-detail-cell'>Quantité</th>
+                    <th className='recipes-detail-cell'>Kcal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {ingredients}
+            </tbody>
+        </table>
     }
 
     function editRecipe(): void {
@@ -213,6 +198,7 @@ function RecipesDetail() {
             image: "",
             ingredients: [],
             quantities: [],
+            numberOfPortions: 0,
             preparationTime: 0, // en minutes
             cookingTime: 0, // en minutes
             categories: [], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
@@ -236,26 +222,44 @@ function RecipesDetail() {
         });
     }
 
-    return <div id="recipes-detail" className='page recipes-table'>
-        <div id="ingredient-detail-back">{button({ text: "Retourner à la liste des ingrédients", onClick: () => navigate('/food/ingredients') })}</div>
+    return <div id="recipes-detail" className='page table-list'>
+        {/* TEST */}
         <div id="ingredient-detail-delete">{button({ text: "Supprimer l'ingrédient", onClick: () => deleteIngredient(), del: true })} </div>
+        <div id="ingredient-detail-back">{button({ text: "Retourner à la liste des ingrédients", onClick: () => navigate('/food/ingredients') })}</div>
 
-        <h2>Recettes de la CE Toolbox</h2>
-        {kcalPerPortion()}
-        {restrictionsToHtml()}
-        <div>
-            {typeToHtml()}
-        </div>
-
-        <div>
-            <h3>Nombre de personnes</h3>
-            <div id="recipes-detail-number">
-                {button({ text: "-", onClick: () => setNumber(number - 1), width: '11px', rounded: true, disabled: number <= 1 })}
-                {number}
-                {button({ text: "+", onClick: () => setNumber(number + 1), width: '11px', rounded: true })}
+        <div id='recipes-detail-back'>
+            <img alt="book" id='recipes-detail-book' src='/food-icons/recipe/book.jpg' />
+            <div id='recipes-detail-left-page' className='recipes-detail-page'>
+                <h2 id='recipes-detail-name'>{name}</h2>
+                <div id="recipes-detail-infos">
+                    <div className='recipes-detail-infos-side-img'>
+                        {time()}
+                        {typeToHtml()}
+                    </div>
+                    <div className='recipes-detail-infos-side-img'>
+                        {statusToHtml()}
+                        {kcalPerPortion()}
+                        {originToHtml()}
+                    </div>
+                    <img alt="recipe" id='recipes-detail-image' src={recipe.image} />
+                </div>
+                <div id='recipes-detail-top-infos'>
+                    {restrictionsToHtml()}
+                </div>
+                <div>
+                    <h3>Nombre de personnes</h3>
+                    <div id="recipes-detail-number">
+                        {button({ text: "-", onClick: () => setRecipe({ ...recipe, numberOfPortions: (recipe.numberOfPortions - 1) }), width: '11px', padding: "4px 10px 7px", rounded: true, disabled: recipe.numberOfPortions <= 1 })}
+                        {recipe.numberOfPortions}
+                        {button({ text: "+", onClick: () => setRecipe({ ...recipe, numberOfPortions: (recipe.numberOfPortions + 1) }), width: '11px', padding: "4px 10px 7px", rounded: true })}
+                    </div>
+                    <h3>Ingrédients</h3>
+                    {ingredientsTable()}
+                </div>
             </div>
-            <h3>Ingrédients</h3>
-            {ingredientsTable()}
+
+            <div id='recipes-detail-right-page' className='recipes-detail-page'>
+            </div>
         </div>
     </div>
 }

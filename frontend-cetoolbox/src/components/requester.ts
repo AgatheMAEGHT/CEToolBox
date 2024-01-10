@@ -52,7 +52,7 @@ export function requester<T>(url: string, method: string, body?: any): Promise<T
                 let msg = "Vous n'êtes pas connecté."
                 if (url === '/login') msg = "Identifiants incorrects."
                 else if (token) {
-                    msg = "Votre session a expiré. Veuillez vous reconnecter."
+                    msg = "Action non authorisée."
                 }
                 alert(msg);
             } else if (res.status === 418) {

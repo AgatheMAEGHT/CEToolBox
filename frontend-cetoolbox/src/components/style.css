@@ -140,6 +140,46 @@
 }
 
 /* ======== *
+ *  Table   *
+ * ======== */
+#table-list {
+    background: var(--gradient-light);
+    padding: 2px;
+    border-radius: 5px;
+}
+
+.table-list-header {
+    background: transparent;
+    color: var(--text-color);
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0%;
+    padding-bottom: 1px;
+    border-bottom: 1px solid var(--background);
+}
+
+.table-list-name {
+    cursor: pointer;
+    width: 100%;
+}
+
+.table-list-col {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px dotted var(--background-darker);
+    border-right: 1px dotted var(--background-darker);
+}
+
+.table-list-cell {
+    border-bottom: 1px dotted var(--background-darker);
+    background-color: var(--background);
+    color: var(--text-color);
+    cursor: default;
+}
+
+/* ======== *
  *  Colors  *
  * ======== */
 .Blanc {

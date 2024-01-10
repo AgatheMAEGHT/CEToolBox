@@ -1,13 +1,8 @@
-.recipes-table {
-    width: 90%;
+#recipes {
     padding: 0% 5%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
-.recipes-table-restrictions {
+.recipes-restrictions {
     display: flex;
     justify-content: center;
     gap: 2px;
@@ -24,65 +19,15 @@
     width: 20px;
 }
 
-#recipes-table {
-    background: var(--gradient-light);
-    padding: 2px;
-}
-
-.recipes-table-col {
-    display: flex;
-    flex-direction: column;
-    border-left: 1px dotted var(--background-darker);
-    border-right: 1px dotted var(--background-darker);
-}
-
-.recipes-table-header {
-    background: transparent;
-    color: var(--text-color);
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0%;
-    padding-bottom: 1px;
-    border-bottom: 1px solid var(--background);
-}
-
-.recipes-table-cell {
-    border-bottom: 1px dotted var(--background-darker);
-    background-color: var(--background);
-    color: var(--text-color);
-    cursor: default;
-}
-
-.recipes-table-bar {
-    width: 30px;
-}
-
-#recipes-table-col-name {
-    size: 250px;
-}
-
-.recipes-table-name {
-    cursor: pointer;
-    width: 100%;
-}
-
-.recipes-table-tags {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-
-.recipes-table-cell-tag {
+.recipes-list-table-cell-tag {
     padding: 2px 5px;
     margin: 2px;
     border-radius: 5px;
     font-size: 0.8em;
+    height: fit-content;
 }
 
-.recipes-table-cell-time-line {
+.recipes-list-table-cell-time-line {
     display: flex;
     gap: 5px;
     padding: 2px 5px;

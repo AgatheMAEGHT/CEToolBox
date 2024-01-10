@@ -16,8 +16,9 @@ function RecipesList() {
             image: "",
             ingredients: [],
             quantities: [],
+            numberOfPortions: 0,
             preparationTime: 0, // en minutes
-            cookingTime: 121, // en minutes
+            cookingTime: 2200, // en minutes
             categories: [], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
             origin: { _id: "", name: "", color: "" }, // pays d'origine
             status: { _id: "0", name: "À tester", color: "fff000" }, // approuvé, à tester, refusé
@@ -36,58 +37,58 @@ function RecipesList() {
 
     // Change the color of the line in the table
     function changeColor(i: number, select: boolean): void {
-        let element: HTMLElement | null = document.getElementById('recipes-table-name' + i);
+        let element: HTMLElement | null = document.getElementById('table-list-name' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-time' + i);
+        element = document.getElementById('table-list-time' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-categories' + i);
+        element = document.getElementById('table-list-categories' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-origin' + i);
+        element = document.getElementById('table-list-origin' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-status' + i);
+        element = document.getElementById('table-list-status' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-type' + i);
+        element = document.getElementById('table-list-type' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-kcalPerPortion' + i);
+        element = document.getElementById('table-list-kcalPerPortion' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
 
-        element = document.getElementById('recipes-table-restrictions' + i);
+        element = document.getElementById('recipes-restrictions' + i);
         if (element) {
             select ? element.style.backgroundColor = 'transparent' : element.style.backgroundColor = 'var(--background)';
         }
     }
 
     function setHeights(): void {
-        let heights: number[] = JSON.parse(localStorage.getItem('recipes-table-heights') || '[]');
+        let heights: number[] = JSON.parse(localStorage.getItem('table-list-heights') || '[]');
 
-        let headerNames: number = document.getElementById('recipes-table-name')?.offsetWidth ?? 0;
-        let headerTime: number = document.getElementById('recipes-table-time')?.offsetWidth ?? 0;
-        let headerCategories: number = document.getElementById('recipes-table-categories')?.offsetWidth ?? 0;
-        let headerOrigin: number = document.getElementById('recipes-table-origin')?.offsetWidth ?? 0;
-        let headerStatus: number = document.getElementById('recipes-table-status')?.offsetWidth ?? 0;
-        let headerType: number = document.getElementById('recipes-table-type')?.offsetWidth ?? 0;
-        let headerKcalPerPortion: number = document.getElementById('recipes-table-kcalPerPortion')?.offsetWidth ?? 0;
-        let headerRestrictions: number = document.getElementById('recipes-table-restrictions')?.offsetWidth ?? 0;
+        let headerNames: number = document.getElementById('table-list-name')?.offsetWidth ?? 0;
+        let headerTime: number = document.getElementById('table-list-time')?.offsetWidth ?? 0;
+        let headerCategories: number = document.getElementById('table-list-categories')?.offsetWidth ?? 0;
+        let headerOrigin: number = document.getElementById('table-list-origin')?.offsetWidth ?? 0;
+        let headerStatus: number = document.getElementById('table-list-status')?.offsetWidth ?? 0;
+        let headerType: number = document.getElementById('table-list-type')?.offsetWidth ?? 0;
+        let headerKcalPerPortion: number = document.getElementById('table-list-kcalPerPortion')?.offsetWidth ?? 0;
+        let headerRestrictions: number = document.getElementById('recipes-restrictions')?.offsetWidth ?? 0;
 
         // If headers width changed
         if (headerNames !== heights[0] || headerTime !== heights[1] || headerCategories !== heights[2] ||
@@ -96,49 +97,49 @@ function RecipesList() {
 
             // Get the heights of the lines
             for (let i = 0; i < heights?.length; i++) {
-                let element: HTMLElement | null = document.getElementById('recipes-table-name' + i);
+                let element: HTMLElement | null = document.getElementById('table-list-name' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-time' + i);
+                element = document.getElementById('table-list-time' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-categories' + i);
+                element = document.getElementById('table-list-categories' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-origin' + i);
+                element = document.getElementById('table-list-origin' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-status' + i);
+                element = document.getElementById('table-list-status' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-type' + i);
+                element = document.getElementById('table-list-type' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-kcalPerPortion' + i);
+                element = document.getElementById('table-list-kcalPerPortion' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
                 }
 
-                element = document.getElementById('recipes-table-restrictions' + i);
+                element = document.getElementById('recipes-restrictions' + i);
                 if (element) {
                     element.style.height = 'fit-content'
                     heights[i] = (heights[i] < element.offsetHeight ? element.offsetHeight : heights[i]);
@@ -147,42 +148,42 @@ function RecipesList() {
 
             // Set the heights to the lines
             for (let i = 0; i < heights?.length; i++) {
-                let element: HTMLElement | null = document.getElementById('recipes-table-name' + i);
+                let element: HTMLElement | null = document.getElementById('table-list-name' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-time' + i);
+                element = document.getElementById('table-list-time' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-categories' + i);
+                element = document.getElementById('table-list-categories' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-origin' + i);
+                element = document.getElementById('table-list-origin' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-status' + i);
+                element = document.getElementById('table-list-status' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-type' + i);
+                element = document.getElementById('table-list-type' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-kcalPerPortion' + i);
+                element = document.getElementById('table-list-kcalPerPortion' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
 
-                element = document.getElementById('recipes-table-restrictions' + i);
+                element = document.getElementById('recipes-restrictions' + i);
                 if (element) {
                     element.style.height = heights[i] - 1 + 'px';
                 }
@@ -198,14 +199,14 @@ function RecipesList() {
     function tableToHtml(): JSX.Element {
         let htmlTable: JSX.Element[] = [];
 
-        let names: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-name'>Nom</span>];
-        let time: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-time'>Temps</span>];
-        let categories: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-categories'>Catégories</span>];
-        let origin: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-origin'>Origine</span>];
-        let status: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-status'>Status</span>];
-        let type: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-type'>Type</span>];
-        let kcalPerPortion: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-kcal'>Kcal / portion</span>];
-        let restrictions: JSX.Element[] = [<span key="header" className='recipes-table-header' id='recipes-table-restrictions'>Restrictions</span>];
+        let names: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-name'>Nom</span>];
+        let time: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-time'>Temps</span>];
+        let categories: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-categories'>Catégories</span>];
+        let origin: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-origin'>Origine</span>];
+        let status: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-status'>Status</span>];
+        let type: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-type'>Type</span>];
+        let kcalPerPortion: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-kcal'>Kcal / portion</span>];
+        let restrictions: JSX.Element[] = [<span key="header" className='table-list-header' id='recipes-restrictions'>Restrictions</span>];
 
         let heights: number[] = [];
 
@@ -215,8 +216,8 @@ function RecipesList() {
                 names.push(<span
                     key={i}
                     onClick={() => navigate("/food/recipes/" + table[i].name)}
-                    className='recipes-table-cell recipes-table-name'
-                    id={'recipes-table-name' + i}
+                    className='table-list-cell table-list-name'
+                    id={'table-list-name' + i}
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
                 >
@@ -230,7 +231,7 @@ function RecipesList() {
                 let prepMinutes: number = table[i].preparationTime % 60;
                 let prepTime: string = prepHours > 0 ? prepHours + "h " : "";
                 if (prepMinutes > 0) {
-                    if (prepMinutes.toString.length === 1 && prepHours !== 0) {
+                    if (prepMinutes.toString().length === 1 && prepHours !== 0) {
                         prepTime += "0";
                     }
                     prepTime += prepMinutes;
@@ -242,7 +243,7 @@ function RecipesList() {
                 let cookMinutes: number = table[i].cookingTime % 60;
                 let cookTime: string = cookHours > 0 ? cookHours + "h " : "";
                 if (cookMinutes > 0) {
-                    if (cookMinutes.toString.length === 1 && cookHours !== 0) {
+                    if (cookMinutes.toString().length === 1 && cookHours !== 0) {
                         cookTime += "0";
                     }
                     cookTime += cookMinutes;
@@ -252,17 +253,16 @@ function RecipesList() {
 
                 time.push(<span
                     key={i}
-                    className='recipes-table-cell recipes-table-cell-time'
-                    id={'recipes-table-time' + i}
+                    className='table-list-cell table-list-cell-time'
+                    id={'table-list-time' + i}
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
                 >
-                    <div className='recipes-table-cell-time-line'>
+                    <div className='recipes-list-table-cell-time-line'>
                         <img alt="clock" className="recipes-icons rotating" src='/food-icons/recipe/prepa.png' />
-                        {prepHours > 0 && (prepHours + "h ")}
                         {prepTime}
                     </div>
-                    <div className='recipes-table-cell-time-line'>
+                    <div className='recipes-list-table-cell-time-line'>
                         <img alt="clock" className="recipes-icons rotating" src='/food-icons/recipe/oven.png' />
                         {cookTime}
                     </div>
@@ -275,13 +275,13 @@ function RecipesList() {
                 for (let j = 0; j < table[i].categories?.length; j++) {
                     cellCategories.push(<span
                         key={j}
-                        className='recipes-table-cell-tag'
+                        className='recipes-list-table-cell-tag'
                         style={{ backgroundColor: "#" + table[i].categories[j]?.color }}
                     >
                         {table[i].categories[j].name}</span>);
                 }
                 categories.push(<span
-                    key={i} className='recipes-table-cell recipes-table-categories' id={'recipes-table-categories' + i}
+                    key={i} className='table-list-cell table-list-categories' id={'table-list-categories' + i}
                     onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}
                 >
                     {table[i].categories.length === 0 ? "Aucune" : cellCategories}
@@ -292,12 +292,12 @@ function RecipesList() {
             {
                 origin.push(<span
                     key={i}
-                    className='recipes-table-cell recipes-table-origin'
-                    id={'recipes-table-origin' + i}
+                    className='table-list-cell table-list-origin'
+                    id={'table-list-origin' + i}
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
                 >
-                    <span key={i + "-tag"} className='recipes-table-cell-tag' style={{ backgroundColor: "#" + table[i].origin?.color }}>
+                    <span key={i + "-tag"} className='recipes-list-table-cell-tag' style={{ backgroundColor: "#" + table[i].origin?.color }}>
                         {table[i].origin.name}</span>
                 </span>);
             }
@@ -306,12 +306,12 @@ function RecipesList() {
             {
                 status.push(<span
                     key={i}
-                    className='recipes-table-cell recipes-table-status'
-                    id={'recipes-table-status' + i}
+                    className='table-list-cell table-list-status'
+                    id={'table-list-status' + i}
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
                 >
-                    <span key={i + "-tag"} className='recipes-table-cell-tag' style={{ backgroundColor: "#" + table[i].status?.color }}>
+                    <span key={i + "-tag"} className='recipes-list-table-cell-tag' style={{ backgroundColor: "#" + table[i].status?.color }}>
                         {table[i].status.name}</span>
                 </span>);
             }
@@ -320,12 +320,12 @@ function RecipesList() {
             {
                 type.push(<span
                     key={i}
-                    className='recipes-table-cell recipes-table-type'
-                    id={'recipes-table-type' + i}
+                    className='table-list-cell table-list-type'
+                    id={'table-list-type' + i}
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
                 >
-                    <span key={i + "-tag"} className='recipes-table-cell-tag' style={{ backgroundColor: "#" + table[i].type?.color }}>
+                    <span key={i + "-tag"} className='recipes-list-table-cell-tag' style={{ backgroundColor: "#" + table[i].type?.color }}>
                         {table[i].type.name}</span>
                 </span>);
             }
@@ -337,7 +337,7 @@ function RecipesList() {
                     portion += table[i].ingredients[j].kcalPerGram * table[i].ingredients[j].toGramFactor * table[i].quantities[j];
                 }
                 kcalPerPortion.push(<span
-                    key={i} className='recipes-table-cell' id={'recipes-table-kcalPerPortion' + i}
+                    key={i} className='table-list-cell' id={'table-list-kcalPerPortion' + i}
                     onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}>
                     {portion}kcal
                 </span>);
@@ -359,7 +359,7 @@ function RecipesList() {
                     isFishFree = isFishFree && table[i].ingredients[j].restrictions.isFishFree;
                 }
 
-                restrictions.push(<span key={i} className='recipes-table-cell recipes-table-restrictions' id={'recipes-table-restrictions' + i}
+                restrictions.push(<span key={i} className='table-list-cell recipes-restrictions' id={'recipes-restrictions' + i}
                     onMouseOut={() => changeColor(i, false)} onMouseOver={() => changeColor(i, true)}
                 >
                     {isVegan ? <img alt="vegan" className="recipes-restrictions-icon" src='/food-icons/vegan.png' /> : ""}
@@ -375,25 +375,25 @@ function RecipesList() {
             heights.push(0);
         }
 
-        htmlTable.push(<Section key={"section-0"} className='recipes-table-col' id="recipes-table-col-name" minSize={100}>{names}</Section>);
-        htmlTable.push(<Bar key={"bar-0"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-1"} className='recipes-table-col' minSize={100}>{time}</Section>);
-        htmlTable.push(<Bar key={"bar-1"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-2"} className='recipes-table-col' minSize={90}>{categories}</Section>);
-        htmlTable.push(<Bar key={"bar-2"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-3"} className='recipes-table-col' minSize={80}>{origin}</Section>);
-        htmlTable.push(<Bar key={"bar-3"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-4"} className='recipes-table-col' minSize={60}>{status}</Section>);
-        htmlTable.push(<Bar key={"bar-4"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-5"} className='recipes-table-col' minSize={75}>{type}</Section>);
-        htmlTable.push(<Bar key={"bar-5"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-6"} className='recipes-table-col' minSize={110}>{kcalPerPortion}</Section>);
-        htmlTable.push(<Bar key={"bar-6"} size={1} style={{ cursor: 'col-resize' }} className='recipes-table-bar' />);
-        htmlTable.push(<Section key={"section-7"} className='recipes-table-col' minSize={120}>{restrictions}</Section>);
+        htmlTable.push(<Section key={"section-0"} className='table-list-col' id="table-list-col-name" minSize={100}>{names}</Section>);
+        htmlTable.push(<Bar key={"bar-0"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-1"} className='table-list-col' minSize={85}>{time}</Section>);
+        htmlTable.push(<Bar key={"bar-1"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-2"} className='table-list-col' minSize={90}>{categories}</Section>);
+        htmlTable.push(<Bar key={"bar-2"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-3"} className='table-list-col' minSize={80}>{origin}</Section>);
+        htmlTable.push(<Bar key={"bar-3"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-4"} className='table-list-col' minSize={60}>{status}</Section>);
+        htmlTable.push(<Bar key={"bar-4"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-5"} className='table-list-col' minSize={75}>{type}</Section>);
+        htmlTable.push(<Bar key={"bar-5"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-6"} className='table-list-col' minSize={110}>{kcalPerPortion}</Section>);
+        htmlTable.push(<Bar key={"bar-6"} size={1} style={{ cursor: 'col-resize' }} />);
+        htmlTable.push(<Section key={"section-7"} className='table-list-col' minSize={120}>{restrictions}</Section>);
 
-        localStorage.setItem('recipes-table-heights', JSON.stringify(heights));
+        localStorage.setItem('table-list-heights', JSON.stringify(heights));
 
-        return <Container id='recipes-table' onMouseOver={() => setHeights()}>{htmlTable}</Container>
+        return <Container id='table-list' onMouseOver={() => setHeights()}>{htmlTable}</Container>
     }
 
     function createNewRecipe(): void {
@@ -403,6 +403,7 @@ function RecipesList() {
             image: "",
             ingredients: [],
             quantities: [],
+            numberOfPortions: 0,
             preparationTime: 0, // en minutes
             cookingTime: 0, // en minutes
             categories: [], // entrée, plat, dessert, apéro, petit-déjeuner, goûter, brunch, boisson
@@ -416,12 +417,12 @@ function RecipesList() {
         });
     }
 
-    return <div id="recipes" className='page recipes-table'>
+    return <div id="recipes" className='page'>
         <h2>Recettes de la CE Toolbox</h2>
         <button className='recipes-button' onClick={() => { createNewRecipe() }}><div className='recipes-button-content'>Ajouter une Recette</div></button>
 
         <div className='block-preview'>
-            <div id='recipes-table-content' style={{ width: "100%" }}>
+            <div id='table-list-content' style={{ width: "100%" }}>
                 {tableToHtml()}
             </div>
         </div>

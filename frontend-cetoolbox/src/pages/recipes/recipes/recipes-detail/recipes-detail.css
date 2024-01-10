@@ -1,3 +1,100 @@
+#recipes-detail-back {
+    background-image: url("../../../../../public/food-icons/recipe/back.jpg");
+    background-size: 100vw;
+    width: 100%;
+    min-height: 93vh;
+    object-fit: cover;
+}
+
+#recipes-detail-book {
+    width: 80%;
+    position: absolute;
+    top: 15vh;
+    left: 10vw;
+}
+
+.recipes-detail-page {
+    position: absolute;
+    height: calc(100vw - 45vw);
+    top: calc(15vh + 1vw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#recipes-detail-left-page {
+    width: 31%;
+    left: 17vw;
+}
+
+#recipes-detail-right-page {
+    width: 33%;
+    left: 50.5vw;
+}
+
+/* INFOS */
+#recipes-detail-name {
+    padding-left: 15px;
+}
+
+/* Top infos */
+#recipes-detail-infos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.recipes-detail-infos-side-img {
+    width: calc(100% - 20vw);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+}
+
+#recipes-detail-image {
+    width: 10vw;
+    height: 10vw;
+    object-fit: cover;
+    border-radius: 5px;
+    border: #7e4300 2px solid;
+}
+
+/* Under Img */
+.recipes-detail-tag {
+    padding: 2px 5px;
+    margin: 2px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    height: fit-content;
+    width: fit-content;
+}
+
+#recipes-detail-top-infos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+
+}
+
+#recipes-table-kcalPerPortion {
+    font-size: smaller;
+}
+
+#recipes-detail-restrictions {
+    display: flex;
+    gap: 5px;
+}
+
+.recipes-detail-restrictions-icon {
+    width: 30px;
+}
+
+/* Ingredients */
 #recipes-detail-number {
     display: flex;
     justify-content: center;
@@ -6,20 +103,12 @@
     user-select: none;
 }
 
-table {
-    border-color: transparent;
-    border-width: 2px;
+.recipes-detail-table-ingredients-header:first-child {
+    background-color: transparent;
 }
 
-table td {
-    padding: 5px;
-    border-color: var(--gradient-color3);
+.recipes-detail-cell {
+    border-color: #926634;
+    background-color: transparent;
     border-width: 1px;
-}
-
-#recipes-table-ingredients {
-    background: var(--gradient);
-    padding: 2px;
-    border-radius: 3px;
-    overflow: hidden;
 }
