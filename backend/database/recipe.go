@@ -14,33 +14,38 @@ var (
 )
 
 type RecipeRes struct {
-	ID              primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-	Name            string             `json:"name" bson:"name"`
-	Ingredients     []Ingredient       `json:"ingredients" bson:"ingredients"`
-	Quantity        []float64          `json:"quantity" bson:"quantity"`
-	Image           string             `json:"image" bson:"image"`
-	Category        string             `json:"category" bson:"category"`
-	Origin          string             `json:"origin" bson:"origin"`
-	Status          string             `json:"status" bson:"status"`
-	Type            string             `json:"type" bson:"type"`
-	PreparationTime int64              `json:"preparationTime" bson:"preparationTime"`
-	CookingTime     int64              `json:"cookingTime" bson:"cookingTime"`
-	Steps           []string           `json:"steps" bson:"steps"`
+	ID               primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Icon             string             `json:"icon" bson:"icon"`
+	Name             string             `json:"name" bson:"name"`
+	Ingredients      []IngredientRes    `json:"ingredients" bson:"ingredients"`
+	Quantities       []float64          `json:"quantities" bson:"quantities"`
+	NumberOfPortions int64              `json:"numberOfPortions" bson:"numberOfPortions"`
+	Image            string             `json:"image" bson:"image"`
+	Categories       []RecipeCategory   `json:"categories" bson:"categories"`
+	Origin           RecipeOrigin       `json:"origin" bson:"origin"`
+	Status           RecipeStatus       `json:"status" bson:"status"`
+	Type             RecipeType         `json:"type" bson:"type"`
+	PreparationTime  int64              `json:"preparationTime" bson:"preparationTime"`
+	CookingTime      int64              `json:"cookingTime" bson:"cookingTime"`
+	Steps            []string           `json:"steps" bson:"steps"`
 }
 
 type Recipe struct {
-	ID              primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
-	Name            string               `json:"name" bson:"name"`
-	Ingredients     []primitive.ObjectID `json:"ingredients" bson:"ingredients"`
-	Quantity        []float64            `json:"quantity" bson:"quantity"`
-	Image           File                 `json:"image" bson:"image"`
-	Category        string               `json:"category" bson:"category"`
-	Origin          string               `json:"origin" bson:"origin"`
-	Status          string               `json:"status" bson:"status"`
-	Type            string               `json:"type" bson:"type"`
-	PreparationTime int64                `json:"preparationTime" bson:"preparationTime"`
-	CookingTime     int64                `json:"cookingTime" bson:"cookingTime"`
-	Steps           []string             `json:"steps" bson:"steps"`
+	ID               primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
+	Icon             string               `json:"icon" bson:"icon"`
+	Name             string               `json:"name" bson:"name"`
+	Ingredients      []primitive.ObjectID `json:"ingredients" bson:"ingredients"`
+	Quantities       []float64            `json:"quantities" bson:"quantities"`
+	NumberOfPortions int64                `json:"numberOfPortions" bson:"numberOfPortions"`
+	Image            File                 `json:"image" bson:"image"`
+	Categories       []primitive.ObjectID `json:"categories" bson:"categories"`
+	Origin           primitive.ObjectID   `json:"origin" bson:"origin"`
+	Status           primitive.ObjectID   `json:"status" bson:"status"`
+	Type             primitive.ObjectID   `json:"type" bson:"type"`
+	PreparationTime  int64                `json:"preparationTime" bson:"preparationTime"`
+	CookingTime      int64                `json:"cookingTime" bson:"cookingTime"`
+	Steps            []string             `json:"steps" bson:"steps"`
+	IsIngredient     bool                 `json:"isIngredient" bson:"isIngredient"`
 }
 
 func (a *Recipe) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {
@@ -55,6 +60,10 @@ func (a *Recipe) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) 
 
 func (a *Recipe) UpdateOne(ctx context.Context) (*mongo.UpdateResult, error) {
 	return RecipeCollection.UpdateOne(ctx, bson.M{"_id": a.ID}, bson.M{"$set": a})
+}
+
+func UpdateManyRecipes(ctx context.Context, filter bson.M, update bson.M) (*mongo.UpdateResult, error) {
+	return RecipeCollection.UpdateMany(ctx, filter, update)
 }
 
 func DeleteOneRecipe(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
@@ -90,22 +99,56 @@ func (a *Recipe) Populate(ctx context.Context) (RecipeRes, error) {
 	var res RecipeRes
 	res.ID = a.ID
 	res.Name = a.Name
-	res.Category = a.Category
-	res.Origin = a.Origin
-	res.Status = a.Status
-	res.Type = a.Type
-	res.PreparationTime = a.PreparationTime
-	res.CookingTime = a.CookingTime
-	res.Steps = a.Steps
-	res.Quantity = a.Quantity
-
-	res.Ingredients = []Ingredient{}
-	for _, id := range a.Ingredients {
-		ingredient, err := FindOneIngredient(ctx, bson.M{"_id": id})
+	res.Icon = a.Icon
+	res.Categories = []RecipeCategory{}
+	for _, id := range a.Categories {
+		category, err := FindOneRecipeCategory(ctx, bson.M{"_id": id})
 		if err != nil {
 			return res, err
 		}
-		res.Ingredients = append(res.Ingredients, *ingredient)
+		res.Categories = append(res.Categories, *category)
+	}
+
+	if a.Origin != primitive.NilObjectID {
+		origin, err := FindOneRecipeOrigin(ctx, bson.M{"_id": a.Origin})
+		if err != nil {
+			return res, err
+		}
+		res.Origin = *origin
+	}
+
+	if a.Status != primitive.NilObjectID {
+		status, err := FindOneRecipeStatus(ctx, bson.M{"_id": a.Status})
+		if err != nil {
+			return res, err
+		}
+		res.Status = *status
+	}
+
+	if a.Type != primitive.NilObjectID {
+		t, err := FindOneRecipeType(ctx, bson.M{"_id": a.Type})
+		if err != nil {
+			return res, err
+		}
+		res.Type = *t
+	}
+
+	res.PreparationTime = a.PreparationTime
+	res.CookingTime = a.CookingTime
+	res.Steps = a.Steps
+	res.Quantities = a.Quantities
+
+	ingredients, err := FindIngredients(ctx, bson.M{"_id": bson.M{"$in": a.Ingredients}})
+	if err != nil {
+		return res, err
+	}
+
+	res.Ingredients = make([]IngredientRes, len(ingredients))
+	for i, ingredient := range ingredients {
+		res.Ingredients[i], err = ingredient.Populate(ctx)
+		if err != nil {
+			return res, err
+		}
 	}
 
 	file, err := FindOneFile(ctx, bson.M{"_id": a.Image})

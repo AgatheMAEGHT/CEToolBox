@@ -57,6 +57,66 @@ func recipeGet(w http.ResponseWriter, r *http.Request, user database.User) {
 		query["name"] = r.Form.Get("name")
 	}
 
+	if r.Form.Get("recipeCategoryIds") != "" {
+		recipeCategoryIds, err := utils.IsStringListObjectIdValid(r.Form["recipeCategoryIds"], database.RecipeCategoriesCollection)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
+
+		query["categories"] = bson.M{"$in": recipeCategoryIds}
+	}
+
+	if r.Form.Get("recipeOriginIds") != "" {
+		recipeOriginIds, err := utils.IsStringListObjectIdValid(r.Form["recipeOriginIds"], database.RecipeOriginsCollection)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
+
+		query["origin"] = bson.M{"$in": recipeOriginIds}
+	}
+
+	if r.Form.Get("recipeStatusIds") != "" {
+		recipeStatusIds, err := utils.IsStringListObjectIdValid(r.Form["recipeStatusIds"], database.RecipeStatusCollection)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
+
+		query["status"] = bson.M{"$in": recipeStatusIds}
+	}
+
+	if r.Form.Get("recipeTypeIds") != "" {
+		recipeTypeIds, err := utils.IsStringListObjectIdValid(r.Form["recipeTypeIds"], database.RecipeTypesCollection)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
+
+		query["type"] = bson.M{"$in": recipeTypeIds}
+	}
+
+	if r.Form.Get("ingredientIds") != "" {
+		ingredientIds, err := utils.IsStringListObjectIdValid(r.Form["ingredientIds"], database.IngredientCollection)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
+
+		query["ingredients"] = bson.M{"$in": ingredientIds}
+	}
+
+	query["isIngredient"] = false
+	if r.Form.Get("isIngredient") != "" {
+		query["isIngredient"] = true
+	}
+
 	recipes, err := database.FindRecipes(ctx, query)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -105,6 +165,12 @@ func recipePost(w http.ResponseWriter, r *http.Request, user database.User) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
+		return
+	}
+
+	if len(recipe.Ingredients) != len(recipe.Quantities) {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("Ingredients and quantities must have the same length").ToJson())
 		return
 	}
 

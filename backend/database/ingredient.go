@@ -15,8 +15,9 @@ var (
 
 type IngredientRes struct {
 	ID           primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Icon         string             `json:"icon" bson:"icon"`
 	Name         string             `json:"name" bson:"name"`
-	Tags         []IngredientTag   `json:"tags" bson:"tags"`
+	Tags         []IngredientTag    `json:"tags" bson:"tags"`
 	KcalPerGram  float64            `json:"kcalPerGram" bson:"kcalPerGram"`
 	ToGramFactor float64            `json:"toGramFactor" bson:"toGramFactor"`
 	Restrictions Restrictions       `json:"restrictions" bson:"restrictions"`
@@ -32,6 +33,7 @@ type Restrictions struct {
 
 type Ingredient struct {
 	ID           primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
+	Icon         string               `json:"icon" bson:"icon"`
 	Name         string               `json:"name" bson:"name"`
 	Tags         []primitive.ObjectID `json:"tags" bson:"tags"`
 	KcalPerGram  float64              `json:"kcalPerGram" bson:"kcalPerGram"`
