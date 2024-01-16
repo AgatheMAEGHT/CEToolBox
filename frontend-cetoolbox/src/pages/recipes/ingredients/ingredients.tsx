@@ -149,8 +149,8 @@ function Ingredients() {
                 names.push(<span
                     key={i}
                     onClick={() => navigate("/food/ingredients/" + table[i].name)}
-                    className='table-list-cell table-list-cell-name'
-                    id={'table-list-name' + i}
+                    className='table-list-cell table-list-name'
+                    id={'table-list-cell-name' + i}
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
                 >
@@ -246,14 +246,14 @@ function Ingredients() {
 
     return <div id="ingredients" className='page'>
         <h2>Ingrédients de la CE Toolbox</h2>
-        <button className='recipes-button' onClick={() => { createNewIngredient() }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
+        <button className='food-button' onClick={() => { createNewIngredient() }}><div className='food-button-content'>Ajouter un ingrédient</div></button>
 
         <div className='block-preview'>
             <div id='table-list-content' style={{ width: "100%" }}>
                 {tableToHtml()}
             </div>
         </div>
-        <button className='recipes-button' onClick={() => { navigate('/food/ingredients/new') }}><div className='recipes-button-content'>Ajouter un ingrédient</div></button>
+        <button className='food-button' onClick={() => { navigate('/food/ingredients/new') }}><div className='food-button-content'>Ajouter un ingrédient</div></button>
     </div>
 }
 

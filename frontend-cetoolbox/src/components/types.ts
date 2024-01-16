@@ -87,6 +87,7 @@ export type recipe = {
     image: string,
     ingredients: ingredientDB[],
     quantities: number[], // same length as ingredients
+    notes: string[], // same length as ingredients (markdown)
     numberOfPortions: number, // default number of portions (then transforms the quantities)
     preparationTime: number, // en minutes
     cookingTime: number, // en minutes
@@ -97,5 +98,4 @@ export type recipe = {
     steps: string[], // markdown
     // kcalPerPortion: number, // calculated from ingredients and quantities
     // restrictions: restrictions, // calculated from ingredients
-    // tags: tag[], // calculated from ingredients,
 }

@@ -1,4 +1,4 @@
-#recipes {
+#food {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6,7 +6,7 @@
     gap: 20px;
 }
 
-.recipes-button {
+.food-button {
     padding: 0px;
     background: var(--gradient);
     border-radius: 10px;
@@ -16,7 +16,7 @@
     cursor: pointer;
 }
 
-.recipes-button-content {
+.food-button-content {
     width: 150px;
     height: 50px;
     border-radius: 8px;

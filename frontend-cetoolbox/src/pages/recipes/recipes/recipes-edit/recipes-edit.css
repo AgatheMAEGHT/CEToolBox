@@ -1,0 +1,165 @@
+#recipes-edit {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#recipes-edit-top-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 90%;
+    margin: 5vh 0;
+    height: 3px;
+}
+
+#recipes-edit-top-buttons-center {
+    justify-self: center;
+}
+
+#recipes-edit-top-buttons-right {
+    justify-self: flex-end;
+}
+
+#recipes-edit-left-page {
+    width: 31%;
+    left: 17vw;
+}
+
+#recipes-edit-right-page {
+    width: 33%;
+    left: 50.5vw;
+}
+
+#recipe-detail-edit-save {
+    display: flex;
+    position: absolute;
+    top: 10vh;
+    left: calc(50vw - 65px);
+}
+
+/* INFOS */
+#recipes-edit-name {
+    padding: 10px;
+}
+
+/* Top infos */
+#recipes-edit-infos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.recipes-edit-infos-side-img {
+    width: calc(100% - 20vw);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+}
+
+#recipes-edit-image {
+    width: 10vw;
+    height: 10vw;
+    object-fit: cover;
+    border-radius: 5px;
+    border: #7e4300 2px solid;
+}
+
+/* Under Img */
+.recipes-edit-tag {
+    padding: 2px 5px;
+    margin: 2px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    height: fit-content;
+    width: fit-content;
+}
+
+#recipes-edit-top-infos {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    gap: 10px;
+}
+
+#recipes-table-kcalPerPortion {
+    font-size: smaller;
+}
+
+#recipes-edit-restrictions {
+    display: flex;
+    gap: 5px;
+}
+
+.recipes-edit-restrictions-icon {
+    width: 30px;
+}
+
+/* Ingredients */
+#recipes-edit-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+}
+
+.recipes-edit-table-ingredients-header:first-child {
+    background-color: transparent;
+}
+
+.recipes-edit-cell {
+    border-color: #926634;
+    background-color: transparent;
+    border-width: 1px;
+    padding: 0px;
+}
+
+/* Steps */
+#recipes-edit-steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+#recipes-edit-step-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 80%;
+}
+
+.recipes-edit-step {
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    font-size: smaller;
+    gap: 5px;
+}
+
+.recipes-edit-step-number {
+    width: 20px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.recipes-edit-step-text {
+    width: 100%;
+    min-height: 50px;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: vertical;
+    /*Text return to new line when overflow the input*/
+
+}

@@ -4,6 +4,7 @@
     width: 100%;
     min-height: 93vh;
     object-fit: cover;
+    background-repeat: repeat;
 }
 
 #recipes-detail-book {
@@ -32,9 +33,16 @@
     left: 50.5vw;
 }
 
+#recipe-detail-edit {
+    display: flex;
+    position: absolute;
+    top: 10vh;
+    left: calc(50vw - 85px);
+}
+
 /* INFOS */
 #recipes-detail-name {
-    padding-left: 15px;
+    padding: 10px;
 }
 
 /* Top infos */
@@ -78,7 +86,6 @@
     justify-content: space-between;
     align-items: center;
     width: 80%;
-
 }
 
 #recipes-table-kcalPerPortion {
@@ -111,4 +118,32 @@
     border-color: #926634;
     background-color: transparent;
     border-width: 1px;
+}
+
+/* Steps */
+#recipes-detail-step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    background-image: url("../../../../../public/food-icons/recipe/post-it.png");
+    background-size: calc(100% + 35px) 100%;
+    background-repeat: no-repeat;
+    background-position-y: calc(100vw - 45vw - 90px);
+    background-position-x: -30px;
+}
+
+.recipes-detail-step {
+    display: flex;
+    text-align: left;
+    font-size: smaller;
+}
+
+.recipes-detail-step-number {
+    width: 20px;
+    font-weight: bold;
+}
+
+.recipes-detail-step-text {
+    width: 100%;
 }

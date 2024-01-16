@@ -16,6 +16,7 @@ function RecipesList() {
             image: "",
             ingredients: [],
             quantities: [],
+            notes: [],
             numberOfPortions: 0,
             preparationTime: 0, // en minutes
             cookingTime: 2200, // en minutes
@@ -213,16 +214,16 @@ function RecipesList() {
         for (let i = 0; i < table?.length; i++) {
             // Names
             {
-                names.push(<span
+                names.push(<a
                     key={i}
-                    onClick={() => navigate("/food/recipes/" + table[i].name)}
-                    className='table-list-cell table-list-name'
                     id={'table-list-name' + i}
+                    className='table-list-cell table-list-name'
                     onMouseOut={() => changeColor(i, false)}
                     onMouseOver={() => changeColor(i, true)}
+                    href={"/food/recipes/" + table[i].name}
                 >
                     {table[i].name}
-                </span>);
+                </a>);
             }
 
             // Time
@@ -403,6 +404,7 @@ function RecipesList() {
             image: "",
             ingredients: [],
             quantities: [],
+            notes: [],
             numberOfPortions: 0,
             preparationTime: 0, // en minutes
             cookingTime: 0, // en minutes
@@ -417,16 +419,32 @@ function RecipesList() {
         });
     }
 
-    return <div id="recipes" className='page'>
-        <h2>Recettes de la CE Toolbox</h2>
-        <button className='recipes-button' onClick={() => { createNewRecipe() }}><div className='recipes-button-content'>Ajouter une Recette</div></button>
-
-        <div className='block-preview'>
-            <div id='table-list-content' style={{ width: "100%" }}>
-                {tableToHtml()}
+    return <div>
+        <div className='sub-header'>
+            <h2>Recettes de la CE Toolbox</h2>
+            <div className='sub-header-buttons'>
+                {/* Meal types (entrées, plats, ...) */}
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=aperos") }}>Apéros</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=entrees") }}>Entrées</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=plats") }}>Plats</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=") }}>Accompgnements</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=") }}>Desserts</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=") }}>Petits-déjeuners</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=") }}>Goûters</button>
+                <button className='sub-header-button sub-header-button-border' onClick={() => { navigate("/food/recipes?type=") }}>Sauces</button>
+                <button className='sub-header-button' onClick={() => { navigate("/food/recipes?type=") }}>Boissons</button>
             </div>
         </div>
-        <button className='recipes-button' onClick={() => { createNewRecipe() }}><div className='recipes-button-content'>Ajouter une Recette</div></button>
+        <div id="recipes" className='page'>
+            <button className='food-button' onClick={() => { createNewRecipe() }}><div className='food-button-content'>Ajouter une Recette</div></button>
+
+            <div className='block-preview'>
+                <div id='table-list-content' style={{ width: "100%" }}>
+                    {tableToHtml()}
+                </div>
+            </div>
+            <button className='food-button' onClick={() => { createNewRecipe() }}><div className='food-button-content'>Ajouter une Recette</div></button>
+        </div>
     </div>
 }
 

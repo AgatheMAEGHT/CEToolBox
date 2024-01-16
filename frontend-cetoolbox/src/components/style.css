@@ -7,6 +7,36 @@
     text-align: center;
 }
 
+/* ========= *
+ *  Header   *
+ * ========= */
+.sub-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    background-color: #333;
+    color: white;
+}
+
+.sub-header-button {
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0px 5px;
+}
+
+.sub-header-button-border {
+    border-right: 1px solid white;
+}
+
 /* Rotating */
 @-webkit-keyframes rotating
 
@@ -130,6 +160,12 @@
 /* ========= *
  *  Inputs   *
  * ========= */
+.input-name {
+    font-size: x-large;
+    margin: 20px;
+    font-weight: bold;
+}
+
 .input {
     width: 100%;
     padding: 5px;
@@ -137,6 +173,26 @@
     border: 1px solid var(--gradient-color3);
     background-color: var(--background);
     color: var(--text);
+}
+
+.input-transparent {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+}
+
+.table-input {
+    height: 100%;
+}
+
+/* ========= *
+ *  Select   *
+ * ========= */
+.select {
+    min-width: 150px;
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid var(--gradient-color3);
 }
 
 /* ======== *
@@ -155,14 +211,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0%;
-    padding-bottom: 1px;
+    padding: 10px 0px;
     border-bottom: 1px solid var(--background);
 }
 
 .table-list-name {
     cursor: pointer;
     width: 100%;
+    text-decoration: none;
 }
 
 .table-list-col {
@@ -176,7 +232,6 @@
     border-bottom: 1px dotted var(--background-darker);
     background-color: var(--background);
     color: var(--text-color);
-    cursor: default;
 }
 
 /* ======== *

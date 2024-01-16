@@ -4,11 +4,11 @@ import './recipes.css';
 function RecipesHome() {
     let navigate = useNavigate();
 
-    return <div id="recipes" className='page'>
+    return <div id="food" className='page'>
         <h2>Recettes de la CE Toolbox</h2>
-        <button className='recipes-button' onClick={() => navigate("/food/ingredients")}><div className='recipes-button-content'>Ingrédients</div></button>
-        <button className='recipes-button' onClick={() => navigate("/food/list")}><div className='recipes-button-content'>Recettes</div></button>
-        <button className='recipes-button' onClick={() => navigate("/food/cheeses")}><div className='recipes-button-content'>Fromages</div></button>
+        <button className='food-button' onClick={() => navigate("/food/ingredients")}><div className='food-button-content'>Ingrédients</div></button>
+        <button className='food-button' onClick={() => navigate("/food/recipes")}><div className='food-button-content'>Recettes</div></button>
+        <button className='food-button' onClick={() => navigate("/food/cheeses")}><div className='food-button-content'>Fromages</div></button>
     </div>
 }
 

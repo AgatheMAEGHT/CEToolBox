@@ -16,7 +16,7 @@ function Header() {
             <a className='header-button' href='/food'>Recettes</a>
             <div className="header-dropdown-list">
                 <a className='header-dropdown-button' href='/food/ingredients' >Ingrédients</a>
-                <a className='header-dropdown-button' href='/food/list' >Recettes</a>
+                <a className='header-dropdown-button' href='/food/recipes' >Recettes</a>
                 <a className='header-dropdown-button' href='/food/cheeses' >Fromages</a>
             </div >
         </div >

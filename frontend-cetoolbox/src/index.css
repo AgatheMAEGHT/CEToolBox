@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: whitesmoke;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -8,6 +9,7 @@ body {
 
   /* Global variables */
   --gradient: linear-gradient(90deg, rgba(0, 0, 215, 1) 0%, rgba(250, 13, 217, 1) 100%);
+  --gradient-side: linear-gradient(180deg, rgba(0, 0, 215, 1) 0%, rgba(250, 13, 217, 1) 100%);
   --gradient-color1: rgba(0, 0, 215, 1);
   --gradient-color2: rgba(250, 13, 217, 1);
   --gradient-color3: rgba(125,7,216, 1);
