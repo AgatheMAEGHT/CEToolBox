@@ -3,8 +3,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 93vh;
+    min-height: calc(93vh - 50px);
     text-align: center;
+    padding: 50px 0px;
 }
 
 /* ========= *
@@ -184,6 +185,24 @@
 .table-input {
     height: 100%;
 }
+
+.input-textarea {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: vertical;
+}
+
+/* ========= *
+ *  Colors   *
+ * ========= */
+ .color-picker {
+    padding: 0px;
+    border: none;
+    margin: 0px;
+    background-color: transparent;
+    cursor: pointer;
+ }
 
 /* ========= *
  *  Select   *

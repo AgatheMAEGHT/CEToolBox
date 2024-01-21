@@ -12,6 +12,14 @@ export type buttonType = {
     disabled?: boolean,
 };
 
+export type dragAndDropType = {
+    id: string,
+    content: JSX.Element[],
+    areaClassName: string,
+    list: any[],
+    setList: any,
+};
+
 /* ========== *
 *    BLOCKS
 ** ========== */
@@ -45,6 +53,33 @@ export type blockType = {
 };
 
 export type docType = blockType[];
+
+/* ======== *
+*    HOME   *
+** ======== */
+export type note = {
+    _id: string,
+    title: string,
+    content: string,
+    color: string,
+    tags: tag[],
+    sharedWith: string[],
+};
+
+export type homeEvent = {
+    _id: string,
+    title: string,
+    description: string,
+    date: Date,
+    tags: tag[],
+    sharedWith: string[],
+};
+
+export type homeFavorite = {
+    _id: string,
+    title: string,
+    url: string,
+};
 
 /* ======== *
 *    FOOD
