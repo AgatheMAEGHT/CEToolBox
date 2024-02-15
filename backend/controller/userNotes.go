@@ -233,6 +233,12 @@ func removeNoteFromUser(w http.ResponseWriter, r *http.Request, user database.Us
 	isIn := false
 	for i, n := range userToUpdate.Notes {
 		if n == note.ID {
+			if i == 0 {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write(utils.NewResErr(fmt.Sprintf("Note %s cannot be removed from user %s", note.ID.Hex(), userToUpdate.ID.Hex())).ToJson())
+				return
+			}
+
 			userToUpdate.Notes = append(userToUpdate.Notes[:i], userToUpdate.Notes[i+1:]...)
 			isIn = true
 			break

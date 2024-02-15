@@ -167,6 +167,31 @@ func noteDelete(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
+	// Get all users that have this note
+	users, err := database.FindUsers(ctx, bson.M{"notes": id})
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
+		return
+	}
+
+	// Remove the note from all users
+	for _, user := range users {
+		for i, note := range user.Notes {
+			if note == id {
+				user.Notes = append(user.Notes[:i], user.Notes[i+1:]...)
+				break
+			}
+		}
+
+		_, err = user.UpdateOne(ctx)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
+	}
+
 	res, err := database.DeleteOneNote(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
