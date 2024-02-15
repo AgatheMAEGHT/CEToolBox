@@ -8,121 +8,134 @@ import { requester } from '../../components/requester';
 
 function Home() {
     //let navigate = useNavigate();
-    const [notes, setNotes] = React.useState<note[]>([
-        {
-            _id: "0",
-            title: "Test1",
-            content: "Test avec plein de mots pour voir si ca marche bien et que ca ne depasse pas",
-            tags: [],
-            sharedWith: [],
-            color: "9dfbe1",
-        },
-        {
-            _id: "1",
-            title: "Test2",
-            content: "Test",
-            tags: [],
-            sharedWith: [],
-            color: "fff555"
-        },
-        {
-            _id: "2",
-            title: "Test3",
-            content: "Test avec plein de mots pour voir si ca marche bien et que ca ne depasse pas",
-            tags: [],
-            sharedWith: [],
-            color: "c79dfb",
-        },
-        {
-            _id: "3",
-            title: "Test4",
-            content: "Test avec plein de mots pour voir si ca marche bien et que ca ne depasse pas",
-            tags: [],
-            sharedWith: [],
-            color: "fb9dca",
-        },
-        {
-            _id: "4",
-            title: "Test5",
-            content: "Test avec plein de mots pour voir si ca marche bien et que ca ne depasse pas",
-            tags: [],
-            sharedWith: [],
-            color: "fbab9d",
-        },
-    ]);
+    const [notes, setNotes] = React.useState<note[]>([]);
     const [events, setEvents] = React.useState<homeEvent[]>([]);
     const [favorites, setFavorites] = React.useState<homeFavorite[]>([]);
+    const [users, setUsers] = React.useState<any[]>([]);
+    const [selectedNoteIndex, setSelectedNoteIndex] = React.useState<number>(-1);
 
-    //React.useEffect(() => {
-    //    fetch('http://localhost:8000/api/notes')
-    //        .then(res => res.json())
-    //        .then(data => setNotes(data))
-    //        .catch(err => console.log(err));
-    //    fetch('http://localhost:8000/api/events')
-    //        .then(res => res.json())
-    //        .then(data => setEvents(data))
-    //        .catch(err => console.log(err));
-    //
-    //    fetch('http://localhost:8000/api/favorites')
-    //        .then(res => res.json())
-    //        .then(data => setFavorites(data))
-    //        .catch(err => console.log(err));
-    //}, []);
+    React.useEffect(() => {
+        requester("/user-notes", "GET").then((res: any) => {
+            setNotes(res ?? []);
+        });
+        requester("/user", "GET").then((res: any) => {
+            setUsers(res ?? []);
+        });
+    }, []);
 
+    /* =======*
+     *  Notes *
+     * =======*/
     function notesToHTML(): JSX.Element {
         return <div id="note-content">
-            {button({ text: "Ajouter une note", onClick: () => { } })}
-            {button({ text: "Sauvegarder l'ordre des notes", onClick: () => { saveNotesOrder() } })}
-            <DragAndDrop list={notes} setList={setNotes} id='notes' areaClassName='notes' content={notes.map((note, index) => <div
-                className="note"
-                style={{ backgroundColor: ("#" + note.color) }}
-                key={index}
-                id={"note-" + index}
-                draggable
-                onDragStart={() => { document.getElementById("note-" + index)?.classList.add("dragging") }}
-                onDragEnd={() => { document.getElementById("note-" + index)?.classList.remove("dragging") }}
-            >
-                <input name={"note-title-" + index} className="note-title input-transparent" value={note.title} onChange={(e) => setNotes(notes.map((n, i) => { if (i === index) { n.title = e.target.value }; return n }))} />
-                <textarea name={"note-content-" + index} className="note-content input-transparent input-textarea" value={note.content} onChange={(e) => setNotes(notes.map((n, i) => { if (i === index) { n.content = e.target.value }; return n }))} />
-                <div>
-                    {button({ text: "Modifier", onClick: () => { saveNote() } })}
-                    <input name={"note-color-" + index} className='color-picker' type="color" value={"#" + note.color} onChange={(e) => setNotes(notes.map((n, i) => { if (i === index) { n.color = e.target.value.substring(1) }; return n }))} />
-                </div>
-            </div>)} />
+            {button({ text: "Ajouter une note", onClick: () => { addNote() } })}
+            <DragAndDrop list={notes} setList={saveNotesOrder} id='notes' areaClassName='notes' content={notes.map((note, index) =>
+                <div
+                    className="note"
+                    style={{ backgroundColor: ("#" + note.color) }}
+                    key={index}
+                    id={"note-" + index}
+                    draggable
+                    onDragStart={() => { document.getElementById("note-" + index)?.classList.add("dragging") }}
+                    onDragEnd={() => { document.getElementById("note-" + index)?.classList.remove("dragging") }}
+                >
+                    <input name={"note-title-" + index} className="note-title input-transparent" value={note.title} onChange={(e) => editTitleNote(index, e.target.value)} />
+                    <textarea name={"note-content-" + index} className="note-content input-transparent input-textarea" value={note.content} onChange={(e) => editContentNote(index, e.target.value)} />
+                    <div className='note-buttons'>
+                        <input name={"note-color-" + index} className='color-picker' type="color" value={"#" + note.color} onChange={(e) => editColorNote(index, e.target.value.substring(1))} />
+                        <div className='note-share' onClick={() => { shareNote(index) }} />
+                        <div className='note-delete' onClick={() => { deleteNote(index) }} />
+                        <div className='note-delete-for-everyone' onClick={() => { deleteNoteForEveryone(index) }} />
+                    </div>
+                </div>)}
+            />
         </div>
     }
 
+    function addNote() {
+        requester("/notes", "POST", { title: "Nouvelle note", content: "", color: "ffffff" });
+        window.location.reload();
+    }
+
+    function deleteNote(index: number) {
+        let user_id = localStorage.getItem('user_id');
+        requester("/user-notes", "PATCH", { note: notes[index]._id, user: user_id });
+        setNotes(notes.filter((n, i) => i !== index))
+    }
+
+    function deleteNoteForEveryone(index: number) {
+        requester("/notes?_id=" + notes[index]._id, "DELETE");
+        setNotes(notes.filter((n, i) => i !== index))
+    }
+
+    function shareNote(index: number) {
+        clearSelectedUsers();
+        setSelectedNoteIndex(index);
+        document.getElementById("user-popup-container")?.style.setProperty("display", "flex");
+    }
+
+    function shareNoteWithUsers() {
+        let user_ids = [localStorage.getItem('user_id')];
+        for (let i = 0; i < users.length; i++) {
+            let user = document.getElementById("user-" + i) as HTMLInputElement;
+            if ((user).checked) {
+                user_ids.push((user).value);
+                requester("/user-notes", "POST", { note: notes[selectedNoteIndex]._id, user: (user).value });
+            }
+        }
+        setSelectedNoteIndex(-1);
+        document.getElementById("user-popup-container")?.style.setProperty("display", "none");
+    }
+
+    function clearSelectedUsers() {
+        for (let i = 0; i < users.length; i++) {
+            let user = document.getElementById("user-" + i) as HTMLInputElement;
+            user.checked = false;
+        }
+    }
+
+    function editTitleNote(index: number, title: string) {
+        let editedNote = notes[index];
+        editedNote.title = title;
+        setNotes(notes.map((n, i) => { if (i === index) { n.title = title }; return n }));
+        requester("/notes", "PUT", editedNote);
+    }
+
+    function editContentNote(index: number, content: string) {
+        let editedNote = notes[index];
+        editedNote.content = content;
+        setNotes(notes.map((n, i) => { if (i === index) { n.content = content }; return n }));
+        requester("/notes", "PUT", editedNote);
+    }
+
+    function editColorNote(index: number, color: string) {
+        let editedNote = notes[index];
+        editedNote.color = color;
+        setNotes(notes.map((n, i) => { if (i === index) { n.color = color }; return n }));
+        requester("/notes", "PUT", editedNote);
+    }
+
+    function saveNotesOrder(n: note[]) {
+        let ids = n.map((note) => note._id);
+        requester("/user-notes", "PUT", ids);
+    }
+
+    /* ========*
+     *  Events *
+     * ========*/
     function eventsToHTML(): JSX.Element {
         return <div id="events">
             {events.map((event, index) => <div className="event" key={index}>{event.title}</div>)}
         </div>
     }
 
+    /* ===========*
+     *  Favorites *
+     * ===========*/
     function favoritesToHTML(): JSX.Element {
         return <div id="favorites">
             {favorites.map((favorite, index) => <a className="favorite" key={index} href={favorite.url}>{favorite.title}</a>)}
         </div>
-    }
-
-    function saveNote() {
-        requester("POST", "notes", { notes: notes });
-    }
-
-    function saveNotesOrder() {
-        const ddList = document.getElementById("ddlistnotes");
-        let elements = ddList?.querySelectorAll(".ddeltnotes");
-        if (elements === null || elements === undefined) { return; }
-        let tempNotes = [...notes];
-
-        for (let i = 0; i < notes.length; i++) {
-            tempNotes[i] = notes[parseInt(elements[i].id.split("-")[1])];
-            console.log(parseInt(elements[i].id.split("-")[1]));
-            console.log(elements[i]);
-        }
-
-        setNotes(tempNotes);
-        requester("POST", "notes", { notes: tempNotes });
-        window.location.reload();
     }
 
     return <div id="home" className='page'>
@@ -141,6 +154,22 @@ function Home() {
                 <div>
                     <h2>Favoris</h2>
                     {favoritesToHTML()}
+                </div>
+            </div>
+        </div>
+
+        <div id='user-popup-container'>
+            <div id="users-popup">
+                <h3 id='users-title'>Utilisateurs</h3>
+                <ul id='users-list'>
+                    {users.map((user, index) => <li key={index} className='user' style={{ display: user._id !== localStorage.getItem("user_id") ? "flex" : "none" }}>
+                        <label htmlFor={"user-" + index}>{user.pseudo}</label>
+                        <input type="checkbox" id={"user-" + index} name={"user-" + index} value={user._id} />
+                    </li>)}
+                </ul>
+                <div id='users-buttons'>
+                    {button({ text: "Annuler", del: true, onClick: () => { document.getElementById("user-popup-container")?.style.setProperty("display", "none"); clearSelectedUsers() } })}
+                    {button({ text: "Partager", onClick: () => { shareNoteWithUsers() } })}
                 </div>
             </div>
         </div>

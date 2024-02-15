@@ -61,6 +61,9 @@ export function DragAndDrop(props: dragAndDropType): JSX.Element {
 
             ddList?.insertBefore(drag, nextSibling);
         }}
+        onDragEnd={() => {
+            props.setList(Array.from(ddList?.querySelectorAll(queryStr) ?? []).map((el: any) => props.list[parseInt(el.id.split("-")[1])]));
+        }}
     >
         {props.content.map((element: JSX.Element, index) => {
             return <div

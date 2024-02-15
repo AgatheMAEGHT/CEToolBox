@@ -62,7 +62,6 @@ export type note = {
     title: string,
     content: string,
     color: string,
-    tags: tag[],
     sharedWith: string[],
 };
 

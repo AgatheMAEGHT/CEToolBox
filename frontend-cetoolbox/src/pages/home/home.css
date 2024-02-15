@@ -37,14 +37,15 @@
 }
 
 .note {
-    width: 200px;
+    width: 150px;
     height: fit-content;
-    min-height: 200px;
+    min-height: 150px;
     border-radius: 10px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
     /*shadow*/
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.2);
@@ -58,7 +59,47 @@
 }
 
 .note-content {
-    height: calc(200px - 85px);
+    height: calc(150px - 85px);
+}
+
+.note-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.note-share {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-image: url("../../../public/share.png");
+    background-size: cover;
+}
+
+.note-share:hover {
+    background-image: url("../../../public/share-hover.png");
+}
+
+.note-delete {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-image: url("../../../public/bin.png");
+    background-size: cover;
+}
+
+.note-delete:hover {
+    background-image: url("../../../public/bin-hover.png");
+}
+
+.note-delete-for-everyone {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-image: url("../../../public/delete-for-everyone.png");
+    background-size: cover;
 }
 
 /*========== *
@@ -73,5 +114,49 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 10px;
+}
+
+/*========== *
+*   USERS    *
+**===========*/
+#user-popup-container {
+    position: fixed;
+    top: 30vh;
+    background: var(--gradient);
+    border-radius: 10px;
+    padding: 2px;
+    display: none;
+}
+
+#users-popup {
+    background-color: var(--background);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 1px;
+    margin-bottom: 0px;
+}
+
+#users-title {
+    margin: 0px;
+}
+
+#users-list {
+    list-style: none;
+    margin: 0;
+    padding: 20px 0px;
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#users-buttons {
+    display: flex;
     gap: 10px;
 }

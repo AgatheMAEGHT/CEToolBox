@@ -26,23 +26,21 @@ function Login() {
                 localStorage.setItem('access_token', res.access_token);
                 localStorage.setItem('expire_date', d.toString());
                 localStorage.setItem('refresh_token', res.refresh_token);
-                localStorage.setItem('pseudo', profile.pseudo);
 
                 // Get user infos
                 requester('/who-am-i', 'GET').then((res2: any) => {
-                    console.log(res2.isAdmin);
-                    if (res2.isAdmin !== undefined) {
+                    console.log(res2);
+                    if (res2) {
                         localStorage.setItem('logged', res2.isAdmin ? "admin" : "client");
-                        localStorage.setItem('pseudo', res2.name);
+                        localStorage.setItem('pseudo', res2.pseudo);
+                        localStorage.setItem('user_id', res2._id);
                     } else {
                         console.log(res2);
                         alert("Une erreur est survenue, merci de réessayer ultérieurement");
                     }
+                    navigate('/');
+                    window.location.reload();
                 });
-
-                navigate('/');
-                window.location.reload();
-
             } else {
                 if (res.message === 'Wrong pseudo or password') {
                     alert('Identifiant ou mot de passe incorrect');
