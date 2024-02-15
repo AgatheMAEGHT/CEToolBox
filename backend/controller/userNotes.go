@@ -67,19 +67,19 @@ func getUserNotes(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-    // Reorder notes
-    tmpNotes := make([]database.Note, len(notes))
-    for i, id := range user.Notes {
-        for _, n := range notes {
-            if n.ID == id {
-                tmpNotes[i] = *n
-                break
-            }
-        }
-    }
+	// Reorder notes
+	tmpNotes := make([]database.Note, len(notes))
+	for i, id := range user.Notes {
+		for _, n := range notes {
+			if n.ID == id {
+				tmpNotes[i] = *n
+				break
+			}
+		}
+	}
 
-    w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(tmpNotes)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tmpNotes)
 }
 
 func addNoteToUser(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -96,27 +96,28 @@ func addNoteToUser(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	err := r.ParseForm()
+	bodyMap := map[string]string{}
+	err := utils.ParseBody(r.Body, &bodyMap)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write(utils.NewResErr("Bad request").ToJson())
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
-	if r.PostFormValue("note") == "" {
+	if bodyMap["note"] == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr("Missing note").ToJson())
 		return
 	}
 
-	noteID, resErr := utils.IsStringObjectIdValid(r.PostFormValue("note"), database.NotesCollection)
+	noteID, resErr := utils.IsStringObjectIdValid(bodyMap["note"], database.NotesCollection)
 	if resErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(resErr.Error()).ToJson())
 		return
 	}
 
-	userID, resErr := utils.IsStringObjectIdValid(r.PostFormValue("user"), database.UserCollection)
+	userID, resErr := utils.IsStringObjectIdValid(bodyMap["user"], database.UserCollection)
 	if resErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(resErr.Error()).ToJson())
@@ -194,21 +195,22 @@ func removeNoteFromUser(w http.ResponseWriter, r *http.Request, user database.Us
 		return
 	}
 
-	err := r.ParseForm()
+	bodyMap := map[string]string{}
+	err := utils.ParseBody(r.Body, &bodyMap)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write(utils.NewResErr("Bad request").ToJson())
+		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
-	noteID, resErr := utils.IsStringObjectIdValid(r.Form.Get("note"), database.NotesCollection)
+	noteID, resErr := utils.IsStringObjectIdValid(bodyMap["note"], database.NotesCollection)
 	if resErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(resErr.Error()).ToJson())
 		return
 	}
 
-	userID, resErr := utils.IsStringObjectIdValid(r.Form.Get("user"), database.UserCollection)
+	userID, resErr := utils.IsStringObjectIdValid(bodyMap["user"], database.UserCollection)
 	if resErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(resErr.Error()).ToJson())
