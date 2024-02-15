@@ -43,8 +43,10 @@ func TestIngredient(t *testing.T) {
 
 	// Post ingredient
 	body = map[string]interface{}{
-		"name": "testIngredient1",
-		"tags": []string{tagID1},
+		"fields": map[string]interface{}{
+			"name": "testIngredient1",
+			"tags": []string{tagID1},
+		},
 	}
 	result, status = requester("/ingredients", http.MethodPost, body, adminTok)
 	assert.Equal(t, 200, status, result["err"])
@@ -53,8 +55,10 @@ func TestIngredient(t *testing.T) {
 	assert.True(t, ok)
 
 	body = map[string]interface{}{
-		"name": "testIngredient2",
-		"tags": []string{tagID2},
+		"fields": map[string]interface{}{
+			"name": "testIngredient2",
+			"tags": []string{tagID2},
+		},
 	}
 
 	result, status = requester("/ingredients", http.MethodPost, body, adminTok)
@@ -64,8 +68,10 @@ func TestIngredient(t *testing.T) {
 	assert.True(t, ok)
 
 	body = map[string]interface{}{
-		"name": "testIngredient11",
-		"tags": []string{tagID1},
+		"fields": map[string]interface{}{
+			"name": "testIngredient11",
+			"tags": []string{tagID1},
+		},
 	}
 
 	result, status = requester("/ingredients", http.MethodPost, body, adminTok)
@@ -102,21 +108,23 @@ func TestIngredient(t *testing.T) {
 	resultList, status, errList = requesterList("/ingredients?populate=true", http.MethodGet, nil, adminTok)
 	assert.Equal(t, 200, status, errList)
 	assert.Equal(t, 3, len(resultList))
-	assert.Equal(t, 1, len(resultList[0]["tags"].([]interface{})))
-	assert.Equal(t, "testTag1", resultList[0]["tags"].([]interface{})[0].(map[string]interface{})["name"])
+	assert.Equal(t, 1, len(resultList[0]["fields"].(map[string]interface{})["tags"].([]interface{})))
+	assert.Equal(t, "testTag1", resultList[0]["fields"].(map[string]interface{})["tags"].([]interface{})[0].(map[string]interface{})["name"])
 
 	// Put ingredient
 	body = map[string]interface{}{
-		"_id":  resID1,
-		"name": "testIngredient12",
-		"tags": []string{tagID1, tagID2},
+		"_id": resID1,
+		"fields": map[string]interface{}{
+			"name": "testIngredient12",
+			"tags": []string{tagID1, tagID2},
+		},
 	}
 
 	result, status = requester("/ingredients", http.MethodPut, body, adminTok)
 	assert.Equal(t, 200, status, result["err"])
 	assert.Equal(t, resID1, result["_id"])
-	assert.Equal(t, "testIngredient12", result["name"])
-	assert.Equal(t, []interface{}{tagID1, tagID2}, result["tags"])
+	assert.Equal(t, "testIngredient12", result["fields"].(map[string]interface{})["name"])
+	assert.Equal(t, []interface{}{tagID1, tagID2}, result["fields"].(map[string]interface{})["tags"])
 
 	// Delete ingredient
 	for _, id := range []string{resID1, resID2, resID3} {

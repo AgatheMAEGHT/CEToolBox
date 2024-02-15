@@ -55,7 +55,7 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 		query["_id"] = id
 	}
 	if r.Form.Get("name") != "" {
-		query["name"] = r.Form.Get("name")
+		query["fields.name"] = r.Form.Get("name")
 	}
 	if len(r.Form["tags"]) >= 1 {
 		tagsID, err := utils.IsStringListObjectIdValid(r.Form["tags"], database.IngredientTagsCollection)
@@ -65,7 +65,7 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 			return
 		}
 
-		query["tags"] = bson.M{
+		query["fields.tags"] = bson.M{
 			"$in": tagsID,
 		}
 	}
@@ -78,7 +78,7 @@ func ingredientGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	if r.Form.Get("populate") != "" {
-		ingredientsPopulated := make([]database.IngredientRes, len(ingredients))
+		ingredientsPopulated := make([]database.IngredientWrapperRes, len(ingredients))
 		for i, ingredient := range ingredients {
 			ingredientPopulated, err := ingredient.Populate(ctx)
 			if err != nil {
@@ -113,16 +113,18 @@ func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) 
 		return
 	}
 
-	ingredient := database.Ingredient{}
+	ingredient := database.IngredientWrapper{}
 	err := utils.ParseBody(r.Body, &ingredient)
 	if err != nil {
+		log.Errorf("Error creating ingredient: %s", err)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
-	resErr := utils.IsListObjectIdExist(ingredient.Tags, database.IngredientTagsCollection)
+	resErr := utils.IsListObjectIdExist(ingredient.Fields.Tags, database.IngredientTagsCollection)
 	if resErr != nil {
+		log.Errorf("Error creating ingredient %s: %s", ingredient.Fields.Name, resErr)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(resErr.Error()).ToJson())
 		return
@@ -130,13 +132,14 @@ func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) 
 
 	_, err = ingredient.CreateOne(ctx)
 	if err != nil {
+		log.Errorf("Error creating ingredient %s: %s", ingredient.Fields.Name, err)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
 	}
 
 	recipe := database.Recipe{
-		Name:       ingredient.Name,
+		Name:       ingredient.Fields.Name,
 		Quantities: []float64{1},
 		Ingredients: []primitive.ObjectID{
 			ingredient.ID,
@@ -146,6 +149,7 @@ func ingredientPost(w http.ResponseWriter, r *http.Request, user database.User) 
 
 	_, err = recipe.CreateOne(ctx)
 	if err != nil {
+		log.Errorf("Error creating recipe related to ingredient %s: %s", ingredient.Fields.Name, err)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(err.Error()).ToJson())
 		return
@@ -169,7 +173,7 @@ func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	ingredient := database.Ingredient{}
+	ingredient := database.IngredientWrapper{}
 	err := utils.ParseBody(r.Body, &ingredient)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -177,7 +181,7 @@ func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	resErr := utils.IsListObjectIdExist(ingredient.Tags, database.IngredientTagsCollection)
+	resErr := utils.IsListObjectIdExist(ingredient.Fields.Tags, database.IngredientTagsCollection)
 	if resErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(utils.NewResErr(resErr.Error()).ToJson())
@@ -191,13 +195,13 @@ func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	if ingredientFromDB.Name != ingredient.Name {
+	if ingredientFromDB.Fields.Name != ingredient.Fields.Name {
 		// Update recipe related to ingredient
-		recipe, err := database.FindOneRecipe(ctx, bson.M{"name": ingredientFromDB.Name})
+		recipe, err := database.FindOneRecipe(ctx, bson.M{"name": ingredientFromDB.Fields.Name})
 		if err != nil {
 			if mongo.ErrNoDocuments == err {
 				w.WriteHeader(http.StatusNotFound)
-				w.Write(utils.NewResErr(fmt.Sprintf("Recipe %s not found", ingredientFromDB.Name)).ToJson())
+				w.Write(utils.NewResErr(fmt.Sprintf("Recipe %s not found", ingredientFromDB.Fields.Name)).ToJson())
 				return
 			}
 			w.WriteHeader(http.StatusBadRequest)
@@ -205,7 +209,7 @@ func ingredientPut(w http.ResponseWriter, r *http.Request, user database.User) {
 			return
 		}
 
-		recipe.Name = ingredient.Name
+		recipe.Name = ingredient.Fields.Name
 		_, err = recipe.UpdateOne(ctx)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -291,11 +295,11 @@ func ingredientDelete(w http.ResponseWriter, r *http.Request, user database.User
 	}
 
 	// Delete recipe related to ingredient
-	recipe, err := database.FindOneRecipe(ctx, bson.M{"name": ingredient.Name})
+	recipe, err := database.FindOneRecipe(ctx, bson.M{"name": ingredient.Fields.Name})
 	if err != nil {
 		if mongo.ErrNoDocuments == err {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write(utils.NewResErr(fmt.Sprintf("Recipe %s not found", ingredient.Name)).ToJson())
+			w.Write(utils.NewResErr(fmt.Sprintf("Recipe %s not found", ingredient.Fields.Name)).ToJson())
 			return
 		}
 		w.WriteHeader(http.StatusBadRequest)
@@ -308,7 +312,7 @@ func ingredientDelete(w http.ResponseWriter, r *http.Request, user database.User
 	if err != nil {
 		if mongo.ErrNoDocuments == err {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write(utils.NewResErr(fmt.Sprintf("Recipe %s not found", ingredient.Name)).ToJson())
+			w.Write(utils.NewResErr(fmt.Sprintf("Recipe %s not found", ingredient.Fields.Name)).ToJson())
 			return
 		}
 		w.WriteHeader(http.StatusBadRequest)

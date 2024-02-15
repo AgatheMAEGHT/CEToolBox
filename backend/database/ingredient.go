@@ -6,21 +6,23 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var (
-	IngredientCollection *mongo.Collection
-)
+const HouseItemIngredientType = "ingredient"
 
 type IngredientRes struct {
-	ID           primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-	Icon         string             `json:"icon" bson:"icon"`
-	Name         string             `json:"name" bson:"name"`
-	Tags         []IngredientTag    `json:"tags" bson:"tags"`
-	KcalPerGram  float64            `json:"kcalPerGram" bson:"kcalPerGram"`
-	ToGramFactor float64            `json:"toGramFactor" bson:"toGramFactor"`
-	Restrictions Restrictions       `json:"restrictions" bson:"restrictions"`
+	Icon         string          `json:"icon" bson:"icon"`
+	Name         string          `json:"name" bson:"name"`
+	Tags         []IngredientTag `json:"tags" bson:"tags"`
+	KcalPerGram  float64         `json:"kcalPerGram" bson:"kcalPerGram"`
+	ToGramFactor float64         `json:"toGramFactor" bson:"toGramFactor"`
+	Restrictions Restrictions    `json:"restrictions" bson:"restrictions"`
+}
+
+type IngredientWrapperRes struct {
+	ID     primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Type   string             `json:"type" bson:"type"`
+	Fields IngredientRes      `json:"fields" bson:"fields"`
 }
 
 type Restrictions struct {
@@ -32,7 +34,6 @@ type Restrictions struct {
 }
 
 type Ingredient struct {
-	ID           primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
 	Icon         string               `json:"icon" bson:"icon"`
 	Name         string               `json:"name" bson:"name"`
 	Tags         []primitive.ObjectID `json:"tags" bson:"tags"`
@@ -41,8 +42,15 @@ type Ingredient struct {
 	Restrictions Restrictions         `json:"restrictions" bson:"restrictions"`
 }
 
-func (a *Ingredient) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {
-	res, err := IngredientCollection.InsertOne(ctx, a)
+type IngredientWrapper struct {
+	ID     primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Type   string             `json:"type" bson:"type"`
+	Fields Ingredient         `json:"fields" bson:"fields"`
+}
+
+func (a *IngredientWrapper) CreateOne(ctx context.Context) (*mongo.InsertOneResult, error) {
+	a.Type = HouseItemIngredientType
+	res, err := HouseItemCollection.InsertOne(ctx, a)
 	if err != nil {
 		return nil, err
 	}
@@ -51,29 +59,32 @@ func (a *Ingredient) CreateOne(ctx context.Context) (*mongo.InsertOneResult, err
 	return res, nil
 }
 
-func (a *Ingredient) UpdateOne(ctx context.Context) (*mongo.UpdateResult, error) {
-	return IngredientCollection.UpdateOne(ctx, bson.M{"_id": a.ID}, bson.M{"$set": a})
+func (a *IngredientWrapper) UpdateOne(ctx context.Context) (*mongo.UpdateResult, error) {
+	a.Type = HouseItemIngredientType
+	return HouseItemCollection.UpdateOne(ctx, bson.M{"_id": a.ID}, bson.M{"$set": a})
 }
 
 func DeleteOneIngredient(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
-	return IngredientCollection.DeleteOne(ctx, bson.M{"_id": id})
+	return HouseItemCollection.DeleteOne(ctx, bson.M{"_id": id})
 }
 
-func FindOneIngredient(ctx context.Context, filter bson.M) (*Ingredient, error) {
-	var a Ingredient
-	err := IngredientCollection.FindOne(ctx, filter).Decode(&a)
+func FindOneIngredient(ctx context.Context, filter bson.M) (*IngredientWrapper, error) {
+	filter["type"] = HouseItemIngredientType
+	var a IngredientWrapper
+	err := HouseItemCollection.FindOne(ctx, filter).Decode(&a)
 	return &a, err
 }
 
-func FindIngredients(ctx context.Context, filter bson.M) ([]*Ingredient, error) {
-	cursor, err := IngredientCollection.Find(ctx, filter)
+func FindIngredients(ctx context.Context, filter bson.M) ([]*IngredientWrapper, error) {
+	filter["type"] = HouseItemIngredientType
+	cursor, err := HouseItemCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
 
-	var ingredients []*Ingredient
+	var ingredients []*IngredientWrapper
 	for cursor.Next(ctx) {
-		var a Ingredient
+		var a IngredientWrapper
 		err := cursor.Decode(&a)
 		if err != nil {
 			return nil, err
@@ -84,32 +95,23 @@ func FindIngredients(ctx context.Context, filter bson.M) ([]*Ingredient, error) 
 	return ingredients, nil
 }
 
-func (a *Ingredient) Populate(ctx context.Context) (IngredientRes, error) {
-	var res IngredientRes
-	tags, err := FindIngredientTags(ctx, bson.M{"_id": bson.M{"$in": a.Tags}})
+func (a *IngredientWrapper) Populate(ctx context.Context) (IngredientWrapperRes, error) {
+	var res IngredientWrapperRes
+	tags, err := FindIngredientTags(ctx, bson.M{"_id": bson.M{"$in": a.Fields.Tags}})
 	if err != nil {
 		return res, err
 	}
 
 	res.ID = a.ID
-	res.Name = a.Name
-	res.Tags = make([]IngredientTag, len(tags))
+	res.Type = a.Type
+	res.Fields.Name = a.Fields.Name
+	res.Fields.Tags = make([]IngredientTag, len(tags))
 	for i, tag := range tags {
-		res.Tags[i] = *tag
+		res.Fields.Tags[i] = *tag
 	}
-	res.KcalPerGram = a.KcalPerGram
-	res.ToGramFactor = a.ToGramFactor
-	res.Restrictions = a.Restrictions
+	res.Fields.KcalPerGram = a.Fields.KcalPerGram
+	res.Fields.ToGramFactor = a.Fields.ToGramFactor
+	res.Fields.Restrictions = a.Fields.Restrictions
 
 	return res, nil
-}
-
-func initIngredient(ctx context.Context, db *mongo.Database) {
-	IngredientCollection = db.Collection("ingredients")
-
-	// Create indexes
-	IngredientCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
-		Keys:    map[string]int{"name": 1},
-		Options: options.Index().SetUnique(true),
-	})
 }

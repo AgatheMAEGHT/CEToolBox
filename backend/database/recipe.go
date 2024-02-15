@@ -14,20 +14,20 @@ var (
 )
 
 type RecipeRes struct {
-	ID               primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-	Icon             string             `json:"icon" bson:"icon"`
-	Name             string             `json:"name" bson:"name"`
-	Ingredients      []IngredientRes    `json:"ingredients" bson:"ingredients"`
-	Quantities       []float64          `json:"quantities" bson:"quantities"`
-	NumberOfPortions int64              `json:"numberOfPortions" bson:"numberOfPortions"`
-	Image            string             `json:"image" bson:"image"`
-	Categories       []RecipeCategory   `json:"categories" bson:"categories"`
-	Origin           RecipeOrigin       `json:"origin" bson:"origin"`
-	Status           RecipeStatus       `json:"status" bson:"status"`
-	Type             RecipeType         `json:"type" bson:"type"`
-	PreparationTime  int64              `json:"preparationTime" bson:"preparationTime"`
-	CookingTime      int64              `json:"cookingTime" bson:"cookingTime"`
-	Steps            []string           `json:"steps" bson:"steps"`
+	ID               primitive.ObjectID     `json:"_id" bson:"_id,omitempty"`
+	Icon             string                 `json:"icon" bson:"icon"`
+	Name             string                 `json:"name" bson:"name"`
+	Ingredients      []IngredientWrapperRes `json:"ingredients" bson:"ingredients"`
+	Quantities       []float64              `json:"quantities" bson:"quantities"`
+	NumberOfPortions int64                  `json:"numberOfPortions" bson:"numberOfPortions"`
+	Image            string                 `json:"image" bson:"image"`
+	Categories       []RecipeCategory       `json:"categories" bson:"categories"`
+	Origin           RecipeOrigin           `json:"origin" bson:"origin"`
+	Status           RecipeStatus           `json:"status" bson:"status"`
+	Type             RecipeType             `json:"type" bson:"type"`
+	PreparationTime  int64                  `json:"preparationTime" bson:"preparationTime"`
+	CookingTime      int64                  `json:"cookingTime" bson:"cookingTime"`
+	Steps            []string               `json:"steps" bson:"steps"`
 }
 
 type Recipe struct {
@@ -143,7 +143,7 @@ func (a *Recipe) Populate(ctx context.Context) (RecipeRes, error) {
 		return res, err
 	}
 
-	res.Ingredients = make([]IngredientRes, len(ingredients))
+	res.Ingredients = make([]IngredientWrapperRes, len(ingredients))
 	for i, ingredient := range ingredients {
 		res.Ingredients[i], err = ingredient.Populate(ctx)
 		if err != nil {

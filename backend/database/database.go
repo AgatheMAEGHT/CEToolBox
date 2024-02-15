@@ -29,7 +29,7 @@ func initCollections(ctx context.Context) {
 	initBlockText(ctx, db)
 	initDocuments(ctx, db)
 	initFile(ctx, db)
-	initIngredient(ctx, db)
+	initHouseItem(ctx, db)
 	initRecipe(ctx, db)
 	initIngredientTags(ctx, db)
 	initRecipeCategories(ctx, db)

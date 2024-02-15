@@ -71,7 +71,9 @@ func TestRecipe(t *testing.T) {
 
 	// Post ingredient
 	body = map[string]interface{}{
-		"name": "testIngredient1",
+		"fields": map[string]interface{}{
+			"name": "testIngredient1",
+		},
 	}
 
 	result, status = requester("/ingredients", http.MethodPost, body, adminTok)
@@ -81,7 +83,9 @@ func TestRecipe(t *testing.T) {
 	assert.True(t, ok)
 
 	body = map[string]interface{}{
-		"name": "testIngredient2",
+		"fields": map[string]interface{}{
+			"name": "testIngredient2",
+		},
 	}
 
 	result, status = requester("/ingredients", http.MethodPost, body, adminTok)

@@ -102,7 +102,7 @@ func recipeGet(w http.ResponseWriter, r *http.Request, user database.User) {
 	}
 
 	if r.Form.Get("ingredientIds") != "" {
-		ingredientIds, err := utils.IsStringListObjectIdValid(r.Form["ingredientIds"], database.IngredientCollection)
+		ingredientIds, err := utils.IsStringListObjectIdValid(r.Form["ingredientIds"], database.HouseItemCollection)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write(utils.NewResErr(err.Error()).ToJson())
