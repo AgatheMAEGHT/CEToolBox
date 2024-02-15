@@ -316,16 +316,45 @@ func getUsers(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	if !user.IsAdmin {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(utils.NewResErr("Unauthorized").ToJson())
+	err := r.ParseForm()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("Bad request").ToJson())
 		return
 	}
 
-	users, err := database.FindUsers(ctx, bson.M{})
+	query := bson.M{}
+
+	if r.Form.Get("_id") != "" {
+		userID, err := primitive.ObjectIDFromHex(r.Form.Get("_id"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr("Wrong ID format").ToJson())
+			return
+		}
+		query["_id"] = userID
+	}
+
+	users, err := database.FindUsers(ctx, query)
 	if err != nil {
 		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if r.Form.Get("populate") == "true" {
+		usersRes := make([]database.UserRes, len(users))
+		for i, u := range users {
+			usersRes[i], err = u.Populate(ctx)
+			if err != nil {
+				log.Error(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(usersRes)
 		return
 	}
 
