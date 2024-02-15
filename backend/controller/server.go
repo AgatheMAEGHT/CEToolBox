@@ -42,35 +42,35 @@ func StartServer(path string) {
 	// User-related endpoints
 	server.HandleFunc("/login", corsWrapper(login))
 	server.HandleFunc("/refresh", corsWrapper(refresh))
-	server.HandleFunc("/user", middlewareWrapper(getUsers))
-	server.HandleFunc("/user/create", middlewareWrapper(createUser))
-	server.HandleFunc("/user/delete", middlewareWrapper(deleteUser))
-	server.HandleFunc("/user/update", middlewareWrapper(updateUser))
-	server.HandleFunc("/user/password", middlewareWrapper(changePassword))
-	server.HandleFunc("/who-am-i", middlewareWrapper(whoAmI))
+	server.HandleFunc("/user", corsWrapper(middlewareWrapper(getUsers)))
+	server.HandleFunc("/user/create", corsWrapper(middlewareWrapper(createUser)))
+	server.HandleFunc("/user/delete", corsWrapper(middlewareWrapper(deleteUser)))
+	server.HandleFunc("/user/update", corsWrapper(middlewareWrapper(updateUser)))
+	server.HandleFunc("/user/password", corsWrapper(middlewareWrapper(changePassword)))
+	server.HandleFunc("/who-am-i", corsWrapper(middlewareWrapper(whoAmI)))
 
-	server.HandleFunc("/user-notes", middlewareWrapper(userNotesDispatch))
+	server.HandleFunc("/user-notes", corsWrapper(middlewareWrapper(userNotesDispatch)))
 
 	// Block-related endpoints
-	server.HandleFunc("/blocks", middlewareWrapper(BlockDispatch))
-	server.HandleFunc("/blocks/text", middlewareWrapper(BlockTextDispatch))
+	server.HandleFunc("/blocks", corsWrapper(middlewareWrapper(BlockDispatch)))
+	server.HandleFunc("/blocks/text", corsWrapper(middlewareWrapper(BlockTextDispatch)))
 
 	// Recipe-related endpoints
-	server.HandleFunc("/ingredients", middlewareWrapper(IngredientDispatch))
-	server.HandleFunc("/ingredient-tags", middlewareWrapper(IngredientTagDispatch))
-	server.HandleFunc("/recipes", middlewareWrapper(RecipeDispatch))
-	server.HandleFunc("/recipe-categories", middlewareWrapper(RecipeCategoryDispatch))
-	server.HandleFunc("/recipe-origins", middlewareWrapper(RecipeOriginDispatch))
-	server.HandleFunc("/recipe-status", middlewareWrapper(RecipeStatusDispatch))
-	server.HandleFunc("/recipe-types", middlewareWrapper(RecipeTypeDispatch))
+	server.HandleFunc("/ingredients", corsWrapper(middlewareWrapper(IngredientDispatch)))
+	server.HandleFunc("/ingredient-tags", corsWrapper(middlewareWrapper(IngredientTagDispatch)))
+	server.HandleFunc("/recipes", corsWrapper(middlewareWrapper(RecipeDispatch)))
+	server.HandleFunc("/recipe-categories", corsWrapper(middlewareWrapper(RecipeCategoryDispatch)))
+	server.HandleFunc("/recipe-origins", corsWrapper(middlewareWrapper(RecipeOriginDispatch)))
+	server.HandleFunc("/recipe-status", corsWrapper(middlewareWrapper(RecipeStatusDispatch)))
+	server.HandleFunc("/recipe-types", corsWrapper(middlewareWrapper(RecipeTypeDispatch)))
 
 	// Note-related endpoints
-	server.HandleFunc("/notes", middlewareWrapper(NoteDispatch))
+	server.HandleFunc("/notes", corsWrapper(middlewareWrapper(NoteDispatch)))
 
 	// File-related endpoints
 	server.HandleFunc("/file/download/", corsWrapper(downloadFile))
-	server.HandleFunc("/file/create", middlewareWrapper(postFile))
-	server.HandleFunc("/file/delete/", middlewareWrapper(deleteFile))
+	server.HandleFunc("/file/create", corsWrapper(middlewareWrapper(postFile)))
+	server.HandleFunc("/file/delete/", corsWrapper(middlewareWrapper(deleteFile)))
 
 	fmt.Printf("Listening on '%s'\n", path)
 	http.ListenAndServe(path, server)
