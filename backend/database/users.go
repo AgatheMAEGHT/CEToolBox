@@ -16,13 +16,24 @@ var (
 	UserCollection *mongo.Collection
 )
 
+type UserRes struct {
+	ID             primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
+	Pseudo         string             `json:"pseudo" bson:"pseudo"`
+	Password       string             `json:"-" bson:"password"`
+	IsAdmin        bool               `json:"isAdmin" bson:"isAdmin" default:"false"`
+	CreatedAt      primitive.DateTime `json:"createdAt" bson:"createdAt"`
+	Notes          []Note             `json:"notes" bson:"notes"`
+	ProfilePicture string             `json:"profilePicture" bson:"profilePicture"`
+}
+
 type User struct {
-	ID        primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
-	Pseudo    string               `json:"pseudo" bson:"pseudo"`
-	Password  string               `json:"-" bson:"password"`
-	IsAdmin   bool                 `json:"isAdmin" bson:"isAdmin" default:"false"`
-	CreatedAt primitive.DateTime   `json:"createdAt" bson:"createdAt"`
-	Notes     []primitive.ObjectID `json:"notes" bson:"notes"`
+	ID             primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
+	Pseudo         string               `json:"pseudo" bson:"pseudo"`
+	Password       string               `json:"-" bson:"password"`
+	IsAdmin        bool                 `json:"isAdmin" bson:"isAdmin" default:"false"`
+	CreatedAt      primitive.DateTime   `json:"createdAt" bson:"createdAt"`
+	Notes          []primitive.ObjectID `json:"notes" bson:"notes"`
+	ProfilePicture primitive.ObjectID   `json:"profilePicture" bson:"profilePicture"`
 }
 
 func HashPassword(password string) (string, error) {
@@ -93,6 +104,32 @@ func FindUsers(ctx context.Context, query bson.M) ([]User, error) {
 
 func DeleteOneUser(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
 	return UserCollection.DeleteOne(ctx, bson.M{"_id": id})
+}
+
+func (u *User) Populate(ctx context.Context) (UserRes, error) {
+	userRes := UserRes{
+		ID:        u.ID,
+		Pseudo:    u.Pseudo,
+		IsAdmin:   u.IsAdmin,
+		CreatedAt: u.CreatedAt,
+	}
+
+	notes, err := FindNotes(ctx, bson.M{"_id": bson.M{"$in": u.Notes}})
+	if err != nil {
+		return UserRes{}, err
+	}
+	userRes.Notes = make([]Note, len(notes))
+	for i, note := range notes {
+		userRes.Notes[i] = *note
+	}
+
+	file, err := FindOneFile(ctx, bson.M{"_id": u.ProfilePicture})
+	if err != nil {
+		return UserRes{}, err
+	}
+	userRes.ProfilePicture = file.FullName()
+
+	return userRes, nil
 }
 
 func initUser(ctx context.Context, db *mongo.Database) {
