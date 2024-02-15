@@ -21,6 +21,8 @@ func userNotesDispatch(w http.ResponseWriter, r *http.Request, user database.Use
 		addNoteToUser(w, r, user)
 	case http.MethodPatch:
 		removeNoteFromUser(w, r, user)
+	case http.MethodPut:
+		updateNoteOrderFromUser(w, r, user)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write(utils.NewResErr(fmt.Sprintf("Method %s not allowed", r.Method)).ToJson())
@@ -264,4 +266,38 @@ func removeNoteFromUser(w http.ResponseWriter, r *http.Request, user database.Us
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(utils.NewResMsg("Note removed").ToJson())
+}
+
+func updateNoteOrderFromUser(w http.ResponseWriter, r *http.Request, user database.User) {
+	ctx := r.Context()
+	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
+		"method": r.Method,
+		"path":   r.URL.Path,
+	})
+	log.Info("updateNoteOrderFromUser")
+
+	if r.Method != http.MethodPut {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write(utils.NewResErr("Method not allowed").ToJson())
+		return
+	}
+
+	notes := []primitive.ObjectID{}
+	err := utils.ParseBody(r.Body, &notes)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
+		return
+	}
+
+	if utils.IsListObjectIdExist(notes, database.NotesCollection) != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr("Invalid notes").ToJson())
+		return
+	}
+
+	user.Notes = notes
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(utils.NewResMsg("Notes order updated").ToJson())
 }
