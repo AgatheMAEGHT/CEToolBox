@@ -36,6 +36,7 @@ func initCollections(ctx context.Context) {
 	initRecipeOrigins(ctx, db)
 	initRecipeStatus(ctx, db)
 	initRecipeTypes(ctx, db)
+	initNotes(ctx, db)
 }
 
 func Connect(ctx context.Context, url string) (*mongo.Client, error) {

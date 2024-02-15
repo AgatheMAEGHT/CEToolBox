@@ -17,11 +17,12 @@ var (
 )
 
 type User struct {
-	ID        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
-	Pseudo    string             `json:"pseudo" bson:"pseudo"`
-	Password  string             `json:"-" bson:"password"`
-	IsAdmin   bool               `json:"isAdmin" bson:"isAdmin" default:"false"`
-	CreatedAt primitive.DateTime `json:"createdAt" bson:"createdAt"`
+	ID        primitive.ObjectID   `json:"_id" bson:"_id,omitempty"`
+	Pseudo    string               `json:"pseudo" bson:"pseudo"`
+	Password  string               `json:"-" bson:"password"`
+	IsAdmin   bool                 `json:"isAdmin" bson:"isAdmin" default:"false"`
+	CreatedAt primitive.DateTime   `json:"createdAt" bson:"createdAt"`
+	Notes     []primitive.ObjectID `json:"notes" bson:"notes"`
 }
 
 func HashPassword(password string) (string, error) {
@@ -69,6 +70,25 @@ func FindOneUser(ctx context.Context, query bson.M) (User, error) {
 	user := User{}
 	err := UserCollection.FindOne(ctx, query).Decode(&user)
 	return user, err
+}
+
+func FindUsers(ctx context.Context, query bson.M) ([]User, error) {
+	cursor, err := UserCollection.Find(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []User
+	for cursor.Next(ctx) {
+		var user User
+		err := cursor.Decode(&user)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 func DeleteOneUser(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {

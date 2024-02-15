@@ -301,3 +301,34 @@ func updateUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(utils.NewResMsg("User updated").ToJson())
 }
+
+func getUsers(w http.ResponseWriter, r *http.Request, user database.User) {
+	ctx := r.Context()
+	log := logrus.WithContext(ctx).WithFields(logrus.Fields{
+		"method": r.Method,
+		"path":   r.URL.Path,
+	})
+	log.Info("getUsers")
+
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write(utils.NewResErr("Method not allowed").ToJson())
+		return
+	}
+
+	if !user.IsAdmin {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(utils.NewResErr("Unauthorized").ToJson())
+		return
+	}
+
+	users, err := database.FindUsers(ctx, bson.M{})
+	if err != nil {
+		log.Error(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users)
+}

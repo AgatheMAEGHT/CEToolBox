@@ -42,11 +42,14 @@ func StartServer(path string) {
 	// User-related endpoints
 	server.HandleFunc("/login", corsWrapper(login))
 	server.HandleFunc("/refresh", corsWrapper(refresh))
+	server.HandleFunc("/user", middlewareWrapper(getUsers))
 	server.HandleFunc("/user/create", middlewareWrapper(createUser))
 	server.HandleFunc("/user/delete", middlewareWrapper(deleteUser))
 	server.HandleFunc("/user/update", middlewareWrapper(updateUser))
 	server.HandleFunc("/user/password", middlewareWrapper(changePassword))
 	server.HandleFunc("/who-am-i", middlewareWrapper(whoAmI))
+
+	server.HandleFunc("/user-notes", middlewareWrapper(userNotesDispatch))
 
 	// Block-related endpoints
 	server.HandleFunc("/blocks", middlewareWrapper(BlockDispatch))
@@ -60,6 +63,9 @@ func StartServer(path string) {
 	server.HandleFunc("/recipe-origins", middlewareWrapper(RecipeOriginDispatch))
 	server.HandleFunc("/recipe-status", middlewareWrapper(RecipeStatusDispatch))
 	server.HandleFunc("/recipe-types", middlewareWrapper(RecipeTypeDispatch))
+
+	// Note-related endpoints
+	server.HandleFunc("/notes", middlewareWrapper(NoteDispatch))
 
 	// File-related endpoints
 	server.HandleFunc("/file/download/", corsWrapper(downloadFile))
