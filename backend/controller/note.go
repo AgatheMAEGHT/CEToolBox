@@ -97,6 +97,9 @@ func notePost(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
+	user.Notes = append(user.Notes, note.ID)
+	user.UpdateOne(ctx)
+
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(note)
 }
