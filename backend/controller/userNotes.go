@@ -48,6 +48,10 @@ func getUserNotes(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
+	if user.Notes == nil {
+		user.Notes = []primitive.ObjectID{}
+	}
+
 	notes, err := database.FindNotes(ctx, bson.M{"_id": bson.M{"$in": user.Notes}})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
