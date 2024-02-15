@@ -67,8 +67,19 @@ func getUserNotes(w http.ResponseWriter, r *http.Request, user database.User) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(notes)
+    // Reorder notes
+    tmpNotes := make([]database.Note, len(notes))
+    for i, id := range user.Notes {
+        for _, n := range notes {
+            if n.ID == id {
+                tmpNotes[i] = *n
+                break
+            }
+        }
+    }
+
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(tmpNotes)
 }
 
 func addNoteToUser(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -239,12 +250,6 @@ func removeNoteFromUser(w http.ResponseWriter, r *http.Request, user database.Us
 	isIn := false
 	for i, n := range userToUpdate.Notes {
 		if n == note.ID {
-			if i == 0 {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write(utils.NewResErr(fmt.Sprintf("Note %s cannot be removed from user %s", note.ID.Hex(), userToUpdate.ID.Hex())).ToJson())
-				return
-			}
-
 			userToUpdate.Notes = append(userToUpdate.Notes[:i], userToUpdate.Notes[i+1:]...)
 			isIn = true
 			break
@@ -262,6 +267,23 @@ func removeNoteFromUser(w http.ResponseWriter, r *http.Request, user database.Us
 		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+	}
+
+	// Delete note if no user is using it
+	users, err := database.FindUsers(ctx, bson.M{"notes": note.ID})
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(utils.NewResErr(err.Error()).ToJson())
+		return
+	}
+
+	if len(users) == 0 {
+		_, err = database.DeleteOneNote(ctx, note.ID)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(utils.NewResErr(err.Error()).ToJson())
+			return
+		}
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -297,6 +319,13 @@ func updateNoteOrderFromUser(w http.ResponseWriter, r *http.Request, user databa
 	}
 
 	user.Notes = notes
+
+	_, err = user.UpdateOne(ctx)
+	if err != nil {
+		log.Error(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(utils.NewResMsg("Notes order updated").ToJson())
